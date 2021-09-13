@@ -51,6 +51,7 @@
         </LinearLayout>
 
         <View
+            android:id="@+id/line"
             android:layout_marginVertical="@dimen/_5sdp"
             android:layout_marginHorizontal="@dimen/_20sdp"
             android:layout_width="match_parent"
@@ -58,6 +59,12 @@
             android:background="@color/grey"
             android:layout_below="@id/topLL" />
 
+
+        <FrameLayout
+            android:id="@+id/container1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/line"/>
 
     </RelativeLayout>
 </layout>

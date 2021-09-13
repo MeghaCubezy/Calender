@@ -27,6 +27,10 @@ class HomeFragment : Fragment() ,View.OnClickListener{
     }
 
     var fragmentHomeBinding:FragmentHomeBinding? =null
+    var yearFragment: YearFragment ?=null
+    var monthFragment: MonthFragment ?=null
+    var weekFragment: WeekFragment ?=null
+    var dayFragment: DayFragment ?=null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +43,15 @@ class HomeFragment : Fragment() ,View.OnClickListener{
         fragmentHomeBinding?.monthIV?.setOnClickListener(this)
         fragmentHomeBinding?.weekIV?.setOnClickListener(this)
         fragmentHomeBinding?.dayIV?.setOnClickListener(this)
+
+        yearFragment= YearFragment()
+        monthFragment= MonthFragment()
+        weekFragment= WeekFragment()
+        dayFragment=DayFragment()
+
+        yearFragment?.let {
+            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.container1, it)?.commit()
+        }
 
         return fragmentHomeBinding?.getRoot()
     }
@@ -63,6 +76,11 @@ class HomeFragment : Fragment() ,View.OnClickListener{
                     fragmentHomeBinding?.monthIV?.setColorFilter(ContextCompat.getColor(it, R.color.grey), android.graphics.PorterDuff.Mode.SRC_IN);
                     fragmentHomeBinding?.weekIV?.setColorFilter(ContextCompat.getColor(it, R.color.grey), android.graphics.PorterDuff.Mode.SRC_IN);
                     fragmentHomeBinding?.dayIV?.setColorFilter(ContextCompat.getColor(it, R.color.grey), android.graphics.PorterDuff.Mode.SRC_IN);
+                    yearFragment?.let { it1 ->
+                        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.container1,
+                            it1
+                        )?.commit()
+                    }
                 }
             }
             R.id.monthIV ->{
@@ -71,6 +89,11 @@ class HomeFragment : Fragment() ,View.OnClickListener{
                     fragmentHomeBinding?.monthIV?.setColorFilter(ContextCompat.getColor(it, R.color.theme_color), android.graphics.PorterDuff.Mode.SRC_IN);
                     fragmentHomeBinding?.weekIV?.setColorFilter(ContextCompat.getColor(it, R.color.grey), android.graphics.PorterDuff.Mode.SRC_IN);
                     fragmentHomeBinding?.dayIV?.setColorFilter(ContextCompat.getColor(it, R.color.grey), android.graphics.PorterDuff.Mode.SRC_IN);
+                    monthFragment?.let { it1 ->
+                        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.container1,
+                            it1
+                        )?.commit()
+                    }
                 }
             }
             R.id.weekIV ->{
@@ -79,6 +102,11 @@ class HomeFragment : Fragment() ,View.OnClickListener{
                     fragmentHomeBinding?.monthIV?.setColorFilter(ContextCompat.getColor(it, R.color.grey), android.graphics.PorterDuff.Mode.SRC_IN);
                     fragmentHomeBinding?.weekIV?.setColorFilter(ContextCompat.getColor(it, R.color.theme_color), android.graphics.PorterDuff.Mode.SRC_IN);
                     fragmentHomeBinding?.dayIV?.setColorFilter(ContextCompat.getColor(it, R.color.grey), android.graphics.PorterDuff.Mode.SRC_IN);
+                    weekFragment?.let { it1 ->
+                        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.container1,
+                            it1
+                        )?.commit()
+                    }
                 }
             }
             R.id.dayIV ->{
@@ -87,6 +115,11 @@ class HomeFragment : Fragment() ,View.OnClickListener{
                     fragmentHomeBinding?.monthIV?.setColorFilter(ContextCompat.getColor(it, R.color.grey), android.graphics.PorterDuff.Mode.SRC_IN);
                     fragmentHomeBinding?.weekIV?.setColorFilter(ContextCompat.getColor(it, R.color.grey), android.graphics.PorterDuff.Mode.SRC_IN);
                     fragmentHomeBinding?.dayIV?.setColorFilter(ContextCompat.getColor(it, R.color.theme_color), android.graphics.PorterDuff.Mode.SRC_IN);
+                    dayFragment?.let { it1 ->
+                        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.container1,
+                            it1
+                        )?.commit()
+                    }
                 }
             }
         }
