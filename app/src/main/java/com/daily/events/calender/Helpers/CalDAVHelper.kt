@@ -6,9 +6,17 @@ import android.content.ContentValues
 import android.content.Context
 import android.provider.CalendarContract.*
 import android.util.SparseIntArray
-import com.daily.events.calender.Extensions.eventsHelper
+import com.daily.events.calender.Extensions.*
+import com.daily.events.calender.Model.Attendee
+import com.daily.events.calender.Model.CalDAVCalendar
+import com.daily.events.calender.Model.Event
+import com.daily.events.calender.Model.Reminder
+import com.daily.events.calender.R
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.simplemobiletools.calendar.pro.models.EventType
+import com.simplemobiletools.calendar.pro.objects.States.isUpdatingCalDAV
+
 import com.simplemobiletools.commons.extensions.*
 import com.simplemobiletools.commons.helpers.*
 import org.joda.time.DateTimeZone
@@ -158,7 +166,7 @@ class CalDAVHelper(val context: Context) {
         val existingEvents = try {
             context.eventsDB.getEventsFromCalDAVCalendar("$CALDAV-$calendarId")
         } catch (e: Exception) {
-            ArrayList()
+            ArrayList<String>()
         }
 
         existingEvents.forEach {
