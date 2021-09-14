@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import com.daily.events.calender.Fragment.EventFragment
-import com.daily.events.calender.Fragment.HomeFragment
+import com.daily.events.calender.Fragment.Home.HomeFragment
 import com.daily.events.calender.Fragment.NotificationFragment
 import com.daily.events.calender.Fragment.SettingFragment
 import com.daily.events.calender.R
@@ -40,7 +40,7 @@ class MainActivity : BaseActivity() , BottomNavigationView.OnNavigationItemSelec
     var settingFragment: SettingFragment ?=null
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.getItemId()) {
+        when (item.itemId) {
             R.id.home -> {
                 homeFragment?.let {
                     supportFragmentManager.beginTransaction().replace(R.id.container, it)

@@ -3,10 +3,10 @@ package com.daily.events.calender.helpers
 import android.content.Context
 import com.daily.events.calender.Extensions.config
 import com.daily.events.calender.Extensions.eventsHelper
+import com.daily.events.calender.Extensions.seconds
 import com.daily.events.calender.Interfaces.MonthlyCalendar
 import com.daily.events.calender.Model.DayMonthly
 import com.daily.events.calender.Model.Event
-import com.daily.events.calender.Model.seconds
 import org.joda.time.DateTime
 import java.util.*
 import kotlin.collections.ArrayList

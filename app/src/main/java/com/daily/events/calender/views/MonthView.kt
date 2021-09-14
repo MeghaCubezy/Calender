@@ -1,4 +1,4 @@
-package com.daily.events.calender.Views
+package com.daily.events.calender.views
 
 import android.content.Context
 import android.graphics.*
@@ -8,8 +8,22 @@ import android.util.AttributeSet
 import android.util.SparseIntArray
 import android.view.View
 import com.daily.events.calender.Extensions.config
+import com.daily.events.calender.Extensions.seconds
+import com.daily.events.calender.Model.DayMonthly
+import com.daily.events.calender.Model.Event
 import com.daily.events.calender.Model.MonthViewEvent
 import com.daily.events.calender.R
+import com.daily.events.calender.helpers.COLUMN_COUNT
+import com.daily.events.calender.helpers.Formatter
+import com.daily.events.calender.helpers.ROW_COUNT
+import com.daily.events.calender.helpers.isWeekend
+import com.simplemobiletools.commons.extensions.adjustAlpha
+import com.simplemobiletools.commons.extensions.getAdjustedPrimaryColor
+import com.simplemobiletools.commons.extensions.getContrastColor
+import com.simplemobiletools.commons.extensions.moveLastItemToFront
+import com.simplemobiletools.commons.helpers.HIGHER_ALPHA
+import com.simplemobiletools.commons.helpers.LOWER_ALPHA
+import com.simplemobiletools.commons.helpers.MEDIUM_ALPHA
 
 import org.joda.time.DateTime
 import org.joda.time.Days

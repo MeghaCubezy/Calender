@@ -23,7 +23,7 @@ class EventsHelper(val context: Context) {
         ensureBackgroundThread {
             var eventTypes = ArrayList<EventType>()
             try {
-                eventTypes = eventTypesDB.getEventTypes().toMutableList()
+                eventTypes = eventTypesDB.getEventTypes().toMutableList() as ArrayList<EventType>
             } catch (ignored: Exception) {
             }
 
@@ -33,7 +33,7 @@ class EventsHelper(val context: Context) {
                     val eventType = it
                     it.caldavCalendarId == 0 || caldavCalendars.firstOrNull { it.id == eventType.caldavCalendarId }
                         ?.canWrite() == true
-                }.toMutableList()
+                }.toMutableList() as ArrayList<EventType>
             }
 
             activity.runOnUiThread {
@@ -273,7 +273,8 @@ class EventsHelper(val context: Context) {
                 eventsDB.getEventWithId(parentEventId) ?: return@ensureBackgroundThread
             var repetitionExceptions = parentEvent.repetitionExceptions
             repetitionExceptions.add(Formatter.getDayCodeFromTS(occurrenceTS))
-            repetitionExceptions = repetitionExceptions.distinct().toMutableList()
+            repetitionExceptions =
+                repetitionExceptions.distinct().toMutableList() as ArrayList<String>
 
             eventsDB.updateEventRepetitionExceptions(repetitionExceptions.toString(), parentEventId)
             context.scheduleNextEventReminder(parentEvent, false)
@@ -362,7 +363,7 @@ class EventsHelper(val context: Context) {
             it.color = eventTypeColors.get(it.eventType) ?: config.primaryColor
         }
 
-        callback(events)
+        callback(events as ArrayList<Event>)
     }
 
     fun getBirthdaysEventTypeId(createIfNotExists: Boolean = true): Long {
@@ -552,7 +553,7 @@ class EventsHelper(val context: Context) {
             events.addAll(eventsDB.getRepeatableFutureEventsWithTypes(currTS, eventTypes))
         }
 
-        events = events.distinctBy { it.id }
+        events = events.distinctBy { it.id } as ArrayList<Event>
         return events
     }
 }

@@ -5,10 +5,10 @@ import com.daily.events.calender.Activity.SimpleActivity
 import com.daily.events.calender.Extensions.eventsDB
 import com.daily.events.calender.Extensions.eventsHelper
 import com.daily.events.calender.Model.Event
+import com.daily.events.calender.Model.EventType
 import com.daily.events.calender.Model.Reminder
 import com.daily.events.calender.R
 import com.daily.events.calender.helpers.IcsImporter.ImportResult.*
-import com.daily.events.calender.models.EventType
 import com.simplemobiletools.commons.extensions.areDigitsOnly
 import com.simplemobiletools.commons.extensions.showErrorToast
 import org.joda.time.DateTimeZone
