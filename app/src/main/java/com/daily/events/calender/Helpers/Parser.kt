@@ -1,11 +1,11 @@
 package com.daily.events.calender.helpers
 
-import com.daily.events.calender.extensions.isXMonthlyRepetition
-import com.daily.events.calender.extensions.isXWeeklyRepetition
-import com.daily.events.calender.extensions.isXYearlyRepetition
-import com.daily.events.calender.extensions.seconds
-import com.daily.events.calender.models.Event
-import com.daily.events.calender.models.EventRepetition
+import com.daily.events.calender.Extensions.isXMonthlyRepetition
+import com.daily.events.calender.Extensions.isXWeeklyRepetition
+import com.daily.events.calender.Extensions.isXYearlyRepetition
+import com.daily.events.calender.Model.Event
+import com.daily.events.calender.Model.EventRepetition
+import com.daily.events.calender.Model.seconds
 import com.simplemobiletools.commons.extensions.areDigitsOnly
 import com.simplemobiletools.commons.helpers.*
 import org.joda.time.DateTimeZone

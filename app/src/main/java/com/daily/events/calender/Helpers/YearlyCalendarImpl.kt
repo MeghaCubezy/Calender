@@ -2,11 +2,11 @@ package com.daily.events.calender.helpers
 
 import android.content.Context
 import android.util.SparseArray
-import com.daily.events.calender.extensions.eventsHelper
-import com.daily.events.calender.extensions.seconds
-import com.daily.events.calender.interfaces.YearlyCalendar
-import com.daily.events.calender.models.DayYearly
-import com.daily.events.calender.models.Event
+import com.daily.events.calender.Extensions.eventsHelper
+import com.daily.events.calender.Interfaces.YearlyCalendar
+import com.daily.events.calender.Model.DayYearly
+import com.daily.events.calender.Model.Event
+import com.daily.events.calender.Model.seconds
 import org.joda.time.DateTime
 import java.util.*
 

@@ -1,4 +1,4 @@
-package com.daily.events.calender.interfaces
+package com.daily.events.calender.Interfaces
 
 import org.joda.time.DateTime
 

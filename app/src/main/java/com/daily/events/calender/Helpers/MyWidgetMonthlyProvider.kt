@@ -9,13 +9,14 @@ import android.content.Intent
 import android.content.res.Resources
 import android.view.View
 import android.widget.RemoteViews
+import com.daily.events.calender.Activity.MainActivity
+import com.daily.events.calender.Extensions.config
+import com.daily.events.calender.Extensions.getWidgetFontSize
+import com.daily.events.calender.Extensions.launchNewEventIntent
+import com.daily.events.calender.Interfaces.MonthlyCalendar
+import com.daily.events.calender.Model.DayMonthly
+import com.daily.events.calender.Model.Event
 import com.daily.events.calender.R
-import com.daily.events.calender.activities.SplashActivity
-import com.daily.events.calender.extensions.config
-import com.daily.events.calender.extensions.getWidgetFontSize
-import com.daily.events.calender.extensions.launchNewEventIntent
-import com.daily.events.calender.interfaces.MonthlyCalendar
-import com.daily.events.calender.models.DayMonthly
 import com.simplemobiletools.commons.extensions.*
 import com.simplemobiletools.commons.helpers.MEDIUM_ALPHA
 import org.joda.time.DateTime
@@ -54,7 +55,7 @@ class MyWidgetMonthlyProvider : AppWidgetProvider() {
     }
 
     private fun setupAppOpenIntent(context: Context, views: RemoteViews, id: Int, dayCode: String) {
-        (context.getLaunchIntent() ?: Intent(context, SplashActivity::class.java)).apply {
+        (context.getLaunchIntent() ?: Intent(context, MainActivity::class.java)).apply {
             putExtra(DAY_CODE, dayCode)
             putExtra(VIEW_TO_OPEN, MONTHLY_VIEW)
             val pendingIntent = PendingIntent.getActivity(
@@ -68,7 +69,7 @@ class MyWidgetMonthlyProvider : AppWidgetProvider() {
     }
 
     private fun setupDayOpenIntent(context: Context, views: RemoteViews, id: Int, dayCode: String) {
-        (context.getLaunchIntent() ?: Intent(context, SplashActivity::class.java)).apply {
+        (context.getLaunchIntent() ?: Intent(context, MainActivity::class.java)).apply {
             putExtra(DAY_CODE, dayCode)
             putExtra(VIEW_TO_OPEN, DAILY_VIEW)
             val pendingIntent =
@@ -132,7 +133,7 @@ class MyWidgetMonthlyProvider : AppWidgetProvider() {
         for (i in 0 until len) {
             val day = days[i]
 
-            val redTextColor = context.resources.getColor(R.color.red_text)
+            val redTextColor = context.resources.getColor(R.color.red)
             val dayTextColor = if (context.config.highlightWeekends && day.isWeekend) {
                 redTextColor
             } else {
@@ -151,7 +152,7 @@ class MyWidgetMonthlyProvider : AppWidgetProvider() {
                     { it.startTS },
                     { it.title })
             )
-                .toMutableList()
+                .toMutableList() as ArrayList<Event>
 
             day.dayEvents.forEach {
                 var backgroundColor = it.color
@@ -224,7 +225,7 @@ class MyWidgetMonthlyProvider : AppWidgetProvider() {
                 bmp = resources.getColoredBitmap(R.drawable.ic_chevron_right_vector, textColor)
                 views.setImageViewBitmap(R.id.top_right_arrow, bmp)
 
-                bmp = resources.getColoredBitmap(R.drawable.ic_today_vector, textColor)
+                bmp = resources.getColoredBitmap(R.drawable.ic_event, textColor)
                 views.setImageViewBitmap(R.id.top_go_to_today, bmp)
 
                 bmp = resources.getColoredBitmap(R.drawable.ic_plus_vector, textColor)
@@ -266,7 +267,7 @@ class MyWidgetMonthlyProvider : AppWidgetProvider() {
         val smallerFontSize = context.getWidgetFontSize()
         val packageName = context.packageName
         val letters = context.resources.getStringArray(R.array.week_day_letters)
-        val redTextColor = resources.getColor(R.color.red_text)
+        val redTextColor = resources.getColor(R.color.red)
 
         for (i in 0..6) {
             val id = resources.getIdentifier("label_$i", "id", packageName)

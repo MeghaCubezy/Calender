@@ -7,9 +7,9 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
+import com.daily.events.calender.Activity.MainActivity
 import com.daily.events.calender.Extensions.config
 import com.daily.events.calender.R
-import com.daily.events.calender.activities.SplashActivity
 import com.simplemobiletools.commons.extensions.applyColorFilter
 import com.simplemobiletools.commons.extensions.getLaunchIntent
 import com.simplemobiletools.commons.extensions.setText
@@ -43,7 +43,7 @@ class MyWidgetDateProvider : AppWidgetProvider() {
         ComponentName(context, MyWidgetDateProvider::class.java)
 
     private fun setupAppOpenIntent(context: Context, views: RemoteViews) {
-        (context.getLaunchIntent() ?: Intent(context, SplashActivity::class.java)).apply {
+        (context.getLaunchIntent() ?: Intent(context, MainActivity::class.java)).apply {
             val pendingIntent = PendingIntent.getActivity(
                 context,
                 OPEN_APP_INTENT_ID,

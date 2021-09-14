@@ -1,6 +1,7 @@
-package com.daily.events.calender.interfaces
+package com.daily.events.calender.Interfaces
 
-import com.daily.events.calender.models.Event
+import com.daily.events.calender.Model.Event
+
 
 interface WeeklyCalendar {
     fun updateWeeklyCalendar(events: ArrayList<Event>)

@@ -1,7 +1,7 @@
-package com.daily.events.calender.interfaces
+package com.daily.events.calender.Interfaces
 
 import android.content.Context
-import com.daily.events.calender.models.DayMonthly
+import com.daily.events.calender.Model.DayMonthly
 import org.joda.time.DateTime
 
 interface MonthlyCalendar {

@@ -1,7 +1,7 @@
-package com.daily.events.calender.interfaces
+package com.daily.events.calender.Interfaces
 
 import android.util.SparseArray
-import com.daily.events.calender.models.DayYearly
+import com.daily.events.calender.Model.DayYearly
 import java.util.*
 
 interface YearlyCalendar {

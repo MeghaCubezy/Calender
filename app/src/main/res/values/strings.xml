@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Calender</string>
-    <string name="app_launcher_name">Calendar</string>
     <string name="permission_str">Need Calender Permission for Files</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -10,11 +9,9 @@
     <string name="title_date">2021 September</string>
     <string name="year">Year</string>
     <string name="month">Month</string>
-    <string name="week">Week</string>
     <string name="day">Day</string>
 
-    <string name="regular_event">Regular event</string>
-
+    <string name="app_launcher_name">Calendar</string>
     <string name="change_view">Change view</string>
     <string name="daily_view">Daily view</string>
     <string name="weekly_view">Weekly view</string>
@@ -147,6 +144,7 @@
     <string name="all_day">All-day</string>
 
     <!-- Weekly view -->
+    <string name="week">Week</string>
 
     <!-- Event types -->
     <string name="event_types">Event types</string>
@@ -154,6 +152,7 @@
     <string name="edit_type">Edit type</string>
     <string name="type_already_exists">Type with this title already exists</string>
     <string name="color">Color</string>
+    <string name="regular_event">Regular event</string>
     <string name="cannot_delete_default_type">Default event type cannot be deleted</string>
     <string name="select_event_type">Select an event type</string>
     <string name="move_events_into_default">Move affected events into the default event type</string>
@@ -314,4 +313,5 @@
         <b>Reddit:</b>
         https://www.reddit.com/r/SimpleMobileTools
     </string>
+
 </resources>
