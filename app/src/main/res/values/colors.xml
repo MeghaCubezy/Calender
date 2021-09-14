@@ -14,4 +14,9 @@
     <color name="sky_blue">#00B1C5</color>
     <color name="yellow">#F7B320</color>
     <color name="green">#9ADE45</color>
+
+    <color name="red_text">@color/md_red_400_dark</color>
+    <color name="default_birthdays_color">@color/md_blue_800</color>
+    <color name="default_holidays_color">@color/md_green_700</color>
+    <color name="default_anniversaries_color">@color/md_red_400_dark</color>
 </resources>

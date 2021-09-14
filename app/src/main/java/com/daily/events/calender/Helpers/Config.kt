@@ -5,6 +5,7 @@ import android.media.AudioManager
 import android.media.RingtoneManager
 import com.daily.events.calender.Extensions.config
 import com.daily.events.calender.Extensions.scheduleCalDAVSync
+
 import com.simplemobiletools.commons.extensions.getDefaultAlarmTitle
 import com.simplemobiletools.commons.helpers.BaseConfig
 import com.simplemobiletools.commons.helpers.DAY_MINUTES

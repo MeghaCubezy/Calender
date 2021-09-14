@@ -7,12 +7,9 @@ import android.content.Context
 import android.provider.CalendarContract.*
 import android.util.SparseIntArray
 import com.daily.events.calender.Extensions.*
-import com.daily.events.calender.Model.Attendee
-import com.daily.events.calender.Model.CalDAVCalendar
-import com.daily.events.calender.Model.Event
-import com.daily.events.calender.Model.Reminder
+import com.daily.events.calender.Model.*
 import com.daily.events.calender.R
-import com.daily.events.calender.models.EventType
+import com.daily.events.calender.helpers.*
 import com.daily.events.calender.objects.States.isUpdatingCalDAV
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

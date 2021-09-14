@@ -1,4 +1,4 @@
-package com.daily.events.calender.Model
+package com.daily.events.calender.Extensions
 
 import org.joda.time.DateTime
 

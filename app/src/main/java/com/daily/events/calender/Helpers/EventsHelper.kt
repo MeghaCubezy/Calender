@@ -5,9 +5,8 @@ import android.content.Context
 import androidx.collection.LongSparseArray
 import com.daily.events.calender.Extensions.*
 import com.daily.events.calender.Model.Event
+import com.daily.events.calender.Model.EventType
 import com.daily.events.calender.R
-
-import com.daily.events.calender.models.EventType
 import com.simplemobiletools.commons.helpers.CHOPPED_LIST_DEFAULT_SIZE
 import com.simplemobiletools.commons.helpers.ensureBackgroundThread
 
@@ -34,7 +33,7 @@ class EventsHelper(val context: Context) {
                     val eventType = it
                     it.caldavCalendarId == 0 || caldavCalendars.firstOrNull { it.id == eventType.caldavCalendarId }
                         ?.canWrite() == true
-                }.toMutableList() as ArrayList<EventType>
+                }.toMutableList()
             }
 
             activity.runOnUiThread {
@@ -553,7 +552,7 @@ class EventsHelper(val context: Context) {
             events.addAll(eventsDB.getRepeatableFutureEventsWithTypes(currTS, eventTypes))
         }
 
-        events = events.distinctBy { it.id } as ArrayList<Event>
+        events = events.distinctBy { it.id }
         return events
     }
 }
