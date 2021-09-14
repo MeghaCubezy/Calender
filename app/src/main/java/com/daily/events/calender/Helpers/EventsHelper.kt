@@ -1,12 +1,12 @@
-package com.simplemobiletools.calendar.pro.helpers
+package com.daily.events.calender.helpers
 
 import android.app.Activity
 import android.content.Context
 import androidx.collection.LongSparseArray
-import com.simplemobiletools.calendar.pro.R
-import com.simplemobiletools.calendar.pro.extensions.*
-import com.simplemobiletools.calendar.pro.models.Event
-import com.simplemobiletools.calendar.pro.models.EventType
+import com.daily.events.calender.Extensions.*
+import com.daily.events.calender.Model.Event
+import com.daily.events.calender.Model.EventType
+import com.daily.events.calender.R
 import com.simplemobiletools.commons.helpers.CHOPPED_LIST_DEFAULT_SIZE
 import com.simplemobiletools.commons.helpers.ensureBackgroundThread
 

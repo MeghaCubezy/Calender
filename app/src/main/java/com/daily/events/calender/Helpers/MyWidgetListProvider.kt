@@ -1,4 +1,4 @@
-package com.simplemobiletools.calendar.pro.helpers
+package com.daily.events.calender.helpers
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
@@ -8,13 +8,13 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.widget.RemoteViews
-import com.simplemobiletools.calendar.pro.R
-import com.simplemobiletools.calendar.pro.activities.SplashActivity
-import com.simplemobiletools.calendar.pro.extensions.config
-import com.simplemobiletools.calendar.pro.extensions.getWidgetFontSize
-import com.simplemobiletools.calendar.pro.extensions.launchNewEventIntent
-import com.simplemobiletools.calendar.pro.services.WidgetService
-import com.simplemobiletools.calendar.pro.services.WidgetServiceEmpty
+import com.daily.events.calender.R
+import com.daily.events.calender.activities.SplashActivity
+import com.daily.events.calender.extensions.config
+import com.daily.events.calender.extensions.getWidgetFontSize
+import com.daily.events.calender.extensions.launchNewEventIntent
+import com.daily.events.calender.services.WidgetService
+import com.daily.events.calender.services.WidgetServiceEmpty
 import com.simplemobiletools.commons.extensions.*
 import org.joda.time.DateTime
 

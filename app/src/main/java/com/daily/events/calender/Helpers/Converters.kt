@@ -1,4 +1,4 @@
-package com.simplemobiletools.calendar.pro.helpers
+package com.daily.events.calender.helpers
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson

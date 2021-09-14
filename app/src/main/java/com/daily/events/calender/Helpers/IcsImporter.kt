@@ -1,14 +1,14 @@
-package com.simplemobiletools.calendar.pro.helpers
+package com.daily.events.calender.helpers
 
 import android.provider.CalendarContract.Events
-import com.simplemobiletools.calendar.pro.R
-import com.simplemobiletools.calendar.pro.activities.SimpleActivity
-import com.simplemobiletools.calendar.pro.extensions.eventsDB
-import com.simplemobiletools.calendar.pro.extensions.eventsHelper
-import com.simplemobiletools.calendar.pro.helpers.IcsImporter.ImportResult.*
-import com.simplemobiletools.calendar.pro.models.Event
-import com.simplemobiletools.calendar.pro.models.EventType
-import com.simplemobiletools.calendar.pro.models.Reminder
+import com.daily.events.calender.Model.EventType
+import com.daily.events.calender.R
+import com.daily.events.calender.activities.SimpleActivity
+import com.daily.events.calender.extensions.eventsDB
+import com.daily.events.calender.extensions.eventsHelper
+import com.daily.events.calender.helpers.IcsImporter.ImportResult.*
+import com.daily.events.calender.models.Event
+import com.daily.events.calender.models.Reminder
 import com.simplemobiletools.commons.extensions.areDigitsOnly
 import org.joda.time.DateTimeZone
 import java.io.File

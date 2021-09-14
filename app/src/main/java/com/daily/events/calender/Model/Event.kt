@@ -5,7 +5,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.simplemobiletools.calendar.pro.helpers.*
+import com.daily.events.calender.Extensions.seconds
+import com.daily.events.calender.helpers.*
 import com.simplemobiletools.commons.extensions.addBitIf
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone

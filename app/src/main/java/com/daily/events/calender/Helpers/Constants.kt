@@ -1,4 +1,4 @@
-package com.simplemobiletools.calendar.pro.helpers
+package com.daily.events.calender.helpers
 
 const val STORED_LOCALLY_ONLY = 0
 const val ROW_COUNT = 6

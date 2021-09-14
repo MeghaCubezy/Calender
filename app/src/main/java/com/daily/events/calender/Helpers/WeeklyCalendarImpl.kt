@@ -1,9 +1,9 @@
-package com.simplemobiletools.calendar.pro.helpers
+package com.daily.events.calender.helpers
 
 import android.content.Context
-import com.simplemobiletools.calendar.pro.extensions.eventsHelper
-import com.simplemobiletools.calendar.pro.interfaces.WeeklyCalendar
-import com.simplemobiletools.calendar.pro.models.Event
+import com.daily.events.calender.extensions.eventsHelper
+import com.daily.events.calender.interfaces.WeeklyCalendar
+import com.daily.events.calender.models.Event
 import com.simplemobiletools.commons.helpers.DAY_SECONDS
 import com.simplemobiletools.commons.helpers.WEEK_SECONDS
 import java.util.*

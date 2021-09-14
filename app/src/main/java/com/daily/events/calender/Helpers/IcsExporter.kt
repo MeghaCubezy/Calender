@@ -1,12 +1,12 @@
-package com.simplemobiletools.calendar.pro.helpers
+package com.daily.events.calender.helpers
 
 import android.provider.CalendarContract.Events
-import com.simplemobiletools.calendar.pro.R
-import com.simplemobiletools.calendar.pro.extensions.calDAVHelper
-import com.simplemobiletools.calendar.pro.extensions.eventTypesDB
-import com.simplemobiletools.calendar.pro.helpers.IcsExporter.ExportResult.*
-import com.simplemobiletools.calendar.pro.models.CalDAVCalendar
-import com.simplemobiletools.calendar.pro.models.Event
+import com.daily.events.calender.R
+import com.daily.events.calender.extensions.calDAVHelper
+import com.daily.events.calender.extensions.eventTypesDB
+import com.daily.events.calender.helpers.IcsExporter.ExportResult.*
+import com.daily.events.calender.models.CalDAVCalendar
+import com.daily.events.calender.models.Event
 import com.simplemobiletools.commons.activities.BaseSimpleActivity
 import com.simplemobiletools.commons.extensions.toast
 import com.simplemobiletools.commons.extensions.writeLn

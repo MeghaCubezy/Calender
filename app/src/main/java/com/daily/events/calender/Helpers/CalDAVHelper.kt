@@ -1,4 +1,4 @@
-package com.simplemobiletools.calendar.pro.helpers
+package com.daily.events.calender.helpers
 
 import android.annotation.SuppressLint
 import android.content.ContentUris
@@ -6,7 +6,11 @@ import android.content.ContentValues
 import android.content.Context
 import android.provider.CalendarContract.*
 import android.util.SparseIntArray
-import com.daily.events.calender.Extensions.eventsHelper
+import com.daily.events.calender.Extensions.*
+import com.daily.events.calender.Model.*
+import com.daily.events.calender.R
+import com.daily.events.calender.helpers.*
+import com.daily.events.calender.objects.States.isUpdatingCalDAV
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.simplemobiletools.commons.extensions.*

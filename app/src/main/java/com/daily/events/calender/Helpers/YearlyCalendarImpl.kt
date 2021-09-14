@@ -1,12 +1,12 @@
-package com.simplemobiletools.calendar.pro.helpers
+package com.daily.events.calender.helpers
 
 import android.content.Context
 import android.util.SparseArray
-import com.simplemobiletools.calendar.pro.extensions.eventsHelper
-import com.simplemobiletools.calendar.pro.extensions.seconds
-import com.simplemobiletools.calendar.pro.interfaces.YearlyCalendar
-import com.simplemobiletools.calendar.pro.models.DayYearly
-import com.simplemobiletools.calendar.pro.models.Event
+import com.daily.events.calender.extensions.eventsHelper
+import com.daily.events.calender.extensions.seconds
+import com.daily.events.calender.interfaces.YearlyCalendar
+import com.daily.events.calender.models.DayYearly
+import com.daily.events.calender.models.Event
 import org.joda.time.DateTime
 import java.util.*
 
