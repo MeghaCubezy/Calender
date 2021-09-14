@@ -12,12 +12,11 @@ android {
 
     defaultConfig {
         applicationId "com.daily.events.calender"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
-        setProperty("archivesBaseName", "calendar")
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -44,6 +43,7 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
+
 }
 
 dependencies {

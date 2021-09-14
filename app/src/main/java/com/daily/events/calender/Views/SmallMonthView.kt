@@ -6,7 +6,10 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
-
+import com.daily.events.calender.Extensions.config
+import com.daily.events.calender.Helpers.isWeekend
+import com.daily.events.calender.Model.DayYearly
+import com.daily.events.calender.R
 import com.simplemobiletools.commons.extensions.adjustAlpha
 import com.simplemobiletools.commons.extensions.getAdjustedPrimaryColor
 import com.simplemobiletools.commons.helpers.MEDIUM_ALPHA
@@ -57,7 +60,7 @@ class SmallMonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
 
         val baseColor = context.config.textColor
         textColor = baseColor.adjustAlpha(MEDIUM_ALPHA)
-        redTextColor = context.resources.getColor(R.color.red_text).adjustAlpha(MEDIUM_ALPHA)
+        redTextColor = context.resources.getColor(R.color.red).adjustAlpha(MEDIUM_ALPHA)
         highlightWeekends = context.config.highlightWeekends
         isSundayFirst = context.config.isSundayFirst
 
