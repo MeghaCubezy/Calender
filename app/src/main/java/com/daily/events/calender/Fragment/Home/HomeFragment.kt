@@ -26,9 +26,9 @@ class HomeFragment : Fragment() ,View.OnClickListener{
         }
     }
 
-    var fragmentHomeBinding:FragmentHomeBinding? =null
-    var yearFragment: YearFragment ?=null
-    var monthFragment: MonthFragment ?=null
+    var fragmentHomeBinding: FragmentHomeBinding? = null
+    var yearFragment: MainYearFragment? = null
+    var monthFragment: MonthFragment? = null
     var weekFragment: WeekFragment ?=null
     var dayFragment: DayFragment ?=null
 
@@ -44,8 +44,8 @@ class HomeFragment : Fragment() ,View.OnClickListener{
         fragmentHomeBinding?.weekIV?.setOnClickListener(this)
         fragmentHomeBinding?.dayIV?.setOnClickListener(this)
 
-        yearFragment= YearFragment()
-        monthFragment= MonthFragment()
+        yearFragment = MainYearFragment()
+        monthFragment = MonthFragment()
         weekFragment= WeekFragment()
         dayFragment=DayFragment()
 

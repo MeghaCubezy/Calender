@@ -7,10 +7,9 @@
     android:layout_margin="1dp"
     android:gravity="start"
     android:hyphenationFrequency="none"
-    android:maxLines="1"
     android:paddingStart="@dimen/tiny_margin"
     android:paddingEnd="@dimen/tiny_margin"
-    android:singleLine="true"
     android:textSize="@dimen/day_monthly_text_size"
     tools:targetApi="m"
+    android:singleLine="true"
     tools:text="1" />

@@ -1,4 +1,4 @@
-package com.daily.events.calender.Interfaces
+package com.daily.events.calender.interfaces
 
 import com.daily.events.calender.Model.Event
 

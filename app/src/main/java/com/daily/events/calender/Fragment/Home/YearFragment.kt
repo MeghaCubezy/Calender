@@ -11,12 +11,12 @@ import androidx.fragment.app.Fragment
 import com.daily.events.calender.Extensions.config
 import com.daily.events.calender.Extensions.getViewBitmap
 import com.daily.events.calender.Extensions.printBitmap
-import com.daily.events.calender.Interfaces.YearlyCalendar
 import com.daily.events.calender.Model.DayYearly
 import com.daily.events.calender.R
 import com.daily.events.calender.databinding.FragmentYearBinding
 import com.daily.events.calender.helpers.YEAR_LABEL
 import com.daily.events.calender.helpers.YearlyCalendarImpl
+import com.daily.events.calender.interfaces.YearlyCalendar
 import com.daily.events.calender.views.SmallMonthView
 import com.simplemobiletools.commons.extensions.getAdjustedPrimaryColor
 import com.simplemobiletools.commons.extensions.updateTextColors
@@ -41,7 +41,6 @@ class YearFragment : Fragment(), YearlyCalendar {
         }
     }
 
-
     var fragmentYearBinding: FragmentYearBinding? = null
     private var mYear = 0
     private var mCalendar: YearlyCalendarImpl? = null
@@ -54,6 +53,7 @@ class YearFragment : Fragment(), YearlyCalendar {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        mView = inflater.inflate(R.layout.fragment_year, container, false)
         fragmentYearBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_year, container, false)
         mYear = requireArguments().getInt(YEAR_LABEL)
@@ -61,7 +61,7 @@ class YearFragment : Fragment(), YearlyCalendar {
         setupMonths()
 
         mCalendar = YearlyCalendarImpl(this, requireContext(), mYear)
-        return fragmentYearBinding?.root
+        return mView
     }
 
     companion object {

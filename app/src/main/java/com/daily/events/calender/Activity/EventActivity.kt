@@ -8,7 +8,6 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.CalendarContract.Attendees
 import android.provider.ContactsContract.CommonDataKinds
@@ -23,7 +22,6 @@ import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.widget.ImageView
 import android.widget.RelativeLayout
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationManagerCompat
 import com.daily.events.calender.Adapter.AutoCompleteTextViewAdapter
 import com.daily.events.calender.Extensions.*
@@ -44,7 +42,6 @@ import com.simplemobiletools.commons.models.RadioItem
 import com.simplemobiletools.commons.views.MyAutoCompleteTextView
 import kotlinx.android.synthetic.main.activity_event.*
 import kotlinx.android.synthetic.main.activity_event.view.*
-import kotlinx.android.synthetic.main.item_attendee.*
 import kotlinx.android.synthetic.main.item_attendee.view.*
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
@@ -105,7 +102,6 @@ class EventActivity : SimpleActivity() {
     private lateinit var mEventEndDateTime: DateTime
     private lateinit var mEvent: Event
 
-    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_event)
@@ -138,7 +134,6 @@ class EventActivity : SimpleActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun gotEvent(savedInstanceState: Bundle?, localEventType: EventType?, event: Event?) {
         if (localEventType == null || localEventType.caldavCalendarId != 0) {
             config.lastUsedLocalEventTypeId = REGULAR_EVENT_TYPE_ID
@@ -999,7 +994,7 @@ class EventActivity : SimpleActivity() {
 
     private fun updateAvailabilityImage() {
         val drawable =
-            if (mAvailability == Attendees.AVAILABILITY_FREE) R.drawable.ic_event else R.drawable.ic_event
+            if (mAvailability == Attendees.AVAILABILITY_FREE) R.drawable.ic_event else R.drawable.ic_event_occupied
         val icon = resources.getColoredDrawableWithColor(drawable, config.textColor)
         event_availability_image.setImageDrawable(icon)
     }
@@ -1472,7 +1467,6 @@ class EventActivity : SimpleActivity() {
         launchActivityIntent(intent)
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun setupStartDate() {
         hideKeyboard()
         config.backgroundColor.getContrastColor()

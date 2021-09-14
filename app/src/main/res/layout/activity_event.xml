@@ -164,7 +164,7 @@
             android:layout_alignBottom="@+id/event_time_zone"
             android:layout_marginStart="@dimen/normal_margin"
             android:padding="@dimen/medium_margin"
-            android:src="@drawable/ic_event" />
+            android:src="@drawable/ic_globe_vector" />
 
         <com.simplemobiletools.commons.views.MyTextView
             android:id="@+id/event_time_zone"
@@ -438,20 +438,20 @@
             android:layout_alignBottom="@+id/event_availability"
             android:layout_marginStart="@dimen/normal_margin"
             android:padding="@dimen/medium_margin"
-            android:src="@drawable/ic_event" />
+            android:src="@drawable/ic_event_occupied" />
 
         <com.simplemobiletools.commons.views.MyTextView
             android:id="@+id/event_availability"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/event_attendees_divider"
+            android:layout_toEndOf="@+id/event_availability_image"
             android:layout_marginStart="@dimen/small_margin"
             android:layout_marginTop="@dimen/medium_margin"
-            android:layout_toEndOf="@+id/event_availability_image"
-            android:background="?attr/selectableItemBackground"
             android:paddingTop="@dimen/normal_margin"
-            android:paddingEnd="@dimen/activity_margin"
             android:paddingBottom="@dimen/normal_margin"
+            android:background="?attr/selectableItemBackground"
+            android:paddingEnd="@dimen/activity_margin"
             android:text="@string/status_busy"
             android:textSize="@dimen/day_text_size" />
 
@@ -543,7 +543,7 @@
             android:layout_alignBottom="@+id/event_type_holder"
             android:layout_marginStart="@dimen/normal_margin"
             android:padding="@dimen/medium_margin"
-            android:src="@drawable/ic_event" />
+            android:src="@drawable/ic_color_vector" />
 
         <RelativeLayout
             android:id="@+id/event_type_holder"

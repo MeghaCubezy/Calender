@@ -13,10 +13,10 @@ import com.daily.events.calender.Activity.MainActivity
 import com.daily.events.calender.Extensions.config
 import com.daily.events.calender.Extensions.getWidgetFontSize
 import com.daily.events.calender.Extensions.launchNewEventIntent
-import com.daily.events.calender.Interfaces.MonthlyCalendar
 import com.daily.events.calender.Model.DayMonthly
 import com.daily.events.calender.Model.Event
 import com.daily.events.calender.R
+import com.daily.events.calender.interfaces.MonthlyCalendar
 import com.simplemobiletools.commons.extensions.*
 import com.simplemobiletools.commons.helpers.MEDIUM_ALPHA
 import org.joda.time.DateTime
