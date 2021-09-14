@@ -13,8 +13,8 @@ import com.daily.events.calender.Extensions.config
 import com.daily.events.calender.Extensions.getWidgetFontSize
 import com.daily.events.calender.Extensions.launchNewEventIntent
 import com.daily.events.calender.R
-import com.simplemobiletools.calendar.pro.services.WidgetService
-import com.simplemobiletools.calendar.pro.services.WidgetServiceEmpty
+import com.daily.events.calender.services.WidgetService
+import com.daily.events.calender.services.WidgetServiceEmpty
 import com.simplemobiletools.commons.extensions.*
 import org.joda.time.DateTime
 

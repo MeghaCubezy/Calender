@@ -2,7 +2,7 @@ package com.daily.events.calender.helpers
 
 import android.content.Context
 import com.daily.events.calender.Extensions.config
-import com.daily.events.calender.Model.seconds
+import com.daily.events.calender.Extensions.seconds
 import com.daily.events.calender.R
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone

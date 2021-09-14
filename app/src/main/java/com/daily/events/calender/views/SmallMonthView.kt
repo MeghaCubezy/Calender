@@ -1,4 +1,4 @@
-package com.daily.events.calender.Views
+package com.daily.events.calender.views
 
 import android.content.Context
 import android.content.res.Configuration

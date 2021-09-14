@@ -1,4 +1,6 @@
-package com.daily.events.calender.Model
+package com.daily.events.calender.models
+
+import com.daily.events.calender.Model.ListItem
 
 data class ListEvent(
     var id: Long,

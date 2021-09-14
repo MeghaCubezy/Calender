@@ -9,12 +9,15 @@ import android.widget.RemoteViewsService
 import com.daily.events.calender.Extensions.config
 import com.daily.events.calender.Extensions.eventsHelper
 import com.daily.events.calender.Extensions.getWidgetFontSize
+import com.daily.events.calender.Extensions.seconds
 import com.daily.events.calender.Model.*
 import com.daily.events.calender.R
 import com.daily.events.calender.R.id.event_item_holder
 import com.daily.events.calender.R.id.event_section_title
 import com.daily.events.calender.helpers.*
 import com.daily.events.calender.helpers.Formatter
+import com.daily.events.calender.models.ListEvent
+import com.daily.events.calender.models.ListSection
 import com.simplemobiletools.commons.extensions.adjustAlpha
 import com.simplemobiletools.commons.extensions.setBackgroundColor
 import com.simplemobiletools.commons.extensions.setText
