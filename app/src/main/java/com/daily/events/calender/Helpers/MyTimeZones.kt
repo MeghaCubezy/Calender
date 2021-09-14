@@ -1,6 +1,7 @@
-package com.simplemobiletools.calendar.pro.helpers
+package com.daily.events.calender.helpers
 
-import com.simplemobiletools.calendar.pro.models.MyTimeZone
+import com.daily.events.calender.Model.MyTimeZone
+
 
 // timezones fetched from https://www.joda.org/joda-time/timezones.html
 fun getAllTimeZones() = arrayListOf(

@@ -23,18 +23,18 @@ import android.widget.TextView
 import androidx.core.app.AlarmManagerCompat
 import androidx.core.app.NotificationCompat
 import androidx.print.PrintHelper
-import com.simplemobiletools.calendar.pro.R
-import com.simplemobiletools.calendar.pro.activities.EventActivity
-import com.simplemobiletools.calendar.pro.activities.SnoozeReminderActivity
-import com.simplemobiletools.calendar.pro.databases.EventsDatabase
-import com.simplemobiletools.calendar.pro.helpers.*
-import com.simplemobiletools.calendar.pro.helpers.Formatter
-import com.simplemobiletools.calendar.pro.interfaces.EventTypesDao
-import com.simplemobiletools.calendar.pro.interfaces.EventsDao
-import com.simplemobiletools.calendar.pro.models.*
-import com.simplemobiletools.calendar.pro.receivers.CalDAVSyncReceiver
-import com.simplemobiletools.calendar.pro.receivers.NotificationReceiver
-import com.simplemobiletools.calendar.pro.services.SnoozeService
+import com.daily.events.calender.Activity.EventActivity
+import com.daily.events.calender.Activity.SnoozeReminderActivity
+import com.daily.events.calender.Model.*
+import com.daily.events.calender.R
+import com.daily.events.calender.databases.EventsDatabase
+import com.daily.events.calender.helpers.*
+import com.daily.events.calender.helpers.Formatter
+import com.daily.events.calender.interfaces.EventTypesDao
+import com.daily.events.calender.interfaces.EventsDao
+import com.daily.events.calender.receivers.CalDAVSyncReceiver
+import com.daily.events.calender.receivers.NotificationReceiver
+import com.daily.events.calender.services.SnoozeService
 import com.simplemobiletools.commons.extensions.*
 import com.simplemobiletools.commons.helpers.*
 import org.joda.time.LocalDate
@@ -335,7 +335,7 @@ fun Context.getNotification(
     val builder = NotificationCompat.Builder(this, channelId)
         .setContentTitle(contentTitle)
         .setContentText(contentText)
-        .setSmallIcon(R.drawable.ic_calendar_vector)
+        .setSmallIcon(R.drawable.ic_event)
         .setContentIntent(pendingIntent)
         .setPriority(NotificationCompat.PRIORITY_MAX)
         .setDefaults(Notification.DEFAULT_LIGHTS)

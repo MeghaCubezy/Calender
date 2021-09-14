@@ -1,10 +1,10 @@
-package com.simplemobiletools.calendar.pro.helpers
+package com.daily.events.calender.helpers
 
 import android.content.Context
 import android.media.AudioManager
 import android.media.RingtoneManager
-import com.simplemobiletools.calendar.pro.extensions.config
-import com.simplemobiletools.calendar.pro.extensions.scheduleCalDAVSync
+import com.daily.events.calender.Extensions.config
+import com.daily.events.calender.Extensions.scheduleCalDAVSync
 import com.simplemobiletools.commons.extensions.getDefaultAlarmTitle
 import com.simplemobiletools.commons.helpers.BaseConfig
 import com.simplemobiletools.commons.helpers.DAY_MINUTES

@@ -1,4 +1,4 @@
-package com.simplemobiletools.calendar.pro.objects
+package com.daily.events.calender.objects
 
 object States {
     var isUpdatingCalDAV = false

@@ -1,9 +1,9 @@
-package com.simplemobiletools.calendar.pro.helpers
+package com.daily.events.calender.helpers
 
 import android.content.Context
-import com.simplemobiletools.calendar.pro.R
-import com.simplemobiletools.calendar.pro.extensions.config
-import com.simplemobiletools.calendar.pro.extensions.seconds
+import com.daily.events.calender.Extensions.config
+import com.daily.events.calender.Model.seconds
+import com.daily.events.calender.R
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.LocalDate

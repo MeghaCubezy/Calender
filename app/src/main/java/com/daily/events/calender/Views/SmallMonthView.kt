@@ -7,9 +7,9 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 import com.daily.events.calender.Extensions.config
-import com.daily.events.calender.Helpers.isWeekend
 import com.daily.events.calender.Model.DayYearly
 import com.daily.events.calender.R
+import com.daily.events.calender.helpers.isWeekend
 import com.simplemobiletools.commons.extensions.adjustAlpha
 import com.simplemobiletools.commons.extensions.getAdjustedPrimaryColor
 import com.simplemobiletools.commons.helpers.MEDIUM_ALPHA

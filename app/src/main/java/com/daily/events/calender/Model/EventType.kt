@@ -1,4 +1,4 @@
-package com.simplemobiletools.calendar.pro.models
+package com.daily.events.calender.models
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

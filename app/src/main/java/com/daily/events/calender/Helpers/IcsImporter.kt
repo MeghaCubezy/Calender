@@ -1,15 +1,16 @@
-package com.simplemobiletools.calendar.pro.helpers
+package com.daily.events.calender.helpers
 
 import android.provider.CalendarContract.Events
-import com.simplemobiletools.calendar.pro.R
-import com.simplemobiletools.calendar.pro.activities.SimpleActivity
-import com.simplemobiletools.calendar.pro.extensions.eventsDB
-import com.simplemobiletools.calendar.pro.extensions.eventsHelper
-import com.simplemobiletools.calendar.pro.helpers.IcsImporter.ImportResult.*
-import com.simplemobiletools.calendar.pro.models.Event
-import com.simplemobiletools.calendar.pro.models.EventType
-import com.simplemobiletools.calendar.pro.models.Reminder
+import com.daily.events.calender.Activity.SimpleActivity
+import com.daily.events.calender.Extensions.eventsDB
+import com.daily.events.calender.Extensions.eventsHelper
+import com.daily.events.calender.Model.Event
+import com.daily.events.calender.Model.Reminder
+import com.daily.events.calender.R
+import com.daily.events.calender.helpers.IcsImporter.ImportResult.*
+import com.daily.events.calender.models.EventType
 import com.simplemobiletools.commons.extensions.areDigitsOnly
+import com.simplemobiletools.commons.extensions.showErrorToast
 import org.joda.time.DateTimeZone
 import java.io.File
 
@@ -223,7 +224,8 @@ class IcsImporter(val activity: SimpleActivity) {
                         )
 
                         reminders = reminders.sortedBy { it.minutes }
-                            .sortedBy { it.minutes == REMINDER_OFF }.toMutableList()
+                            .sortedBy { it.minutes == REMINDER_OFF }
+                            .toMutableList() as ArrayList<Reminder>
 
                         val eventType = eventTypes.firstOrNull { it.id == curEventTypeId }
                         val source =

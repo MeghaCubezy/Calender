@@ -1,4 +1,4 @@
-package com.simplemobiletools.calendar.pro.helpers
+package com.daily.events.calender.helpers
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
@@ -8,11 +8,11 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.widget.RemoteViews
-import com.simplemobiletools.calendar.pro.R
-import com.simplemobiletools.calendar.pro.activities.SplashActivity
-import com.simplemobiletools.calendar.pro.extensions.config
-import com.simplemobiletools.calendar.pro.extensions.getWidgetFontSize
-import com.simplemobiletools.calendar.pro.extensions.launchNewEventIntent
+import com.daily.events.calender.Activity.MainActivity
+import com.daily.events.calender.Extensions.config
+import com.daily.events.calender.Extensions.getWidgetFontSize
+import com.daily.events.calender.Extensions.launchNewEventIntent
+import com.daily.events.calender.R
 import com.simplemobiletools.calendar.pro.services.WidgetService
 import com.simplemobiletools.calendar.pro.services.WidgetServiceEmpty
 import com.simplemobiletools.commons.extensions.*
@@ -58,7 +58,7 @@ class MyWidgetListProvider : AppWidgetProvider() {
 
             views.setImageViewBitmap(
                 R.id.widget_event_go_to_today,
-                context.resources.getColoredBitmap(R.drawable.ic_today_vector, textColor)
+                context.resources.getColoredBitmap(R.drawable.ic_event, textColor)
             )
             setupIntent(context, views, GO_TO_TODAY, R.id.widget_event_go_to_today)
 
@@ -68,7 +68,7 @@ class MyWidgetListProvider : AppWidgetProvider() {
             }
 
             val startActivityIntent =
-                context.getLaunchIntent() ?: Intent(context, SplashActivity::class.java)
+                context.getLaunchIntent() ?: Intent(context, MainActivity::class.java)
             val startActivityPendingIntent = PendingIntent.getActivity(
                 context,
                 0,
@@ -104,7 +104,7 @@ class MyWidgetListProvider : AppWidgetProvider() {
     }
 
     private fun launchCalenderInDefaultView(context: Context) {
-        (context.getLaunchIntent() ?: Intent(context, SplashActivity::class.java)).apply {
+        (context.getLaunchIntent() ?: Intent(context, MainActivity::class.java)).apply {
             putExtra(DAY_CODE, Formatter.getDayCodeFromDateTime(DateTime()))
             putExtra(VIEW_TO_OPEN, context.config.listWidgetViewToOpen)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

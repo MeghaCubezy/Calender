@@ -1,4 +1,4 @@
-package com.simplemobiletools.calendar.pro.helpers
+package com.daily.events.calender.helpers
 
 import android.app.Activity
 import android.content.Context
@@ -7,7 +7,7 @@ import com.daily.events.calender.Extensions.*
 import com.daily.events.calender.Model.Event
 import com.daily.events.calender.R
 
-import com.simplemobiletools.calendar.pro.models.EventType
+import com.daily.events.calender.models.EventType
 import com.simplemobiletools.commons.helpers.CHOPPED_LIST_DEFAULT_SIZE
 import com.simplemobiletools.commons.helpers.ensureBackgroundThread
 
@@ -337,7 +337,7 @@ class EventsHelper(val context: Context) {
             .asSequence()
             .distinct()
             .filterNot { it.repetitionExceptions.contains(Formatter.getDayCodeFromTS(it.startTS)) }
-            .toMutableList() as ArrayList<Event>
+            .toMutableList()
 
         val eventTypeColors = LongSparseArray<Int>()
         context.eventTypesDB.getEventTypes().forEach {

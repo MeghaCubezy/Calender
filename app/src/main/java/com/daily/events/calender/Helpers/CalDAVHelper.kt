@@ -1,4 +1,4 @@
-package com.simplemobiletools.calendar.pro.helpers
+package com.daily.events.calender.helpers
 
 import android.annotation.SuppressLint
 import android.content.ContentUris
@@ -12,11 +12,10 @@ import com.daily.events.calender.Model.CalDAVCalendar
 import com.daily.events.calender.Model.Event
 import com.daily.events.calender.Model.Reminder
 import com.daily.events.calender.R
+import com.daily.events.calender.models.EventType
+import com.daily.events.calender.objects.States.isUpdatingCalDAV
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.simplemobiletools.calendar.pro.models.EventType
-import com.simplemobiletools.calendar.pro.objects.States.isUpdatingCalDAV
-
 import com.simplemobiletools.commons.extensions.*
 import com.simplemobiletools.commons.helpers.*
 import org.joda.time.DateTimeZone
@@ -166,7 +165,7 @@ class CalDAVHelper(val context: Context) {
         val existingEvents = try {
             context.eventsDB.getEventsFromCalDAVCalendar("$CALDAV-$calendarId")
         } catch (e: Exception) {
-            ArrayList<String>()
+            ArrayList()
         }
 
         existingEvents.forEach {
