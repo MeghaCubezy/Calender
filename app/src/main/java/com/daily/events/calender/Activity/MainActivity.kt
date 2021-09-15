@@ -10,6 +10,7 @@ import com.daily.events.calender.Fragment.SettingFragment
 import com.daily.events.calender.R
 import com.daily.events.calender.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import java.util.*
 
 
 class MainActivity : BaseActivity() , BottomNavigationView.OnNavigationItemSelectedListener {
@@ -73,4 +74,6 @@ class MainActivity : BaseActivity() , BottomNavigationView.OnNavigationItemSelec
         }
         return false
     }
+
+
 }

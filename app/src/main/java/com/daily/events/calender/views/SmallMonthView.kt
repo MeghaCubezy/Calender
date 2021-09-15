@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
 import com.daily.events.calender.Extensions.config
@@ -11,9 +12,9 @@ import com.daily.events.calender.Model.DayYearly
 import com.daily.events.calender.R
 import com.daily.events.calender.helpers.isWeekend
 import com.simplemobiletools.commons.extensions.adjustAlpha
-import com.simplemobiletools.commons.extensions.getAdjustedPrimaryColor
 import com.simplemobiletools.commons.helpers.MEDIUM_ALPHA
 import java.util.*
+
 
 // used for displaying months at Yearly view
 class SmallMonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
@@ -58,10 +59,9 @@ class SmallMonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
             attributes.recycle()
         }
 
-        val baseColor = context.config.textColor
-        textColor = baseColor.adjustAlpha(MEDIUM_ALPHA)
-        redTextColor = context.resources.getColor(R.color.red).adjustAlpha(MEDIUM_ALPHA)
-        highlightWeekends = context.config.highlightWeekends
+        textColor = context.resources.getColor(R.color.black)
+        redTextColor = context.resources.getColor(R.color.red)
+        highlightWeekends = true
         isSundayFirst = context.config.isSundayFirst
 
         paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -71,7 +71,9 @@ class SmallMonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
         }
 
         todayCirclePaint = Paint(paint)
-        todayCirclePaint.color = context.getAdjustedPrimaryColor().adjustAlpha(MEDIUM_ALPHA)
+        paint.textSize = 30f
+        todayCirclePaint.color = context.resources.getColor(R.color.white)
+        todayCirclePaint.color = context.resources.getColor(R.color.theme_color)
         isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     }
 
@@ -89,23 +91,28 @@ class SmallMonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
         for (y in 1..6) {
             for (x in 1..7) {
                 if (curId in 1..days) {
+
+                    if (curId == todaysId && !isPrintVersion) {
+                        val bgLeft = x * dayWidth - dayWidth
+                        val bgTop = y * dayWidth - dayWidth
+                        canvas.drawRoundRect(
+                            RectF(
+                                bgLeft, bgTop + 15f, bgLeft + 65f, bgTop + 90f
+                            ), 5F, 5F, todayCirclePaint
+                        )
+                    }
+
                     val paint = getPaint(curId, x, highlightWeekends)
+
                     canvas.drawText(
                         curId.toString(),
                         x * dayWidth - (dayWidth / 4),
                         y * dayWidth,
                         paint
                     )
+                    paint.textSize = 30f
 
-                    if (curId == todaysId && !isPrintVersion) {
-                        val dividerConstant = if (isLandscape) 6 else 4
-                        canvas.drawCircle(
-                            x * dayWidth - dayWidth / 2,
-                            y * dayWidth - dayWidth / dividerConstant,
-                            dayWidth * 0.41f,
-                            todayCirclePaint
-                        )
-                    }
+
                 }
                 curId++
             }
@@ -122,6 +129,10 @@ class SmallMonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
             val curPaint = Paint(paint)
             curPaint.color = redTextColor
             return curPaint
+        } else if (curId == todaysId) {
+            val curPaint = Paint(paint)
+            curPaint.color = context.resources.getColor(R.color.white)
+            return curPaint
         }
 
         return paint
@@ -130,7 +141,7 @@ class SmallMonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
     fun togglePrintMode() {
         isPrintVersion = !isPrintVersion
         textColor = if (isPrintVersion) {
-            resources.getColor(R.color.theme_light_text_color)
+            resources.getColor(R.color.text_color)
         } else {
             context.config.textColor.adjustAlpha(MEDIUM_ALPHA)
         }

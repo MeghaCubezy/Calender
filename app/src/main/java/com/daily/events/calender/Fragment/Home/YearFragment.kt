@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import com.daily.events.calender.Extensions.config
 import com.daily.events.calender.Extensions.getViewBitmap
 import com.daily.events.calender.Extensions.printBitmap
 import com.daily.events.calender.Model.DayYearly
@@ -90,6 +89,8 @@ class YearFragment : Fragment(), YearlyCalendar {
                     requireContext().packageName
                 )
             )
+            var dayOfWeek = dateTime.withMonthOfYear(i).dayOfWeek().get()
+            dayOfWeek--
 
             val monthLabel = mView.findViewById<TextView>(
                 resources.getIdentifier(
@@ -98,13 +99,9 @@ class YearFragment : Fragment(), YearlyCalendar {
                     requireContext().packageName
                 )
             )
-            val curTextColor = when {
-                isPrintVersion -> resources.getColor(R.color.theme_light_text_color)
-                else -> requireContext().config.textColor
-            }
 
-            monthLabel.setTextColor(curTextColor)
-
+            monthLabel.setTextColor(resources.getColor(R.color.black))
+            monthView.firstDay = dayOfWeek
 //            monthView.setOnClickListener {
 //                (activity as MainActivity).openMonthFromYearly(DateTime().withDate(mYear, i, 1))
 //            }
