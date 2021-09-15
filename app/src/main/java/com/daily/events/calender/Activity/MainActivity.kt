@@ -84,8 +84,8 @@ class MainActivity : BaseActivity() , BottomNavigationView.OnNavigationItemSelec
         val bundle = Bundle()
         bundle.putString(DAY_CODE, Formatter.getDayCodeFromDateTime(dateTime))
         fragment.arguments = bundle
-        supportFragmentManager.beginTransaction().add(R.id.fragments_holder, fragment).commitNow()
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportFragmentManager.beginTransaction().replace(R.id.container1, fragment).commitNow()
+        homeFragment?.monthChanges()
     }
 
     fun openDayFromMonthly(dateTime: DateTime) {

@@ -23,6 +23,8 @@ private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
 class HomeFragment : Fragment() ,View.OnClickListener{
+
+
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -34,13 +36,6 @@ class HomeFragment : Fragment() ,View.OnClickListener{
             param2 = it.getString(ARG_PARAM2)
         }
     }
-
-    var fragmentHomeBinding: FragmentHomeBinding? = null
-
-    //    var yearFragment: MainYearFragment? = null
-    var monthFragment: MonthFragmentsHolder? = null
-    var weekFragment: WeekFragment? = null
-    var dayFragment: DayFragment ?=null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,17 +50,9 @@ class HomeFragment : Fragment() ,View.OnClickListener{
         fragmentHomeBinding?.weekIV?.setOnClickListener(this)
         fragmentHomeBinding?.dayIV?.setOnClickListener(this)
 
-//        yearFragment = MainYearFragment()
-        monthFragment = MonthFragmentsHolder()
-        weekFragment = WeekFragment()
-        dayFragment = DayFragment()
-
-//        yearFragment?.let {
-//            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.container1, it)?.commit()
-//        }
-
         requireActivity().config.storedView = YEARLY_VIEW
-        updateViewPager()
+        val fragment = YearFragmentsHolder()
+        childFragmentManager.beginTransaction().replace(R.id.container1, fragment).commitNow()
         return fragmentHomeBinding?.root
     }
 
@@ -80,7 +67,7 @@ class HomeFragment : Fragment() ,View.OnClickListener{
         }
 
         fragment.arguments = bundle
-        childFragmentManager.beginTransaction().add(R.id.container1, fragment).commitNow()
+        childFragmentManager.beginTransaction().replace(R.id.container1, fragment).commitNow()
     }
 
     private fun getThisWeekDateTime(): String {
@@ -107,6 +94,7 @@ class HomeFragment : Fragment() ,View.OnClickListener{
     }
 
     companion object {
+        var fragmentHomeBinding: FragmentHomeBinding? = null
 
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
@@ -116,137 +104,153 @@ class HomeFragment : Fragment() ,View.OnClickListener{
                     putString(ARG_PARAM2, param2)
                 }
             }
+
+
+    }
+
+    fun yearChanges() {
+        activity?.let {
+            fragmentHomeBinding?.yearIV?.setColorFilter(
+                ContextCompat.getColor(
+                    it,
+                    R.color.theme_color
+                ), android.graphics.PorterDuff.Mode.SRC_IN
+            )
+            fragmentHomeBinding?.monthIV?.setColorFilter(
+                ContextCompat.getColor(
+                    it,
+                    R.color.grey
+                ), android.graphics.PorterDuff.Mode.SRC_IN
+            )
+            fragmentHomeBinding?.weekIV?.setColorFilter(
+                ContextCompat.getColor(
+                    it,
+                    R.color.grey
+                ), android.graphics.PorterDuff.Mode.SRC_IN
+            )
+            fragmentHomeBinding?.dayIV?.setColorFilter(
+                ContextCompat.getColor(
+                    it,
+                    R.color.grey
+                ), android.graphics.PorterDuff.Mode.SRC_IN
+            )
+
+        }
+    }
+
+    fun monthChanges() {
+        activity?.let {
+            fragmentHomeBinding?.yearIV?.setColorFilter(
+                ContextCompat.getColor(
+                    it,
+                    R.color.grey
+                ), android.graphics.PorterDuff.Mode.SRC_IN
+            )
+            fragmentHomeBinding?.monthIV?.setColorFilter(
+                ContextCompat.getColor(
+                    it,
+                    R.color.theme_color
+                ), android.graphics.PorterDuff.Mode.SRC_IN
+            )
+            fragmentHomeBinding?.weekIV?.setColorFilter(
+                ContextCompat.getColor(
+                    it,
+                    R.color.grey
+                ), android.graphics.PorterDuff.Mode.SRC_IN
+            )
+            fragmentHomeBinding?.dayIV?.setColorFilter(
+                ContextCompat.getColor(
+                    it,
+                    R.color.grey
+                ), android.graphics.PorterDuff.Mode.SRC_IN
+            )
+
+        }
+    }
+
+    fun weekChanges() {
+        activity?.let {
+            fragmentHomeBinding?.yearIV?.setColorFilter(
+                ContextCompat.getColor(
+                    it,
+                    R.color.grey
+                ), android.graphics.PorterDuff.Mode.SRC_IN
+            )
+            fragmentHomeBinding?.monthIV?.setColorFilter(
+                ContextCompat.getColor(
+                    it,
+                    R.color.grey
+                ), android.graphics.PorterDuff.Mode.SRC_IN
+            )
+            fragmentHomeBinding?.weekIV?.setColorFilter(
+                ContextCompat.getColor(
+                    it,
+                    R.color.theme_color
+                ), android.graphics.PorterDuff.Mode.SRC_IN
+            )
+            fragmentHomeBinding?.dayIV?.setColorFilter(
+                ContextCompat.getColor(
+                    it,
+                    R.color.grey
+                ), android.graphics.PorterDuff.Mode.SRC_IN
+            )
+            requireActivity().config.storedView = WEEKLY_VIEW
+            updateViewPager()
+        }
+    }
+
+    fun dayChanges() {
+        activity?.let {
+            fragmentHomeBinding?.yearIV?.setColorFilter(
+                ContextCompat.getColor(
+                    it,
+                    R.color.grey
+                ), android.graphics.PorterDuff.Mode.SRC_IN
+            )
+            fragmentHomeBinding?.monthIV?.setColorFilter(
+                ContextCompat.getColor(
+                    it,
+                    R.color.grey
+                ), android.graphics.PorterDuff.Mode.SRC_IN
+            )
+            fragmentHomeBinding?.weekIV?.setColorFilter(
+                ContextCompat.getColor(
+                    it,
+                    R.color.grey
+                ), android.graphics.PorterDuff.Mode.SRC_IN
+            )
+            fragmentHomeBinding?.dayIV?.setColorFilter(
+                ContextCompat.getColor(
+                    it,
+                    R.color.theme_color
+                ), android.graphics.PorterDuff.Mode.SRC_IN
+            )
+            requireActivity().config.storedView = DAILY_VIEW
+            updateViewPager()
+        }
     }
 
     override fun onClick(v: View?) {
-        when(v?.id){
-            R.id.yearIV ->{
-                activity?.let {
-                    fragmentHomeBinding?.yearIV?.setColorFilter(
-                        ContextCompat.getColor(
-                            it,
-                            R.color.theme_color
-                        ), android.graphics.PorterDuff.Mode.SRC_IN
-                    )
-                    fragmentHomeBinding?.monthIV?.setColorFilter(
-                        ContextCompat.getColor(
-                            it,
-                            R.color.grey
-                        ), android.graphics.PorterDuff.Mode.SRC_IN
-                    )
-                    fragmentHomeBinding?.weekIV?.setColorFilter(
-                        ContextCompat.getColor(
-                            it,
-                            R.color.grey
-                        ), android.graphics.PorterDuff.Mode.SRC_IN
-                    )
-                    fragmentHomeBinding?.dayIV?.setColorFilter(
-                        ContextCompat.getColor(
-                            it,
-                            R.color.grey
-                        ), android.graphics.PorterDuff.Mode.SRC_IN
-                    )
-                    requireActivity().config.storedView = YEARLY_VIEW
-                    updateViewPager()
-                }
+        when (v?.id) {
+            R.id.yearIV -> {
+                yearChanges()
+                requireActivity().config.storedView = YEARLY_VIEW
+                updateViewPager()
             }
-            R.id.monthIV ->{
-                activity?.let {
-                    fragmentHomeBinding?.yearIV?.setColorFilter(
-                        ContextCompat.getColor(
-                            it,
-                            R.color.grey
-                        ), android.graphics.PorterDuff.Mode.SRC_IN
-                    )
-                    fragmentHomeBinding?.monthIV?.setColorFilter(
-                        ContextCompat.getColor(
-                            it,
-                            R.color.theme_color
-                        ), android.graphics.PorterDuff.Mode.SRC_IN
-                    )
-                    fragmentHomeBinding?.weekIV?.setColorFilter(
-                        ContextCompat.getColor(
-                            it,
-                            R.color.grey
-                        ), android.graphics.PorterDuff.Mode.SRC_IN
-                    )
-                    fragmentHomeBinding?.dayIV?.setColorFilter(
-                        ContextCompat.getColor(
-                            it,
-                            R.color.grey
-                        ), android.graphics.PorterDuff.Mode.SRC_IN
-                    )
-                    requireActivity().config.storedView = MONTHLY_VIEW
-                    updateViewPager()
-                }
+            R.id.monthIV -> {
+                monthChanges()
+                requireActivity().config.storedView = MONTHLY_VIEW
+                updateViewPager()
             }
-            R.id.weekIV ->{
-                activity?.let {
-                    fragmentHomeBinding?.yearIV?.setColorFilter(
-                        ContextCompat.getColor(
-                            it,
-                            R.color.grey
-                        ), android.graphics.PorterDuff.Mode.SRC_IN
-                    )
-                    fragmentHomeBinding?.monthIV?.setColorFilter(
-                        ContextCompat.getColor(
-                            it,
-                            R.color.grey
-                        ), android.graphics.PorterDuff.Mode.SRC_IN
-                    )
-                    fragmentHomeBinding?.weekIV?.setColorFilter(
-                        ContextCompat.getColor(
-                            it,
-                            R.color.theme_color
-                        ), android.graphics.PorterDuff.Mode.SRC_IN
-                    )
-                    fragmentHomeBinding?.dayIV?.setColorFilter(
-                        ContextCompat.getColor(
-                            it,
-                            R.color.grey
-                        ), android.graphics.PorterDuff.Mode.SRC_IN
-                    )
-                    weekFragment?.let { it1 ->
-                        activity?.supportFragmentManager?.beginTransaction()?.replace(
-                            R.id.container1,
-                            it1
-                        )?.commit()
-                    }
-                }
+            R.id.weekIV -> {
+                weekChanges()
+                requireActivity().config.storedView = WEEKLY_VIEW
+                updateViewPager()
             }
-            R.id.dayIV ->{
-                activity?.let {
-                    fragmentHomeBinding?.yearIV?.setColorFilter(
-                        ContextCompat.getColor(
-                            it,
-                            R.color.grey
-                        ), android.graphics.PorterDuff.Mode.SRC_IN
-                    )
-                    fragmentHomeBinding?.monthIV?.setColorFilter(
-                        ContextCompat.getColor(
-                            it,
-                            R.color.grey
-                        ), android.graphics.PorterDuff.Mode.SRC_IN
-                    )
-                    fragmentHomeBinding?.weekIV?.setColorFilter(
-                        ContextCompat.getColor(
-                            it,
-                            R.color.grey
-                        ), android.graphics.PorterDuff.Mode.SRC_IN
-                    )
-                    fragmentHomeBinding?.dayIV?.setColorFilter(
-                        ContextCompat.getColor(
-                            it,
-                            R.color.theme_color
-                        ), android.graphics.PorterDuff.Mode.SRC_IN
-                    )
-                    dayFragment?.let { it1 ->
-                        activity?.supportFragmentManager?.beginTransaction()?.replace(
-                            R.id.container1,
-                            it1
-                        )?.commit()
-                    }
-                }
+            R.id.dayIV -> {
+                dayChanges()
+                requireActivity().config.storedView = DAILY_VIEW
+                updateViewPager()
             }
         }
     }

@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.content.res.ResourcesCompat
 import com.daily.events.calender.Extensions.config
 import com.daily.events.calender.Model.DayYearly
 import com.daily.events.calender.R
@@ -71,7 +72,7 @@ class SmallMonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
         }
 
         todayCirclePaint = Paint(paint)
-        paint.textSize = 30f
+        paint.textSize = 25f
         todayCirclePaint.color = context.resources.getColor(R.color.white)
         todayCirclePaint.color = context.resources.getColor(R.color.theme_color)
         isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -100,6 +101,8 @@ class SmallMonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
                                 bgLeft, bgTop + 15f, bgLeft + 65f, bgTop + 90f
                             ), 5F, 5F, todayCirclePaint
                         )
+//                        val dividerConstant = if (isLandscape) 6 else 4
+//                        canvas.drawCircle(x * dayWidth - dayWidth / 2, y * dayWidth - dayWidth / dividerConstant, dayWidth * 0.41f, todayCirclePaint)
                     }
 
                     val paint = getPaint(curId, x, highlightWeekends)
@@ -110,9 +113,9 @@ class SmallMonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
                         y * dayWidth,
                         paint
                     )
-                    paint.textSize = 30f
-
-
+                    paint.textSize = 25f
+                    val customTypeface = ResourcesCompat.getFont(context, R.font.roboto)
+                    paint.typeface = customTypeface
                 }
                 curId++
             }

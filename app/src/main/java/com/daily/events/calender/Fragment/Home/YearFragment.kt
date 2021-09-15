@@ -1,6 +1,7 @@
 package com.daily.events.calender.Fragment.Home
 
 import android.os.Bundle
+import android.util.Log
 import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
@@ -8,11 +9,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.daily.events.calender.Activity.MainActivity
+import com.daily.events.calender.Extensions.config
 import com.daily.events.calender.Extensions.getViewBitmap
 import com.daily.events.calender.Extensions.printBitmap
 import com.daily.events.calender.Model.DayYearly
 import com.daily.events.calender.R
 import com.daily.events.calender.databinding.FragmentYearBinding
+import com.daily.events.calender.helpers.MONTHLY_VIEW
 import com.daily.events.calender.helpers.YEAR_LABEL
 import com.daily.events.calender.helpers.YearlyCalendarImpl
 import com.daily.events.calender.interfaces.YearlyCalendar
@@ -57,11 +61,10 @@ class YearFragment : Fragment(), YearlyCalendar {
             DataBindingUtil.inflate(inflater, R.layout.fragment_year, container, false)
         mYear = requireArguments().getInt(YEAR_LABEL)
         requireContext().updateTextColors(mView.calendar_holder)
-
         setupMonths()
 
         mCalendar = YearlyCalendarImpl(this, requireContext(), mYear)
-        return fragmentYearBinding?.root
+        return mView
     }
 
     companion object {
@@ -76,6 +79,7 @@ class YearFragment : Fragment(), YearlyCalendar {
     }
 
     private fun setupMonths() {
+        Log.e("year", mYear.toString())
         val dateTime = DateTime().withDate(mYear, 2, 1).withHourOfDay(12)
         val days = dateTime.dayOfMonth().maximumValue
         mView.month_2.setDays(days)
@@ -103,9 +107,10 @@ class YearFragment : Fragment(), YearlyCalendar {
 
             monthLabel.setTextColor(resources.getColor(R.color.black))
             monthView.firstDay = dayOfWeek
-//            monthView.setOnClickListener {
-//                (activity as MainActivity).openMonthFromYearly(DateTime().withDate(mYear, i, 1))
-//            }
+            monthView.setOnClickListener {
+                requireActivity().config.storedView = MONTHLY_VIEW
+                (activity as MainActivity).openMonthFromYearly(DateTime().withDate(mYear, i, 1))
+            }
         }
 
         if (!isPrintVersion) {
