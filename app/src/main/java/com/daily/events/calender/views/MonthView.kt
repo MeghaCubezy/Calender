@@ -13,10 +13,7 @@ import com.daily.events.calender.Model.DayMonthly
 import com.daily.events.calender.Model.Event
 import com.daily.events.calender.Model.MonthViewEvent
 import com.daily.events.calender.R
-import com.daily.events.calender.helpers.COLUMN_COUNT
-import com.daily.events.calender.helpers.Formatter
-import com.daily.events.calender.helpers.ROW_COUNT
-import com.daily.events.calender.helpers.isWeekend
+import com.daily.events.calender.helpers.*
 import com.simplemobiletools.commons.extensions.adjustAlpha
 import com.simplemobiletools.commons.extensions.getAdjustedPrimaryColor
 import com.simplemobiletools.commons.extensions.getContrastColor
@@ -285,13 +282,13 @@ class MonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
     private fun addWeekDayLetters(canvas: Canvas) {
         for (i in 0 until COLUMN_COUNT) {
             val xPos = horizontalOffset + (i + 1) * dayWidth - dayWidth / 2
-            var weekDayLetterPaint = getColoredPaint(resources.getColor(R.color.off_day_color))
+            var weekDayLetterPaint = getColoredPaint(resources.getColor(R.color.black))
             if (i == currDayOfWeek && !isPrintVersion) {
                 weekDayLetterPaint = getColoredPaint(primaryColor)
             } else if (highlightWeekends && isWeekend(i, config.isSundayFirst)) {
                 weekDayLetterPaint = getColoredPaint(redTextColor)
             }
-            canvas.drawText(dayLetters[i], xPos, weekDaysLetterHeight * 0.4f, weekDayLetterPaint)
+            canvas.drawText(dayLetters[i], xPos, weekDaysLetterHeight * 0.7f, weekDayLetterPaint)
         }
     }
 
@@ -481,8 +478,13 @@ class MonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
     }
 
     private fun initWeekDayLetters() {
-        dayLetters = context.resources.getStringArray(R.array.week_days_short)
-            .toMutableList() as ArrayList<String>
+        if (config.storedView == YEARLY_VIEW) {
+            dayLetters = context.resources.getStringArray(R.array.week_day_letters)
+                .toMutableList() as ArrayList<String>
+        } else {
+            dayLetters = context.resources.getStringArray(R.array.week_days_short)
+                .toMutableList() as ArrayList<String>
+        }
         if (config.isSundayFirst) {
             dayLetters.moveLastItemToFront()
         }
