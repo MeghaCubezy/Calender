@@ -58,10 +58,11 @@ class YearFragment : Fragment(), YearlyCalendar {
             DataBindingUtil.inflate(inflater, R.layout.fragment_year, container, false)
         mYear = requireArguments().getInt(YEAR_LABEL)
         requireContext().updateTextColors(mView.calendar_holder)
+
         setupMonths()
 
         mCalendar = YearlyCalendarImpl(this, requireContext(), mYear)
-        return mView
+        return fragmentYearBinding?.root
     }
 
     companion object {

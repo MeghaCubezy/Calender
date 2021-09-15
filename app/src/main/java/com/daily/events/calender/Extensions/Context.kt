@@ -548,7 +548,7 @@ private fun addTodaysBackground(
         res,
         dayLabelHeight,
         primaryColor,
-        R.drawable.ic_circle_filled
+        R.drawable.ic_today_background
     )
 
 fun Context.addDayEvents(

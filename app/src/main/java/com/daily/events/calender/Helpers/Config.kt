@@ -61,7 +61,7 @@ class Config(context: Context) : BaseConfig(context) {
             .putLong(LAST_REMINDER_CHANNEL_ID, lastReminderChannel).apply()
 
     var storedView: Int
-        get() = prefs.getInt(VIEW, MONTHLY_VIEW)
+        get() = prefs.getInt(VIEW, YEARLY_VIEW)
         set(view) = prefs.edit().putInt(VIEW, view).apply()
 
     var lastEventReminderMinutes1: Int
@@ -138,7 +138,7 @@ class Config(context: Context) : BaseConfig(context) {
             .apply()
 
     var showGrid: Boolean
-        get() = prefs.getBoolean(SHOW_GRID, false)
+        get() = prefs.getBoolean(SHOW_GRID, true)
         set(showGrid) = prefs.edit().putBoolean(SHOW_GRID, showGrid).apply()
 
     var loopReminders: Boolean
@@ -235,7 +235,7 @@ class Config(context: Context) : BaseConfig(context) {
         set(weeklyViewDays) = prefs.edit().putInt(WEEKLY_VIEW_DAYS, weeklyViewDays).apply()
 
     var highlightWeekends: Boolean
-        get() = prefs.getBoolean(HIGHLIGHT_WEEKENDS, false)
+        get() = prefs.getBoolean(HIGHLIGHT_WEEKENDS, true)
         set(highlightWeekends) = prefs.edit().putBoolean(HIGHLIGHT_WEEKENDS, highlightWeekends)
             .apply()
 }

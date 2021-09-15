@@ -24,9 +24,9 @@ import com.simplemobiletools.commons.extensions.moveLastItemToFront
 import com.simplemobiletools.commons.helpers.HIGHER_ALPHA
 import com.simplemobiletools.commons.helpers.LOWER_ALPHA
 import com.simplemobiletools.commons.helpers.MEDIUM_ALPHA
-
 import org.joda.time.DateTime
 import org.joda.time.Days
+
 
 // used in the Monthly view fragment, 1 view per screen
 class MonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
@@ -182,7 +182,7 @@ class MonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
                     val yPos = y * dayHeight + verticalOffset
                     val xPosCenter = xPos + dayWidth / 2
                     val dayNumber = day.value.toString()
-
+                    textColor = R.color.black
                     val textPaint = getTextPaint(day)
                     if (selectedDayCoords.x != -1 && x == selectedDayCoords.x && y == selectedDayCoords.y) {
                         canvas.drawCircle(
@@ -192,15 +192,30 @@ class MonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
                             circleStrokePaint
                         )
                         if (day.isToday) {
-                            textPaint.color = textColor
+                            textPaint.color = resources.getColor(R.color.white)
+                        } else {
+                            textPaint.color = resources.getColor(R.color.black)
                         }
                     } else if (day.isToday && !isPrintVersion) {
-                        canvas.drawCircle(
-                            xPosCenter,
-                            yPos + textPaint.textSize * 0.7f,
-                            textPaint.textSize * 0.8f,
+                        val backgroundY = yPos + verticalOffset
+                        val bgLeft = xPos + smallPadding * 15F
+                        val bgTop = yPos + textPaint.textSize * 0.001F
+                        var bgRight = xPos - smallPadding * 15F + dayWidth
+                        val bgBottom = backgroundY + smallPadding
+                        bgRectF.set(bgLeft, bgBottom - 90F, bgRight, bgBottom)
+                        textPaint.color = resources.getColor(R.color.white)
+                        canvas.drawRoundRect(
+                            bgRectF,
+                            BG_CORNER_RADIUS,
+                            BG_CORNER_RADIUS,
                             getCirclePaint(day)
                         )
+//                        canvas.drawRoundRect(
+//                            xPosCenter,
+//                            yPos + textPaint.textSize * 0.7f,
+//                            textPaint.textSize * 0.8f,
+//                            getCirclePaint(day)
+//                        )
                     }
 
                     // mark days with events with a dot
@@ -270,13 +285,13 @@ class MonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
     private fun addWeekDayLetters(canvas: Canvas) {
         for (i in 0 until COLUMN_COUNT) {
             val xPos = horizontalOffset + (i + 1) * dayWidth - dayWidth / 2
-            var weekDayLetterPaint = textPaint
+            var weekDayLetterPaint = getColoredPaint(resources.getColor(R.color.off_day_color))
             if (i == currDayOfWeek && !isPrintVersion) {
                 weekDayLetterPaint = getColoredPaint(primaryColor)
             } else if (highlightWeekends && isWeekend(i, config.isSundayFirst)) {
                 weekDayLetterPaint = getColoredPaint(redTextColor)
             }
-            canvas.drawText(dayLetters[i], xPos, weekDaysLetterHeight * 0.7f, weekDayLetterPaint)
+            canvas.drawText(dayLetters[i], xPos, weekDaysLetterHeight * 0.4f, weekDayLetterPaint)
         }
     }
 
@@ -403,6 +418,8 @@ class MonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
                 paintColor = primaryColor.getContrastColor()
             } else if (highlightWeekends && startDay.isWeekend) {
                 paintColor = redTextColor
+            } else {
+                paintColor = resources.getColor(R.color.black)
             }
         }
 
@@ -453,7 +470,7 @@ class MonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
         if (!day.isThisMonth) {
             paintColor = paintColor.adjustAlpha(MEDIUM_ALPHA)
         }
-        curPaint.color = paintColor
+        curPaint.color = context.resources.getColor(R.color.theme_color)
         return curPaint
     }
 
@@ -464,7 +481,7 @@ class MonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
     }
 
     private fun initWeekDayLetters() {
-        dayLetters = context.resources.getStringArray(R.array.week_day_letters)
+        dayLetters = context.resources.getStringArray(R.array.week_days_short)
             .toMutableList() as ArrayList<String>
         if (config.isSundayFirst) {
             dayLetters.moveLastItemToFront()

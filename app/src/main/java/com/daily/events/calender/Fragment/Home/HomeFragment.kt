@@ -7,8 +7,17 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.daily.events.calender.Extensions.config
+import com.daily.events.calender.Extensions.seconds
+import com.daily.events.calender.Fragment.MonthFragmentsHolder
+import com.daily.events.calender.Fragment.YearFragmentsHolder
 import com.daily.events.calender.R
 import com.daily.events.calender.databinding.FragmentHomeBinding
+import com.daily.events.calender.helpers.*
+import com.daily.events.calender.helpers.Formatter
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
+import java.util.*
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -27,9 +36,10 @@ class HomeFragment : Fragment() ,View.OnClickListener{
     }
 
     var fragmentHomeBinding: FragmentHomeBinding? = null
-    var yearFragment: MainYearFragment? = null
-    var monthFragment: MonthFragment? = null
-    var weekFragment: WeekFragment ?=null
+
+    //    var yearFragment: MainYearFragment? = null
+    var monthFragment: MonthFragmentsHolder? = null
+    var weekFragment: WeekFragment? = null
     var dayFragment: DayFragment ?=null
 
     override fun onCreateView(
@@ -37,23 +47,62 @@ class HomeFragment : Fragment() ,View.OnClickListener{
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        fragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false )
+        fragmentHomeBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
 
         fragmentHomeBinding?.yearIV?.setOnClickListener(this)
         fragmentHomeBinding?.monthIV?.setOnClickListener(this)
         fragmentHomeBinding?.weekIV?.setOnClickListener(this)
         fragmentHomeBinding?.dayIV?.setOnClickListener(this)
 
-        yearFragment = MainYearFragment()
-        monthFragment = MonthFragment()
-        weekFragment= WeekFragment()
-        dayFragment=DayFragment()
+//        yearFragment = MainYearFragment()
+        monthFragment = MonthFragmentsHolder()
+        weekFragment = WeekFragment()
+        dayFragment = DayFragment()
 
-        yearFragment?.let {
-            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.container1, it)?.commit()
+//        yearFragment?.let {
+//            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.container1, it)?.commit()
+//        }
+
+        updateViewPager()
+        return fragmentHomeBinding?.root
+    }
+
+    private fun updateViewPager(dayCode: String? = Formatter.getTodayCode()) {
+        val fragment = getFragmentsHolder()
+
+        val bundle = Bundle()
+
+        when (requireActivity().config.storedView) {
+            DAILY_VIEW, MONTHLY_VIEW, MONTHLY_DAILY_VIEW -> bundle.putString(DAY_CODE, dayCode)
+            WEEKLY_VIEW -> bundle.putString(WEEK_START_DATE_TIME, getThisWeekDateTime())
         }
 
-        return fragmentHomeBinding?.root
+        fragment.arguments = bundle
+        childFragmentManager.beginTransaction().add(R.id.container1, fragment).commitNow()
+    }
+
+    private fun getThisWeekDateTime(): String {
+        val currentOffsetHours = TimeZone.getDefault().rawOffset / 1000 / 60 / 60
+
+        // not great, not terrible
+        val useHours = if (currentOffsetHours >= 10) 8 else 12
+        var thisweek =
+            DateTime().withZone(DateTimeZone.UTC).withDayOfWeek(1).withHourOfDay(useHours)
+                .minusDays(if (requireActivity().config.isSundayFirst) 1 else 0)
+        if (DateTime().minusDays(7).seconds() > thisweek.seconds()) {
+            thisweek = thisweek.plusDays(7)
+        }
+        return thisweek.toString()
+    }
+
+    private fun getFragmentsHolder() = when (requireActivity().config.storedView) {
+//        DAILY_VIEW -> DayFragmentsHolder()
+        MONTHLY_VIEW -> MonthFragmentsHolder()
+//        MONTHLY_DAILY_VIEW -> MonthDayFragmentsHolder()
+        YEARLY_VIEW -> YearFragmentsHolder()
+//        EVENTS_LIST_VIEW -> EventListFragment()
+        else -> YearFragmentsHolder()
     }
 
     companion object {
@@ -96,12 +145,8 @@ class HomeFragment : Fragment() ,View.OnClickListener{
                             R.color.grey
                         ), android.graphics.PorterDuff.Mode.SRC_IN
                     )
-                    yearFragment?.let { it1 ->
-                        activity?.supportFragmentManager?.beginTransaction()?.replace(
-                            R.id.container1,
-                            it1
-                        )?.commit()
-                    }
+                    requireActivity().config.storedView = YEARLY_VIEW
+                    updateViewPager()
                 }
             }
             R.id.monthIV ->{
@@ -130,12 +175,8 @@ class HomeFragment : Fragment() ,View.OnClickListener{
                             R.color.grey
                         ), android.graphics.PorterDuff.Mode.SRC_IN
                     )
-                    monthFragment?.let { it1 ->
-                        activity?.supportFragmentManager?.beginTransaction()?.replace(
-                            R.id.container1,
-                            it1
-                        )?.commit()
-                    }
+                    requireActivity().config.storedView = MONTHLY_VIEW
+                    updateViewPager()
                 }
             }
             R.id.weekIV ->{
