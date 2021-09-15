@@ -64,6 +64,7 @@ class HomeFragment : Fragment() ,View.OnClickListener{
 //            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.container1, it)?.commit()
 //        }
 
+        requireActivity().config.storedView = YEARLY_VIEW
         updateViewPager()
         return fragmentHomeBinding?.root
     }
