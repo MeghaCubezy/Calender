@@ -7,6 +7,7 @@ import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.SparseIntArray
 import android.view.View
+import androidx.core.content.res.ResourcesCompat
 import com.daily.events.calender.Extensions.config
 import com.daily.events.calender.Extensions.seconds
 import com.daily.events.calender.Model.DayMonthly
@@ -193,14 +194,18 @@ class MonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
                         } else {
                             textPaint.color = resources.getColor(R.color.black)
                         }
+                        val customTypeface = ResourcesCompat.getFont(context, R.font.roboto)
+                        textPaint.typeface = customTypeface
                     } else if (day.isToday && !isPrintVersion) {
                         val backgroundY = yPos + verticalOffset
                         val bgLeft = xPos + smallPadding * 15F
                         val bgTop = yPos + textPaint.textSize * 0.001F
                         var bgRight = xPos - smallPadding * 15F + dayWidth
                         val bgBottom = backgroundY + smallPadding
-                        bgRectF.set(bgLeft, bgBottom - 90F, bgRight, bgBottom)
+                        bgRectF.set(bgLeft, bgBottom - 85F, bgRight, bgBottom)
                         textPaint.color = resources.getColor(R.color.white)
+                        val customTypeface = ResourcesCompat.getFont(context, R.font.roboto)
+                        textPaint.typeface = customTypeface
                         canvas.drawRoundRect(
                             bgRectF,
                             BG_CORNER_RADIUS,
@@ -430,6 +435,8 @@ class MonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
     private fun getColoredPaint(color: Int): Paint {
         val curPaint = Paint(textPaint)
         curPaint.color = color
+        val customTypeface = ResourcesCompat.getFont(context, R.font.roboto)
+        curPaint.typeface = customTypeface
         return curPaint
     }
 
@@ -458,6 +465,9 @@ class MonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
 
         val curPaint = Paint(eventTitlePaint)
         curPaint.color = paintColor
+        val customTypeface = ResourcesCompat.getFont(context, R.font.roboto)
+        curPaint.typeface = customTypeface
+
         return curPaint
     }
 

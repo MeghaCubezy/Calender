@@ -71,7 +71,7 @@ class SmallMonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
         }
 
         todayCirclePaint = Paint(paint)
-        paint.textSize = 30f
+        paint.textSize = 25f
         todayCirclePaint.color = context.resources.getColor(R.color.white)
         todayCirclePaint.color = context.resources.getColor(R.color.theme_color)
         isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -110,7 +110,7 @@ class SmallMonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
                         y * dayWidth,
                         paint
                     )
-                    paint.textSize = 30f
+                    paint.textSize = 25f
 
 
                 }

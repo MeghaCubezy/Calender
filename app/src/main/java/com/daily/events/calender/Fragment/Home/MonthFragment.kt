@@ -1,13 +1,14 @@
 package com.daily.events.calender.Fragment.Home
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.GestureDetector.SimpleOnGestureListener
+import android.view.animation.AccelerateInterpolator
 import android.widget.RelativeLayout
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -29,6 +30,7 @@ import com.simplemobiletools.commons.extensions.beVisible
 import kotlinx.android.synthetic.main.fragment_month.view.*
 import kotlinx.android.synthetic.main.top_navigation.view.*
 import org.joda.time.DateTime
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -85,6 +87,8 @@ class MonthFragment : Fragment(), MonthlyCalendar {
             setupButtons()
         }
         mCalendar = MonthlyCalendarImpl(this, requireContext())
+
+//        month_view_wrapper.setOnTouchListener();
 
         return view
     }
@@ -225,4 +229,93 @@ class MonthFragment : Fragment(), MonthlyCalendar {
             month_view_wrapper.togglePrintMode()
         }
     }
+
+    fun slideShow(view: View, newHeight: Int) {
+        val valueAnimator = ValueAnimator.ofInt(view.height, newHeight)
+        valueAnimator.duration = 500
+        valueAnimator.addUpdateListener { animation1 ->
+            val value = animation1.animatedValue as Int
+            view.layoutParams.height = value
+            view.requestLayout()
+        }
+
+        valueAnimator.interpolator = AccelerateInterpolator(1.5f)
+        valueAnimator.start()
+    }
+
+    open class OnSwipeTouchListener(context: Context) : View.OnTouchListener {
+
+        private lateinit var gestureDetector: GestureDetector
+        var context: Context
+
+        init {
+            this.context = context
+            gestureDetector = GestureDetector(context, GestureListener())
+        }
+
+        override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+            return gestureDetector.onTouchEvent(event)
+        }
+
+        private class GestureListener : SimpleOnGestureListener() {
+            override fun onDown(e: MotionEvent): Boolean {
+                return false
+            }
+
+            override fun onFling(
+                e1: MotionEvent,
+                e2: MotionEvent,
+                velocityX: Float,
+                velocityY: Float
+            ): Boolean {
+                var result = false
+                try {
+                    val diffY = e2.y - e1.y
+                    val diffX = e2.x - e1.x
+                    if (Math.abs(diffX) > Math.abs(diffY)) {
+                        if (Math.abs(diffX) > SWIPE_DISTANCE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                            if (diffX > 0) {
+                                onSwipeRight()
+                            } else {
+                                onSwipeLeft()
+                            }
+                            result = true
+                        }
+                    } else if (Math.abs(diffY) > SWIPE_DISTANCE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                        if (diffY > 0) {
+                            onSwipeBottom()
+                        } else {
+                            onSwipeTop()
+                        }
+                        result = true
+                    }
+                } catch (exception: Exception) {
+                    exception.printStackTrace()
+                }
+                return result
+            }
+
+            private fun onSwipeTop() {
+                TODO("Not yet implemented")
+            }
+
+            private fun onSwipeBottom() {
+                TODO("Not yet implemented")
+            }
+
+            private fun onSwipeLeft() {
+                TODO("Not yet implemented")
+            }
+
+            private fun onSwipeRight() {
+                TODO("Not yet implemented")
+            }
+
+            companion object {
+                private const val SWIPE_DISTANCE_THRESHOLD = 100
+                private const val SWIPE_VELOCITY_THRESHOLD = 100
+            }
+        }
+    }
+
 }
