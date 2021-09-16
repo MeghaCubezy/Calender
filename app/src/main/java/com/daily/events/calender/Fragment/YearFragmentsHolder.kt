@@ -10,6 +10,7 @@ import android.widget.DatePicker
 import androidx.appcompat.app.AlertDialog
 import androidx.viewpager.widget.ViewPager
 import com.daily.events.calender.Activity.MainActivity
+import com.daily.events.calender.Activity.MainActivity.Companion.mainBinding
 import com.daily.events.calender.Adapter.MyYearPagerAdapter
 import com.daily.events.calender.Extensions.config
 import com.daily.events.calender.R
@@ -77,7 +78,7 @@ class YearFragmentsHolder : MyFragmentHolder() {
                     }
 
                     if (position < years.size) {
-                        (activity as? MainActivity)?.updateActionBarTitle("${getString(R.string.app_launcher_name)} - ${years[position]}")
+                        mainBinding?.dateTitleTV?.text = years[position].toString()
                     }
                 }
             })

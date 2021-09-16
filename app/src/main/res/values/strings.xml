@@ -10,6 +10,8 @@
     <string name="year">Year</string>
     <string name="month">Month</string>
     <string name="day">Day</string>
+    <string name="middle_dot" translatable="false">•</string>
+
 
     <string name="app_launcher_name">Calendar</string>
     <string name="change_view">Change view</string>

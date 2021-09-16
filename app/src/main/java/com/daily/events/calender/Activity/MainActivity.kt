@@ -3,6 +3,7 @@ package com.daily.events.calender.Activity
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
+import com.daily.events.calender.Extensions.config
 import com.daily.events.calender.Fragment.EventFragment
 import com.daily.events.calender.Fragment.Home.HomeFragment
 import com.daily.events.calender.Fragment.MonthFragmentsHolder
@@ -19,15 +20,20 @@ import java.util.*
 
 class MainActivity : BaseActivity() , BottomNavigationView.OnNavigationItemSelectedListener {
 
-    var mainBinding: ActivityMainBinding? = null
+    companion object {
+        var mainBinding: ActivityMainBinding? = null
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainBinding =
             DataBindingUtil.setContentView(this@MainActivity, R.layout.activity_main)
         mainBinding?.bottomnavigationbar?.setOnNavigationItemSelectedListener(this)
+
+        config.isSundayFirst = false
     }
 
-     override fun permissionGranted() {
+    override fun permissionGranted() {
         homeFragment= HomeFragment()
         eventFragment= EventFragment()
         notificationFragment= NotificationFragment()
@@ -86,6 +92,7 @@ class MainActivity : BaseActivity() , BottomNavigationView.OnNavigationItemSelec
         fragment.arguments = bundle
         supportFragmentManager.beginTransaction().replace(R.id.container1, fragment).commitNow()
         homeFragment?.monthChanges()
+
     }
 
     fun openDayFromMonthly(dateTime: DateTime) {

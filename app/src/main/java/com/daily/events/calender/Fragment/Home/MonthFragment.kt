@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +22,7 @@ import com.daily.events.calender.helpers.Formatter
 import com.daily.events.calender.helpers.MonthlyCalendarImpl
 import com.daily.events.calender.interfaces.MonthlyCalendar
 import com.daily.events.calender.interfaces.NavigationListener
+import com.daily.events.calender.views.MonthViewWrapper
 import com.simplemobiletools.commons.extensions.applyColorFilter
 import com.simplemobiletools.commons.extensions.beGone
 import com.simplemobiletools.commons.extensions.beVisible
@@ -54,6 +54,7 @@ class MonthFragment : Fragment(), MonthlyCalendar {
 
     lateinit var mRes: Resources
     lateinit var mHolder: RelativeLayout
+    lateinit var wrapper: MonthViewWrapper
     lateinit var mConfig: Config
 
     // TODO: Rename and change types of parameters
@@ -76,8 +77,10 @@ class MonthFragment : Fragment(), MonthlyCalendar {
         mRes = resources
         mPackageName = requireActivity().packageName
         mHolder = view.month_calendar_holder
+        wrapper = view.month_view_wrapper
+
         mDayCode = requireArguments().getString(DAY_CODE)!!
-        Log.e("LLL_Code: ", mDayCode)
+//        Log.e("LLL_Code: ", mDayCode)
         mConfig = requireContext().config
         storeStateVariables()
 
@@ -111,7 +114,7 @@ class MonthFragment : Fragment(), MonthlyCalendar {
 
     private fun storeStateVariables() {
         mConfig.apply {
-            mSundayFirst = isSundayFirst
+            mSundayFirst = false
             mShowWeekNumbers = showWeekNumbers
         }
     }
@@ -225,4 +228,6 @@ class MonthFragment : Fragment(), MonthlyCalendar {
             month_view_wrapper.togglePrintMode()
         }
     }
+
+
 }

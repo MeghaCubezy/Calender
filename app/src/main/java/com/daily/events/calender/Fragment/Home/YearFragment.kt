@@ -1,7 +1,6 @@
 package com.daily.events.calender.Fragment.Home
 
 import android.os.Bundle
-import android.util.Log
 import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
@@ -79,7 +78,7 @@ class YearFragment : Fragment(), YearlyCalendar {
     }
 
     private fun setupMonths() {
-        Log.e("year", mYear.toString())
+//        Log.e("year", mYear.toString())
         val dateTime = DateTime().withDate(mYear, 2, 1).withHourOfDay(12)
         val days = dateTime.dayOfMonth().maximumValue
         mView.month_2.setDays(days)

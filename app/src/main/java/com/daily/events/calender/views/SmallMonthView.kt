@@ -63,7 +63,7 @@ class SmallMonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
         textColor = context.resources.getColor(R.color.black)
         redTextColor = context.resources.getColor(R.color.red)
         highlightWeekends = true
-        isSundayFirst = context.config.isSundayFirst
+        isSundayFirst = false
 
         paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = textColor
