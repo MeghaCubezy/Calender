@@ -6,6 +6,7 @@ import android.content.res.Resources
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.util.Range
 import android.view.*
 import android.widget.ImageView
@@ -239,7 +240,6 @@ class WeekFragment : Fragment(), WeeklyCalendar {
             val dayCode = Formatter.getDayCodeFromDateTime(curDay)
             val labelIDs = R.array.week_days_short
 
-
             val dayLetters = res.getStringArray(labelIDs).toMutableList() as ArrayList<String>
             val dayLetter = dayLetters[curDay.dayOfWeek - 1]
 
@@ -260,7 +260,7 @@ class WeekFragment : Fragment(), WeeklyCalendar {
                 mView.week_letters_holder,
                 false
             ) as MyTextView
-            label.text = "$dayLetter\n\n$dot\n${curDay.dayOfMonth}"
+            label.text = "\n$dayLetter\n\n$dot\n${curDay.dayOfMonth}\n"
             label.setTextColor(textColor)
             label.background = null
             if (todayCode == dayCode) {
@@ -287,6 +287,7 @@ class WeekFragment : Fragment(), WeeklyCalendar {
 
                 layout.setOnTouchListener { view, motionEvent ->
                     gestureDetector.onTouchEvent(motionEvent)
+                    Log.e("on", "touch")
                     true
                 }
             }
@@ -302,7 +303,8 @@ class WeekFragment : Fragment(), WeeklyCalendar {
                 selectedGrid =
                     (inflater.inflate(R.layout.week_grid_item, null, false) as ImageView).apply {
                         view.addView(this)
-                        background = ColorDrawable(primaryColor)
+                        background =
+                            ColorDrawable(context.resources.getColor(R.color.light_theme_color))
                         layoutParams.width = view.width
                         layoutParams.height = rowHeight.toInt()
                         y = hour * rowHeight
@@ -589,7 +591,7 @@ class WeekFragment : Fragment(), WeeklyCalendar {
             val weeklyViewDays = config.weeklyViewDays
             currentTimeView =
                 (inflater.inflate(R.layout.week_now_marker, null, false) as ImageView).apply {
-                    applyColorFilter(primaryColor)
+                    applyColorFilter(context.resources.getColor(R.color.theme_color))
                     mView.week_events_holder.addView(this, 0)
                     val extraWidth = res.getDimension(R.dimen.activity_margin).toInt()
                     val markerHeight = res.getDimension(R.dimen.weekly_view_now_height).toInt()

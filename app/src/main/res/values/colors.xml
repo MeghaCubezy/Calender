@@ -10,6 +10,7 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="theme_color">#4285F4</color>
+    <color name="light_theme_color">#4D4285F4</color>
     <color name="text_color">#262D33</color>
     <color name="grey">#BCBFC2</color>
     <color name="red">#F10750</color>

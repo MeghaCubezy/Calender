@@ -148,7 +148,6 @@ class MonthViewWrapper(context: Context, attrs: AttributeSet, defStyle: Int) :
             y = yPos
             setOnClickListener {
                 dayClickCallback?.invoke(day)
-
                 if (isMonthDayView) {
                     monthView.updateCurrentlySelectedDay(viewX, viewY)
                 }

@@ -11,7 +11,6 @@ import android.widget.DatePicker
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.daily.events.calender.Activity.MainActivity
 import com.daily.events.calender.Adapter.MyWeekPagerAdapter
@@ -86,11 +85,9 @@ class WeekFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
                 if (it == 0) {
                     progress = 1
                 }
-
                 updateWeeklyViewDays(progress)
             }
         }
-
         updateActionBarTitle()
     }
 
@@ -175,26 +172,26 @@ class WeekFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
     }
 
     private fun setupWeeklyActionbarTitle(timestamp: Long) {
+
         val startDateTime = Formatter.getDateTimeFromTS(timestamp)
         val endDateTime = Formatter.getDateTimeFromTS(timestamp + WEEK_SECONDS)
         val startMonthName = Formatter.getMonthName(context!!, startDateTime.monthOfYear)
+        var newTitle = Formatter.getMonthName(context!!, startDateTime.monthOfYear)
         if (startDateTime.monthOfYear == endDateTime.monthOfYear) {
-            var newTitle = startMonthName
+            newTitle = startMonthName
             if (startDateTime.year != DateTime().year) {
                 newTitle += " - ${startDateTime.year}"
             }
-            (activity as AppCompatActivity).updateActionBarTitle(newTitle)
         } else {
             val endMonthName = Formatter.getMonthName(context!!, endDateTime.monthOfYear)
-            (activity as AppCompatActivity).updateActionBarTitle("$startMonthName - $endMonthName")
+            newTitle = "$startMonthName - $endMonthName"
         }
-        (activity as AppCompatActivity).updateActionBarSubtitle(
-            "${getString(R.string.week)} ${
-                startDateTime.plusDays(
-                    3
-                ).weekOfWeekyear
+        val str = newTitle.plus(" ").plus(
+            "\n${getString(R.string.week)} ${
+                startDateTime.plusDays(3).weekOfWeekyear
             }"
         )
+        MainActivity.mainBinding?.dateTitleTV?.text = str.toString()
     }
 
     override fun goToToday() {
