@@ -56,7 +56,6 @@ class MonthViewWrapper(context: Context, attrs: AttributeSet, defStyle: Int) :
         for (i in 0 until childCount) {
             val child = getChildAt(i)
             if (child is MonthView) {
-                //ignore the MonthView layout
                 continue
             }
 

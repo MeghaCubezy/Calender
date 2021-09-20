@@ -55,4 +55,13 @@
         <item name="android:textColor">@color/default_text_color</item>
         <item name="android:fontFamily">sans-serif-light</item>
     </style>
+
+    <style name="Theme.Calender.NoActionBar.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Calender.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.Calender.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

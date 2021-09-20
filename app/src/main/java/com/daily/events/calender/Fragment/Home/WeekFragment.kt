@@ -6,7 +6,6 @@ import android.content.res.Resources
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.util.Range
 import android.view.*
 import android.widget.ImageView
@@ -287,7 +286,6 @@ class WeekFragment : Fragment(), WeeklyCalendar {
 
                 layout.setOnTouchListener { view, motionEvent ->
                     gestureDetector.onTouchEvent(motionEvent)
-                    Log.e("on", "touch")
                     true
                 }
             }
@@ -593,7 +591,7 @@ class WeekFragment : Fragment(), WeeklyCalendar {
                 (inflater.inflate(R.layout.week_now_marker, null, false) as ImageView).apply {
                     applyColorFilter(context.resources.getColor(R.color.theme_color))
                     mView.week_events_holder.addView(this, 0)
-                    val extraWidth = res.getDimension(R.dimen.activity_margin).toInt()
+                    val extraWidth = res.getDimension(R.dimen.yearly_padding_half).toInt()
                     val markerHeight = res.getDimension(R.dimen.weekly_view_now_height).toInt()
                     val minuteHeight = rowHeight / 60
                     (layoutParams as RelativeLayout.LayoutParams).apply {

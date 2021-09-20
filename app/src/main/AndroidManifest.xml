@@ -13,12 +13,37 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Calender.NoActionBar">
-        <activity android:name=".Activity.BaseActivity"/>
+        <activity
+            android:name=".Activity.BaseSimpleActivity"
+            android:label="@string/title_activity_base_simple"
+            android:theme="@style/Theme.Calender.NoActionBar.NoActionBar"></activity>
+        <activity android:name=".Activity.BaseActivity" />
         <activity android:name=".Activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Activity.EventActivity"
+            android:launchMode="singleTask"
+            android:parentActivityName=".Activity.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.INSERT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="vnd.android.cursor.item/event" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.INSERT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="vnd.android.cursor.dir/event" />
             </intent-filter>
         </activity>
     </application>
