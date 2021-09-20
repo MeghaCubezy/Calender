@@ -22,6 +22,7 @@ import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationManagerCompat
 import com.daily.events.calender.Adapter.AutoCompleteTextViewAdapter
 import com.daily.events.calender.Extensions.*
@@ -49,7 +50,7 @@ import java.util.*
 import java.util.regex.Pattern
 import kotlin.collections.ArrayList
 
-class EventActivity : SimpleActivity() {
+class EventActivity : AppCompatActivity {
     private val LAT_LON_PATTERN =
         "^[-+]?([1-8]?\\d(\\.\\d+)?|90(\\.0+)?)([,;])\\s*[-+]?(180(\\.0+)?|((1[0-7]\\d)|([1-9]?\\d))(\\.\\d+)?)\$"
     private val EVENT = "EVENT"
@@ -117,12 +118,14 @@ class EventActivity : SimpleActivity() {
 
         val eventId = intent.getLongExtra(EVENT_ID, 0L)
         ensureBackgroundThread {
+
             mStoredEventTypes = eventTypesDB.getEventTypes().toMutableList() as ArrayList<EventType>
             val event = eventsDB.getEventWithId(eventId)
             if (eventId != 0L && event == null) {
                 finish()
                 return@ensureBackgroundThread
             }
+
 
             val localEventType =
                 mStoredEventTypes.firstOrNull { it.id == config.lastUsedLocalEventTypeId }
@@ -376,6 +379,7 @@ class EventActivity : SimpleActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+
         if (!mWasActivityInitialized) {
             return
         }
@@ -1340,7 +1344,6 @@ class EventActivity : SimpleActivity() {
                         notifyEvent(mEvent)
                     }
                 }
-
                 finish()
             }
         } else {

@@ -22,8 +22,9 @@
 
             <TextView
                 android:id="@+id/dateTitleTV"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/today"
                 android:layout_centerVertical="true"
                 android:fontFamily="@font/plusjakarta"
                 android:text="@string/title_date"
@@ -31,6 +32,7 @@
                 android:textSize="@dimen/_17sdp" />
 
             <ImageView
+                android:id="@+id/today"
                 android:layout_width="@dimen/_30sdp"
                 android:layout_height="@dimen/_30sdp"
                 android:layout_alignParentRight="true"
