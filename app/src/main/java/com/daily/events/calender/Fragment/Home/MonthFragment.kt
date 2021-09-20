@@ -79,7 +79,6 @@ class MonthFragment : Fragment(), MonthlyCalendar {
         mPackageName = requireActivity().packageName
         mHolder = view.month_calendar_holder
         mDayCode = requireArguments().getString(DAY_CODE)!!
-        Log.e("LLL_Code: ", mDayCode)
         mConfig = requireContext().config
         storeStateVariables()
 
@@ -160,6 +159,8 @@ class MonthFragment : Fragment(), MonthlyCalendar {
                 contentDescription = text
                 setTextColor(resources.getColor(R.color.black))
             }
+            Log.e("LLL_Month: ", mCalendar?.monthName.toString())
+
             updateDays(days)
         }
     }

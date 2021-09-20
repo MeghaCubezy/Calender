@@ -127,7 +127,7 @@ class MonthlyCalendarImpl(val callback: MonthlyCalendar, val context: Context) {
             .toString(Formatter.DAYCODE_PATTERN) == mToday
     }
 
-    private val monthName: String
+    val monthName: String
         get() {
             var month = Formatter.getMonthName(context, mTargetDate.monthOfYear)
             val targetYear = mTargetDate.toString(YEAR_PATTERN)
