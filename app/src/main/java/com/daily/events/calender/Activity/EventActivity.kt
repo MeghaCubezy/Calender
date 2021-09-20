@@ -22,7 +22,6 @@ import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.widget.ImageView
 import android.widget.RelativeLayout
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationManagerCompat
 import com.daily.events.calender.Adapter.AutoCompleteTextViewAdapter
 import com.daily.events.calender.Extensions.*
@@ -50,7 +49,7 @@ import java.util.*
 import java.util.regex.Pattern
 import kotlin.collections.ArrayList
 
-class EventActivity : AppCompatActivity {
+class EventActivity : SimpleActivity() {
     private val LAT_LON_PATTERN =
         "^[-+]?([1-8]?\\d(\\.\\d+)?|90(\\.0+)?)([,;])\\s*[-+]?(180(\\.0+)?|((1[0-7]\\d)|([1-9]?\\d))(\\.\\d+)?)\$"
     private val EVENT = "EVENT"

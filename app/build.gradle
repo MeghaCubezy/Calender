@@ -4,11 +4,14 @@ plugins {
     id 'kotlin-kapt'
     id 'kotlin-android-extensions'
     id 'de.timfreiheit.resourceplaceholders'
+    id 'com.github.dcendents.android-maven'
 }
 
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
+
+
 
     defaultConfig {
         applicationId "com.daily.events.calender"
@@ -74,9 +77,8 @@ dependencies {
     implementation 'androidx.room:room-runtime:2.3.0'
     annotationProcessor 'androidx.room:room-compiler:2.3.0'
 
-    // Simple common
-    implementation 'com.github.SimpleMobileTools:Simple-Commons:03149a0586'
-
     // Joda Time Out
     implementation 'joda-time:joda-time:2.10.3'
+
+    implementation project(':commons')
 }
