@@ -2,14 +2,14 @@ package com.daily.events.calender.dialogs
 
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import com.daily.events.calender.Activity.SimpleActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.daily.events.calender.R
 import com.simplemobiletools.commons.extensions.hideKeyboard
 import com.simplemobiletools.commons.extensions.setupDialogStuff
 import kotlinx.android.synthetic.main.dialog_edit_repeating_event.view.*
 
 class EditRepeatingEventDialog(
-    val activity: SimpleActivity,
+    val activity: AppCompatActivity,
     val callback: (allOccurrences: Int) -> Unit
 ) {
     var dialog: AlertDialog

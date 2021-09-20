@@ -7,9 +7,9 @@ import android.provider.CalendarContract
 import com.daily.events.calender.Extensions.config
 import com.daily.events.calender.Extensions.refreshCalDAVCalendars
 import com.daily.events.calender.R
-
 import com.simplemobiletools.commons.activities.BaseSimpleActivity
 import com.simplemobiletools.commons.helpers.ensureBackgroundThread
+
 
 open class SimpleActivity : BaseSimpleActivity() {
     val CALDAV_REFRESH_DELAY = 3000L
