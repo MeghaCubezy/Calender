@@ -3,29 +3,26 @@
     xmlns:motion="http://schemas.android.com/apk/res-auto">
 
     <Transition
-        motion:constraintSetEnd="@id/end"
+        motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@id/start"
-        motion:duration="350"
-        motion:motionInterpolator="linear">
-        <OnSwipe motion:dragDirection="dragUp" />
+        motion:duration="1000">
+        <OnSwipe motion:dragDirection="dragDown" />
     </Transition>
 
     <ConstraintSet android:id="@+id/start">
         <Constraint
-            android:id="@+id/month_view_wrapper"
+            android:id="@+id/rlMainView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="73dp"
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintTop_toTopOf="parent" />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
         <Constraint
-            android:id="@+id/month_view_wrapper"
+            android:id="@+id/rlMainView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_250sdp"
-            android:layout_marginTop="73dp"
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintTop_toTopOf="parent" />
     </ConstraintSet>

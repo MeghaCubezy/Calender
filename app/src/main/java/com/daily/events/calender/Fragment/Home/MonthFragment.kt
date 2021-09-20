@@ -1,18 +1,15 @@
 package com.daily.events.calender.Fragment.Home
 
-import android.animation.ValueAnimator
 import android.content.Context
 import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.*
-import android.view.GestureDetector.SimpleOnGestureListener
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.Animation
-import android.view.animation.ScaleAnimation
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.daily.events.calender.Activity.MainActivity
 import com.daily.events.calender.Extensions.config
@@ -44,7 +41,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [MonthFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MonthFragment : Fragment(), MonthlyCalendar, View.OnTouchListener {
+class MonthFragment : Fragment(), MonthlyCalendar {
 
     private var mTextColor = 0
     private var mSundayFirst = false
@@ -57,14 +54,13 @@ class MonthFragment : Fragment(), MonthlyCalendar, View.OnTouchListener {
     var listener: NavigationListener? = null
 
     lateinit var mRes: Resources
-    lateinit var mHolder: MotionLayout
+    lateinit var mHolder: ConstraintLayout
     lateinit var mConfig: Config
 
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
-    private val gestureDetector = GestureDetector(GestureListener())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,24 +83,10 @@ class MonthFragment : Fragment(), MonthlyCalendar, View.OnTouchListener {
         mConfig = requireContext().config
         storeStateVariables()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            setupButtons()
-        }
+        setupButtons()
         mCalendar = MonthlyCalendarImpl(this, requireContext())
 
         return view
-    }
-
-    fun scaleView(v: View, startScale: Float, endScale: Float) {
-        val anim: Animation = ScaleAnimation(
-            1f, 1f,  // Start and end values for the X axis scaling
-            startScale, endScale,  // Start and end values for the Y axis scaling
-            Animation.RELATIVE_TO_SELF, 0f,  // Pivot point of X scaling
-            Animation.RELATIVE_TO_SELF, 1f
-        ) // Pivot point of Y scaling
-        anim.fillAfter = true // Needed to keep the result of the animation
-        anim.duration = 1000
-        v.startAnimation(anim)
     }
 
     override fun onPause() {
@@ -217,7 +199,6 @@ class MonthFragment : Fragment(), MonthlyCalendar, View.OnTouchListener {
         mHolder.top_value.apply {
             setTextColor(resources.getColor(R.color.black))
             setOnClickListener {
-                scaleView(mHolder.month_view_wrapper, 0F, 1F)
 //                (activity as MainActivity).showGoToDateDialog()
             }
         }
@@ -243,83 +224,6 @@ class MonthFragment : Fragment(), MonthlyCalendar, View.OnTouchListener {
             top_value.setTextColor(resources.getColor(R.color.black))
             month_view_wrapper.togglePrintMode()
         }
-    }
-
-    fun slideShow(view: View, newHeight: Int) {
-        val valueAnimator = ValueAnimator.ofInt(view.height, newHeight)
-        valueAnimator.duration = 500
-        valueAnimator.addUpdateListener { animation1 ->
-            val value = animation1.animatedValue as Int
-            view.layoutParams.height = value
-            view.requestLayout()
-        }
-
-        valueAnimator.interpolator = AccelerateInterpolator(1.5f)
-        valueAnimator.start()
-    }
-
-    private class GestureListener : SimpleOnGestureListener() {
-        override fun onDown(e: MotionEvent): Boolean {
-            return false
-        }
-
-        override fun onFling(
-            e1: MotionEvent,
-            e2: MotionEvent,
-            velocityX: Float,
-            velocityY: Float
-        ): Boolean {
-            var result = false
-            try {
-                val diffY = e2.y - e1.y
-                val diffX = e2.x - e1.x
-                if (Math.abs(diffX) > Math.abs(diffY)) {
-                    if (Math.abs(diffX) > SWIPE_DISTANCE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                        if (diffX > 0) {
-                            onSwipeRight()
-                        } else {
-                            onSwipeLeft()
-                        }
-                        result = true
-                    }
-                } else if (Math.abs(diffY) > SWIPE_DISTANCE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
-                    if (diffY > 0) {
-                        onSwipeBottom()
-                    } else {
-                        onSwipeTop()
-                    }
-                    result = true
-                }
-            } catch (exception: Exception) {
-                exception.printStackTrace()
-            }
-            return result
-        }
-
-        private fun onSwipeTop() {
-            Log.e("LLL_Swipe: ", "SwipeTop")
-        }
-
-        private fun onSwipeBottom() {
-            Log.e("LLL_Swipe: ", "SwipeBottom")
-        }
-
-        private fun onSwipeLeft() {
-            Log.e("LLL_Swipe: ", "SwipeLeft")
-        }
-
-        private fun onSwipeRight() {
-            Log.e("LLL_Swipe: ", "SwipeRight")
-        }
-
-        companion object {
-            private const val SWIPE_DISTANCE_THRESHOLD = 100
-            private const val SWIPE_VELOCITY_THRESHOLD = 100
-        }
-    }
-
-    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-        return gestureDetector.onTouchEvent(event)
     }
 
 }
