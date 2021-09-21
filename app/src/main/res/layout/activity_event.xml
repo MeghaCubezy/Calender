@@ -3,34 +3,71 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/event_scrollview"
+    android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:background="@color/white">
 
     <RelativeLayout
+        android:layout_margin="16dp"
+        android:background="@color/white"
         android:id="@+id/event_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.simplemobiletools.commons.views.MyEditText
-            android:id="@+id/event_title"
+        <TextView
+            android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/activity_margin"
-            android:layout_marginTop="@dimen/activity_margin"
-            android:layout_marginEnd="@dimen/activity_margin"
+            android:text="Add new event"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_13sdp" />
+
+        <TextView
+            android:layout_height="@dimen/_35sdp"
+            android:id="@+id/event_title"
+            android:layout_width="match_parent"
+            android:layout_below="@id/title"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:background="@drawable/open_with_card"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/_10sdp"
             android:hint="@string/title"
-            android:inputType="textCapSentences"
+            android:textColorHint="@color/hint_color"
             android:maxLength="180"
             android:maxLines="1"
             android:minEms="20"
             android:textCursorDrawable="@null"
             android:textSize="@dimen/day_text_size" />
 
-        <com.simplemobiletools.commons.views.MyEditText
-            android:id="@+id/event_location"
+        <TextView
+            android:id="@+id/tag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/event_title"
+            android:layout_below="@id/event_title"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:text="@string/choose_tag"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_13sdp" />
+
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/allEventTypeRL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tag"
+            android:layout_marginTop="@dimen/_5sdp"
+            app:flexDirection="row"
+            app:flexWrap="wrap">
+
+
+        </com.google.android.flexbox.FlexboxLayout>
+
+
+        <TextView
+            android:id="@+id/event_location"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_35sdp"
+            android:layout_below="@+id/allEventTypeRL"
             android:layout_marginStart="@dimen/activity_margin"
             android:layout_marginTop="@dimen/activity_margin"
             android:layout_toStartOf="@+id/event_show_on_map"
@@ -193,6 +230,7 @@
             android:importantForAccessibility="no" />
 
         <ImageView
+            android:visibility="gone"
             android:id="@+id/event_reminder_image"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -221,6 +259,7 @@
             tools:text="@string/add_another_reminder" />
 
         <ImageView
+            android:visibility="gone"
             android:id="@+id/event_reminder_1_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -252,6 +291,7 @@
             tools:text="@string/add_another_reminder" />
 
         <ImageView
+            android:visibility="gone"
             android:id="@+id/event_reminder_2_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -283,6 +323,7 @@
             tools:text="@string/add_another_reminder" />
 
         <ImageView
+            android:visibility="gone"
             android:id="@+id/event_reminder_3_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -484,7 +525,7 @@
             android:layout_below="@+id/event_availability_divider"
             android:layout_toEndOf="@+id/event_caldav_calendar_image"
             android:background="?attr/selectableItemBackground"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <com.simplemobiletools.commons.views.MyTextView
                 android:id="@+id/event_caldav_calendar_name"
@@ -532,7 +573,7 @@
             android:layout_below="@+id/event_caldav_calendar_holder"
             android:background="@color/divider_grey"
             android:importantForAccessibility="no"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <ImageView
             android:id="@+id/event_type_image"

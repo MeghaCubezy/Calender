@@ -84,9 +84,12 @@ class MonthFragmentsHolder : MyFragmentHolder(), NavigationListener {
                         )
                         isGoToTodayVisible = shouldGoToTodayBeVisible
                     }
+                    MainActivity.mainBinding?.dateTitleTV?.text = codes[position].toString()
+
                 }
             })
             currentItem = defaultMonthlyPage
+
         }
         updateActionBarTitle()
     }
@@ -150,6 +153,7 @@ class MonthFragmentsHolder : MyFragmentHolder(), NavigationListener {
 
     override fun shouldGoToTodayBeVisible() =
         currentDayCode.getMonthCode() != todayDayCode.getMonthCode()
+
 
     override fun updateActionBarTitle() {
         (activity as? MainActivity)?.updateActionBarTitle(getString(R.string.app_launcher_name))

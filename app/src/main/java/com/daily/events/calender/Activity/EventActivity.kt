@@ -4,6 +4,8 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
@@ -15,10 +17,8 @@ import android.provider.ContactsContract.CommonDataKinds.StructuredName
 import android.provider.ContactsContract.Data
 import android.text.TextUtils
 import android.text.method.LinkMovementMethod
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.WindowManager
+import android.util.Log
+import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -42,7 +42,10 @@ import com.simplemobiletools.commons.models.RadioItem
 import com.simplemobiletools.commons.views.MyAutoCompleteTextView
 import kotlinx.android.synthetic.main.activity_event.*
 import kotlinx.android.synthetic.main.activity_event.view.*
+import kotlinx.android.synthetic.main.dialog_select_radio_group.view.*
 import kotlinx.android.synthetic.main.item_attendee.view.*
+import kotlinx.android.synthetic.main.radio_button_with_color.view.*
+import kotlinx.android.synthetic.main.tag_holder_layout.view.*
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import java.util.*
@@ -102,6 +105,10 @@ class EventActivity : SimpleActivity() {
     private lateinit var mEventEndDateTime: DateTime
     private lateinit var mEvent: Event
 
+    private val NEW_EVENT_TYPE_ID = -2L
+    private var wasInit = false
+    private var eventTypes = java.util.ArrayList<EventType>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_event)
@@ -110,7 +117,8 @@ class EventActivity : SimpleActivity() {
             return
         }
 
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_cross_vector)
+        supportActionBar?.hide()
+//        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_cross_vector)
         val intent = intent ?: return
         mDialogTheme = getDialogTheme()
         mWasContactsPermissionChecked = hasPermission(PERMISSION_READ_CONTACTS)
@@ -125,7 +133,6 @@ class EventActivity : SimpleActivity() {
                 return@ensureBackgroundThread
             }
 
-
             val localEventType =
                 mStoredEventTypes.firstOrNull { it.id == config.lastUsedLocalEventTypeId }
             runOnUiThread {
@@ -134,7 +141,52 @@ class EventActivity : SimpleActivity() {
                 }
             }
         }
+
+//        ****************  Get Event type ***************
+
+        eventsHelper.getEventTypes(this, false) {
+            eventTypes = it
+            runOnUiThread {
+                eventTypes.filter { it.caldavCalendarId == 0 }.forEach {
+                    addRadioButton(it)
+                }
+                val newEventType = EventType(
+                    NEW_EVENT_TYPE_ID,
+                    getString(R.string.add_new_type),
+                    Color.TRANSPARENT,
+                    0
+                )
+                addRadioButton(newEventType)
+//                updateTextColors(allEventTypeRL)
+            }
+        }
     }
+
+    private fun addRadioButton(eventType: EventType) {
+        val view = layoutInflater.inflate(R.layout.tag_holder_layout, null)
+        view.eventTV.text = eventType.getDisplayTitle()
+        view.eventTV.setTextColor(resources.getColor(R.color.grey))
+
+        Log.e("event", eventType.color.toString())
+
+        if (eventType.color != Color.TRANSPARENT) {
+            view.eventTV.setTextColor(eventType.color)
+            view.eventTV.backgroundTintList = ColorStateList.valueOf(eventType.color)
+        } else {
+            view.eventTV.setTextColor(resources.getColor(R.color.theme_color))
+        }
+        view.eventTV.id = eventType.id!!.toInt()
+
+//        view.setOnClickListener { viewClicked(eventType) }
+        allEventTypeRL.addView(
+            view,
+            RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+        )
+    }
+
 
     private fun gotEvent(savedInstanceState: Bundle?, localEventType: EventType?, event: Event?) {
         if (localEventType == null || localEventType.caldavCalendarId != 0) {
@@ -267,28 +319,28 @@ class EventActivity : SimpleActivity() {
         mWasActivityInitialized = true
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_event, menu)
-        if (mWasActivityInitialized) {
-            menu.findItem(R.id.delete).isVisible = mEvent.id != null
-            menu.findItem(R.id.share).isVisible = mEvent.id != null
-            menu.findItem(R.id.duplicate).isVisible = mEvent.id != null
-        }
-
-        updateMenuItemColors(menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.save -> saveCurrentEvent()
-            R.id.delete -> deleteEvent()
-            R.id.duplicate -> duplicateEvent()
-            R.id.share -> shareEvent()
-            else -> return super.onOptionsItemSelected(item)
-        }
-        return true
-    }
+//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+//        menuInflater.inflate(R.menu.menu_event, menu)
+//        if (mWasActivityInitialized) {
+//            menu.findItem(R.id.delete).isVisible = mEvent.id != null
+//            menu.findItem(R.id.share).isVisible = mEvent.id != null
+//            menu.findItem(R.id.duplicate).isVisible = mEvent.id != null
+//        }
+//
+//        updateMenuItemColors(menu)
+//        return true
+//    }
+//
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        when (item.itemId) {
+//            R.id.save -> saveCurrentEvent()
+//            R.id.delete -> deleteEvent()
+//            R.id.duplicate -> duplicateEvent()
+//            R.id.share -> shareEvent()
+//            else -> return super.onOptionsItemSelected(item)
+//        }
+//        return true
+//    }
 
     private fun getStartEndTimes(): Pair<Long, Long> {
         val offset = if (!config.allowChangingTimeZones || mEvent.getTimeZoneString()
@@ -501,8 +553,8 @@ class EventActivity : SimpleActivity() {
             mEventEndDateTime = Formatter.getDateTimeFromTS(realStart + duration)
         }
 
-        event_title.setText(mEvent.title)
-        event_location.setText(mEvent.location)
+        event_title.text = mEvent.title
+        event_location.text = mEvent.location
         event_description.setText(mEvent.description)
 
         mReminder1Minutes = mEvent.reminder1Minutes
@@ -553,8 +605,8 @@ class EventActivity : SimpleActivity() {
                 toggleAllDay(true)
             }
 
-            event_title.setText(intent.getStringExtra("title"))
-            event_location.setText(intent.getStringExtra("eventLocation"))
+            event_title.text = intent.getStringExtra("title")
+            event_location.text = intent.getStringExtra("eventLocation")
             event_description.setText(intent.getStringExtra("description"))
             if (event_description.value.isNotEmpty()) {
                 event_description.movementMethod = LinkMovementMethod.getInstance()

@@ -10,6 +10,9 @@
     <string name="year">Year</string>
     <string name="month">Month</string>
     <string name="day">Day</string>
+    <string name="choose_tag">Choose a tag</string>
+    <string name="add_tag">Add more</string>
+    <string name="add_new_event">Add new event</string>
     <string name="middle_dot" translatable="false">•</string>
 
 
