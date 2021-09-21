@@ -159,7 +159,8 @@ class MonthFragment : Fragment(), MonthlyCalendar {
 
         activity?.runOnUiThread {
             mHolder.top_value.apply {
-                text = month
+
+            text = month
                 contentDescription = text
                 setTextColor(resources.getColor(R.color.black))
             }

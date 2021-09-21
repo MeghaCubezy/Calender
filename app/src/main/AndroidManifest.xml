@@ -13,10 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Calender.NoActionBar">
-        <activity
-            android:name=".Activity.BaseSimpleActivity"
-            android:label="@string/title_activity_base_simple"
-            android:theme="@style/Theme.Calender.NoActionBar.NoActionBar"></activity>
+
         <activity android:name=".Activity.BaseActivity" />
         <activity android:name=".Activity.MainActivity">
             <intent-filter>
@@ -28,6 +25,7 @@
         <activity
             android:name=".Activity.EventActivity"
             android:launchMode="singleTask"
+            android:theme="@style/Theme.Calender.NoActionBar"
             android:parentActivityName=".Activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.EDIT" />

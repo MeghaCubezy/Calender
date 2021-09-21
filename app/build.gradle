@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
-    id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'kotlin-android'
     id 'kotlin-android-extensions'
     id 'de.timfreiheit.resourceplaceholders'
     id 'com.github.dcendents.android-maven'
@@ -79,6 +79,9 @@ dependencies {
 
     // Joda Time Out
     implementation 'joda-time:joda-time:2.10.3'
+
+    //flaxbox
+    implementation 'com.google.android:flexbox:1.1.0'
 
     implementation project(':commons')
 }
