@@ -14,7 +14,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.viewpager.widget.ViewPager
 import com.daily.events.calender.Activity.MainActivity
 import com.daily.events.calender.Adapter.MyDayPagerAdapter
-
 import com.daily.events.calender.Extensions.*
 import com.daily.events.calender.R
 import com.daily.events.calender.helpers.Formatter
@@ -120,10 +119,10 @@ class DayFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
                         )
                         isGoToTodayVisible = shouldGoToTodayBeVisible
                     }
-
                     setupWeeklyActionbarTitle(weekTSs[position])
                 }
             })
+
             currentItem = defaultWeeklyPage
         }
 
@@ -164,8 +163,10 @@ class DayFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
     private fun getWeekTimestamps(targetSeconds: Long): List<Long> {
         val weekTSs = ArrayList<Long>(PREFILLED_WEEKS)
         val dateTime = Formatter.getDateTimeFromTS(targetSeconds)
-        val shownWeekDays = requireContext().config.weeklyViewDays
+        val shownWeekDays = 1
         var currentWeek = dateTime.minusDays(PREFILLED_WEEKS / 2 * shownWeekDays)
+        currentWeekTS = thisWeekTS
+
         for (i in 0 until PREFILLED_WEEKS) {
             weekTSs.add(currentWeek.seconds())
             currentWeek = currentWeek.plusDays(shownWeekDays)
@@ -258,6 +259,7 @@ class DayFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
 
     private fun updateWeeklyViewDays(days: Int) {
         requireContext().config.weeklyViewDays = days
+
         updateDaysCount(days)
         setupWeeklyViewPager()
     }

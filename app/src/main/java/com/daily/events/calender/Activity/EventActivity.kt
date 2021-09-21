@@ -17,7 +17,6 @@ import android.provider.ContactsContract.CommonDataKinds.StructuredName
 import android.provider.ContactsContract.Data
 import android.text.TextUtils
 import android.text.method.LinkMovementMethod
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.ImageView
@@ -106,7 +105,6 @@ class EventActivity : SimpleActivity() {
     private lateinit var mEvent: Event
 
     private val NEW_EVENT_TYPE_ID = -2L
-    private var wasInit = false
     private var eventTypes = java.util.ArrayList<EventType>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -160,14 +158,14 @@ class EventActivity : SimpleActivity() {
 //                updateTextColors(allEventTypeRL)
             }
         }
+
+        back.setOnClickListener { onBackPressed() }
     }
 
     private fun addRadioButton(eventType: EventType) {
         val view = layoutInflater.inflate(R.layout.tag_holder_layout, null)
         view.eventTV.text = eventType.getDisplayTitle()
         view.eventTV.setTextColor(resources.getColor(R.color.grey))
-
-        Log.e("event", eventType.color.toString())
 
         if (eventType.color != Color.TRANSPARENT) {
             view.eventTV.setTextColor(eventType.color)
@@ -2005,7 +2003,6 @@ class EventActivity : SimpleActivity() {
         event_show_on_map.applyColorFilter(getAdjustedPrimaryColor())
         val textColor = config.textColor
         arrayOf(
-            event_time_image,
             event_time_zone_image,
             event_repetition_image,
             event_reminder_image,
