@@ -17,6 +17,7 @@ object Formatter {
     private const val DAY_PATTERN = "d"
     private const val DAY_OF_WEEK_PATTERN = "EEE"
     private const val LONGEST_PATTERN = "MMMM d YYYY (EEEE)"
+    private const val LONGEST_PATTERN1 = "MMMM d YYYY"
     private const val PATTERN_TIME_12 = "hh:mm a"
     private const val PATTERN_TIME_24 = "HH:mm"
 
@@ -48,6 +49,8 @@ object Formatter {
     }
 
     fun getLongestDate(ts: Long) = getDateTimeFromTS(ts).toString(LONGEST_PATTERN)
+
+    fun getLongeDate(ts: Long) = getDateTimeFromTS(ts).toString(LONGEST_PATTERN1)
 
     fun getDate(context: Context, dateTime: DateTime, addDayOfWeek: Boolean = true) =
         getDayTitle(context, getDayCodeFromDateTime(dateTime), addDayOfWeek)

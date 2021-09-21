@@ -226,7 +226,7 @@ class DayFragment : Fragment(), WeeklyCalendar {
 
     private fun addDayColumns() {
         mView.week_events_columns_holder.removeAllViews()
-        (0 until config.weeklyViewDays).forEach {
+        (0 until 1).forEach {
             val column = inflater.inflate(
                 R.layout.weekly_view_day_column,
                 mView.week_events_columns_holder,
@@ -242,13 +242,13 @@ class DayFragment : Fragment(), WeeklyCalendar {
         var curDay = Formatter.getUTCDateTimeFromTS(weekTimestamp)
         val todayCode = Formatter.getDayCodeFromDateTime(DateTime())
         val screenWidth = context?.usableScreenSize?.x ?: return
-        val dayWidth = screenWidth / config.weeklyViewDays
+        val dayWidth = screenWidth / 1
         val useLongerDayLabels = dayWidth > res.getDimension(R.dimen.weekly_view_min_day_label)
 
         mView.week_letters_holder.removeAllViews()
-        for (i in 0 until config.weeklyViewDays) {
+        for (i in 0 until 1) {
             val dayCode = Formatter.getDayCodeFromDateTime(curDay)
-            val labelIDs = R.array.week_days_short
+            val labelIDs = R.array.week_days
 
             val dayLetters = res.getStringArray(labelIDs).toMutableList() as ArrayList<String>
             val dayLetter = dayLetters[curDay.dayOfWeek - 1]
@@ -275,8 +275,7 @@ class DayFragment : Fragment(), WeeklyCalendar {
             label.background = null
             if (todayCode == dayCode) {
                 todayColumnIndex = i
-                label.background =
-                    requireContext().resources.getDrawable(R.drawable.selected_week_bg)
+                label.background = null
             }
 
             mView.week_letters_holder.addView(label)
@@ -291,7 +290,7 @@ class DayFragment : Fragment(), WeeklyCalendar {
     }
 
     private fun initGrid() {
-        (0 until config.weeklyViewDays).mapNotNull { dayColumns.getOrNull(it) }
+        (0 until 1).mapNotNull { dayColumns.getOrNull(it) }
             .forEachIndexed { index, layout ->
                 layout.removeAllViews()
                 val gestureDetector = getViewGestureDetector(layout, index)
@@ -485,7 +484,7 @@ class DayFragment : Fragment(), WeeklyCalendar {
                 var currentDayCode = Formatter.getDayCodeFromDateTime(currentDateTime)
                 do {
                     val dayOfWeek = dayColumns.indexOfFirst { it.tag == currentDayCode }
-                    if (dayOfWeek == -1 || dayOfWeek >= config.weeklyViewDays) {
+                    if (dayOfWeek == -1 || dayOfWeek >= 1) {
                         continue@dayevents
                     }
 
@@ -598,7 +597,7 @@ class DayFragment : Fragment(), WeeklyCalendar {
                 return
             }
 
-            val weeklyViewDays = config.weeklyViewDays
+            val weeklyViewDays = 1
             currentTimeView =
                 (inflater.inflate(R.layout.week_now_marker, null, false) as ImageView).apply {
                     applyColorFilter(context.resources.getColor(R.color.theme_color))
@@ -710,7 +709,7 @@ class DayFragment : Fragment(), WeeklyCalendar {
             }
 
             allDayHolders[drawAtLine].addView(this)
-            val dayWidth = mView.width / config.weeklyViewDays
+            val dayWidth = mView.width / 1
             (layoutParams as RelativeLayout.LayoutParams).apply {
                 leftMargin = dayOfWeek * dayWidth
                 bottomMargin = 1

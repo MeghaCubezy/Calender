@@ -63,10 +63,21 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
         val bundle = Bundle()
 
-        when (requireActivity().config.storedView) {
-            MONTHLY_VIEW, MONTHLY_DAILY_VIEW -> bundle.putString(DAY_CODE, dayCode)
-            WEEKLY_VIEW -> bundle.putString(WEEK_START_DATE_TIME, getThisWeekDateTime())
-            DAILY_VIEW -> bundle.putString(WEEK_START_DATE_TIME, getThisWeekDateTime())
+//        when (requireActivity().config.storedView) {
+//            MONTHLY_VIEW, MONTHLY_DAILY_VIEW -> bundle.putString(DAY_CODE, dayCode)
+//            WEEKLY_VIEW -> bundle.putString(WEEK_START_DATE_TIME, getThisWeekDateTime())
+//            DAILY_VIEW -> bundle.putString(WEEK_START_DATE_TIME, getThisWeekDateTime())
+//        }
+
+        if (requireActivity().config.storedView == MONTHLY_VIEW &&
+            requireActivity().config.storedView == MONTHLY_DAILY_VIEW
+        ) {
+            bundle.putString(DAY_CODE, dayCode)
+        } else if (requireActivity().config.storedView == WEEKLY_VIEW) {
+            bundle.putString(WEEK_START_DATE_TIME, getThisWeekDateTime())
+        } else if (requireActivity().config.storedView == DAILY_VIEW) {
+            bundle.putString(DAY_CODE, dayCode)
+            bundle.putString(WEEK_START_DATE_TIME, getThisWeekDateTime())
         }
 
         fragment.arguments = bundle
