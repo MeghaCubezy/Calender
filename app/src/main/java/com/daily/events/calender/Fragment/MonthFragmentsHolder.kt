@@ -3,6 +3,7 @@ package com.daily.events.calender.Fragment
 import android.content.res.Resources
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import com.daily.events.calender.Extensions.getMonthCode
 import com.daily.events.calender.R
 import com.daily.events.calender.helpers.DAY_CODE
 import com.daily.events.calender.helpers.Formatter
+import com.daily.events.calender.helpers.Formatter.YEAR_PATTERN
 import com.daily.events.calender.interfaces.NavigationListener
 import com.simplemobiletools.commons.extensions.beGone
 import com.simplemobiletools.commons.extensions.getDialogTheme
@@ -74,9 +76,21 @@ class MonthFragmentsHolder : MyFragmentHolder(), NavigationListener {
 
                 override fun onPageSelected(position: Int) {
                     currentDayCode = codes[position]
-                    MainActivity.mainBinding?.dateTitleTV?.apply {
-                        text = codes[position].toString()....
+                    val date = Formatter.getDateTimeFromCode(currentDayCode)
+
+                    var month = Formatter.getMonthName(context, date.monthOfYear)
+                    val targetYear = date.toString(YEAR_PATTERN)
+                    if (targetYear != DateTime().toString(YEAR_PATTERN)) {
+                        month += " $targetYear"
                     }
+
+                    Log.i(
+                        "LLLL_CurrentMon: ",
+                        Formatter.getMonthName(context, date.monthOfYear) + " Month: " + month
+                    )
+
+                    MainActivity.mainBinding?.dateTitleTV?.text = month
+
                     val shouldGoToTodayBeVisible = shouldGoToTodayBeVisible()
                     if (isGoToTodayVisible != shouldGoToTodayBeVisible) {
                         (activity as? MainActivity)?.toggleGoToTodayVisibility(

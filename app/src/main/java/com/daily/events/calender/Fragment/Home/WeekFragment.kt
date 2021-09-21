@@ -84,7 +84,7 @@ class WeekFragment : Fragment(), WeeklyCalendar {
         config = requireContext().config
         rowHeight = requireContext().getWeeklyViewItemHeight()
         defaultRowHeight = res.getDimension(R.dimen.weekly_view_row_height)
-        weekTimestamp = requireArguments().getLong(WEEK_START_TIMESTAMP)
+        weekTimestamp = arguments!!.getLong(WEEK_START_TIMESTAMP)
         dimPastEvents = config.dimPastEvents
         highlightWeekends = config.highlightWeekends
         primaryColor = requireContext().getAdjustedPrimaryColor()
@@ -370,7 +370,7 @@ class WeekFragment : Fragment(), WeeklyCalendar {
                     prevScaleSpanY = detector.currentSpanY
                     prevScaleFactor = config.weeklyViewItemHeightMultiplier
                     wasScaled = true
-                    screenHeight = context!!.realScreenSize.y
+                    screenHeight = requireContext().realScreenSize.y
                     return super.onScaleBegin(detector)
                 }
             })

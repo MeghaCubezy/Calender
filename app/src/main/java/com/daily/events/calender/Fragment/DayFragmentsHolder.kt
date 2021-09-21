@@ -13,7 +13,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.viewpager.widget.ViewPager
 import com.daily.events.calender.Activity.MainActivity
-import com.daily.events.calender.Adapter.MyWeekPagerAdapter
+import com.daily.events.calender.Adapter.MyDayPagerAdapter
+
 import com.daily.events.calender.Extensions.*
 import com.daily.events.calender.R
 import com.daily.events.calender.helpers.Formatter
@@ -26,7 +27,7 @@ import com.simplemobiletools.commons.views.MyViewPager
 import kotlinx.android.synthetic.main.fragment_week_holder.view.*
 import org.joda.time.DateTime
 
-class WeekFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
+class DayFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
     private val PREFILLED_WEEKS = 151
     private val MAX_SEEKBAR_VALUE = 14
 
@@ -94,7 +95,7 @@ class WeekFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
     private fun setupWeeklyViewPager() {
         val weekTSs = getWeekTimestamps(currentWeekTS)
         val weeklyAdapter =
-            MyWeekPagerAdapter(requireActivity().supportFragmentManager, weekTSs, this)
+            MyDayPagerAdapter(requireActivity().supportFragmentManager, weekTSs, this)
 
         defaultWeeklyPage = weekTSs.size / 2
 
@@ -264,7 +265,7 @@ class WeekFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
     private fun updateDaysCount(cnt: Int) {
         weekHolder!!.week_view_days_count.text =
             requireContext().resources.getQuantityString(R.plurals.days, cnt, cnt)
-        (viewPager?.adapter as? MyWeekPagerAdapter)?.updateVisibleDaysCount(
+        (viewPager?.adapter as? MyDayPagerAdapter)?.updateVisibleDaysCount(
             viewPager!!.currentItem,
             cnt,
             currentWeekTS
@@ -272,7 +273,7 @@ class WeekFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
     }
 
     override fun refreshEvents() {
-        (viewPager?.adapter as? MyWeekPagerAdapter)?.updateCalendars(viewPager!!.currentItem)
+        (viewPager?.adapter as? MyDayPagerAdapter)?.updateCalendars(viewPager!!.currentItem)
     }
 
     override fun shouldGoToTodayBeVisible() = currentWeekTS != thisWeekTS
@@ -316,7 +317,7 @@ class WeekFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
         }
 
         weekHolder!!.week_view_hours_holder.setPadding(0, 0, 0, rowHeight)
-        (viewPager!!.adapter as? MyWeekPagerAdapter)?.updateNotVisibleScaleLevel(viewPager!!.currentItem)
+        (viewPager!!.adapter as? MyDayPagerAdapter)?.updateNotVisibleScaleLevel(viewPager!!.currentItem)
     }
 
     override fun getFullFragmentHeight() =
@@ -329,7 +330,7 @@ class WeekFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
             week_view_days_count.beGone()
             addHours(resources.getColor(R.color.theme_light_text_color))
             background = ColorDrawable(Color.WHITE)
-            (viewPager?.adapter as? MyWeekPagerAdapter)?.togglePrintMode(
+            (viewPager?.adapter as? MyDayPagerAdapter)?.togglePrintMode(
                 viewPager?.currentItem ?: 0
             )
 
@@ -342,7 +343,7 @@ class WeekFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
                     week_view_days_count.beVisible()
                     addHours()
                     background = ColorDrawable(requireContext().config.backgroundColor)
-                    (viewPager?.adapter as? MyWeekPagerAdapter)?.togglePrintMode(
+                    (viewPager?.adapter as? MyDayPagerAdapter)?.togglePrintMode(
                         viewPager?.currentItem ?: 0
                     )
                 }, 1000)

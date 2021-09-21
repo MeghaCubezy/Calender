@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.daily.events.calender.Extensions.config
 import com.daily.events.calender.Extensions.seconds
+import com.daily.events.calender.Fragment.DayFragmentsHolder
 import com.daily.events.calender.Fragment.MonthFragmentsHolder
 import com.daily.events.calender.Fragment.WeekFragmentsHolder
 import com.daily.events.calender.Fragment.YearFragmentsHolder
@@ -63,8 +64,9 @@ class HomeFragment : Fragment(), View.OnClickListener {
         val bundle = Bundle()
 
         when (requireActivity().config.storedView) {
-            DAILY_VIEW, MONTHLY_VIEW, MONTHLY_DAILY_VIEW -> bundle.putString(DAY_CODE, dayCode)
+            MONTHLY_VIEW, MONTHLY_DAILY_VIEW -> bundle.putString(DAY_CODE, dayCode)
             WEEKLY_VIEW -> bundle.putString(WEEK_START_DATE_TIME, getThisWeekDateTime())
+            DAILY_VIEW -> bundle.putString(WEEK_START_DATE_TIME, getThisWeekDateTime())
         }
 
         fragment.arguments = bundle
@@ -86,7 +88,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
     }
 
     private fun getFragmentsHolder() = when (requireActivity().config.storedView) {
-//        DAILY_VIEW -> DayFragmentsHolder()
+        DAILY_VIEW -> DayFragmentsHolder()
         MONTHLY_VIEW -> MonthFragmentsHolder()
         WEEKLY_VIEW -> WeekFragmentsHolder()
         YEARLY_VIEW -> YearFragmentsHolder()
