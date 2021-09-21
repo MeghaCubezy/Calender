@@ -117,11 +117,16 @@ class DayFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
 
                 override fun onPageSelected(position: Int) {
                     currentWeekTS = weekTSs[position]
-                    MainActivity.mainBinding?.dateTitleTV?.text =
-                        Formatter.getLongeDate(currentWeekTS)
+                    requireActivity().runOnUiThread {
+                        MainActivity.mainBinding?.dateTitleTV?.text =
+                            Formatter.getLongeDate(currentWeekTS)
+                        Log.e(
+                            "LLL_Week: ",
+                            Formatter.getLongeDate(currentWeekTS) + "    : " + "Done"
+                        )
+                    }
                     val shouldGoToTodayBeVisible = shouldGoToTodayBeVisible()
                     if (isGoToTodayVisible != shouldGoToTodayBeVisible) {
-                        Log.e("LLL_Week: ", currentWeekTS.toString())
                         (activity as? MainActivity)?.toggleGoToTodayVisibility(
                             shouldGoToTodayBeVisible
                         )
@@ -212,7 +217,6 @@ class DayFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
                 startDateTime.plusDays(3).weekOfWeekyear
             }"
         )
-        MainActivity.mainBinding?.dateTitleTV?.text = str.toString()
     }
 
     override fun goToToday() {

@@ -88,8 +88,9 @@ class MonthFragmentsHolder : MyFragmentHolder(), NavigationListener {
                         "LLLL_CurrentMon: ",
                         Formatter.getMonthName(context, date.monthOfYear) + " Month: " + month
                     )
-
-                    MainActivity.mainBinding?.dateTitleTV?.text = month
+                    requireActivity().runOnUiThread {
+                        MainActivity.mainBinding?.dateTitleTV?.text = month
+                    }
 
                     val shouldGoToTodayBeVisible = shouldGoToTodayBeVisible()
                     if (isGoToTodayVisible != shouldGoToTodayBeVisible) {
@@ -98,7 +99,6 @@ class MonthFragmentsHolder : MyFragmentHolder(), NavigationListener {
                         )
                         isGoToTodayVisible = shouldGoToTodayBeVisible
                     }
-                    MainActivity.mainBinding?.dateTitleTV?.text = codes[position].toString()
 
                 }
             })

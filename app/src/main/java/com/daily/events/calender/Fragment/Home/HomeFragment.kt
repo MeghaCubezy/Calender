@@ -69,7 +69,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
 //            DAILY_VIEW -> bundle.putString(WEEK_START_DATE_TIME, getThisWeekDateTime())
 //        }
 
-        if (requireActivity().config.storedView == MONTHLY_VIEW &&
+        if (requireActivity().config.storedView == MONTHLY_VIEW ||
             requireActivity().config.storedView == MONTHLY_DAILY_VIEW
         ) {
             bundle.putString(DAY_CODE, dayCode)
