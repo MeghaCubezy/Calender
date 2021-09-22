@@ -6,9 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import com.daily.events.calender.Activity.MainActivity
 import com.daily.events.calender.R
-import com.daily.events.calender.databinding.FragmentSettingBinding
+import com.daily.events.calender.databinding.FragmentMonthScrollBinding
+import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -17,12 +18,12 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [SettingFragment.newInstance] factory method to
+ * Use the [MonthScrollFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class SettingFragment : Fragment() {
+class MonthScrollFragment : Fragment() {
 
-    var fragmentSetting: FragmentSettingBinding? = null
+    var fragmentMonthScrollFragment: FragmentMonthScrollBinding? = null
 
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -40,12 +41,45 @@ class SettingFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        fragmentSetting =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_setting, container, false)
+        // Inflate the layout for this fragment
+        fragmentMonthScrollFragment =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_month_scroll, container, false)
+        with(fragmentMonthScrollFragment) {
+            this?.collapsibleCalendar?.setCalendarListener(object :
+                CollapsibleCalendar.CalendarListener {
 
-        MainActivity.mainBinding?.dateTitleTV?.text = resources.getString(R.string.settings)
+                override fun onClickListener() {
 
-        return fragmentSetting?.root
+                }
+
+                override fun onDataUpdate() {
+
+                }
+
+                override fun onDayChanged() {
+
+                }
+
+                override fun onDaySelect() {
+
+                }
+
+                override fun onItemClick(v: View) {
+
+                }
+
+                override fun onMonthChange() {
+
+                }
+
+                override fun onWeekChange(position: Int) {
+
+                }
+
+            })
+        }
+
+        return fragmentMonthScrollFragment?.root
     }
 
     companion object {
@@ -55,12 +89,12 @@ class SettingFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment SettingFragment.
+         * @return A new instance of fragment MonthScrollFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            SettingFragment().apply {
+            MonthScrollFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
