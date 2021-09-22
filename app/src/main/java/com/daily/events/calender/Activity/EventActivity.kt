@@ -20,7 +20,10 @@ import android.text.method.LinkMovementMethod
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.ImageView
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.RelativeLayout
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationManagerCompat
 import com.daily.events.calender.Adapter.AutoCompleteTextViewAdapter
 import com.daily.events.calender.Extensions.*
@@ -30,8 +33,10 @@ import com.daily.events.calender.dialogs.*
 import com.daily.events.calender.helpers.*
 import com.daily.events.calender.helpers.Formatter
 import com.daily.events.calender.models.*
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.loper7.date_time_picker.DateTimeConfig
 import com.simplemobiletools.commons.dialogs.ConfirmationAdvancedDialog
 import com.simplemobiletools.commons.dialogs.ConfirmationDialog
 import com.simplemobiletools.commons.dialogs.RadioGroupDialog
@@ -41,12 +46,14 @@ import com.simplemobiletools.commons.models.RadioItem
 import com.simplemobiletools.commons.views.MyAutoCompleteTextView
 import kotlinx.android.synthetic.main.activity_event.*
 import kotlinx.android.synthetic.main.activity_event.view.*
+import kotlinx.android.synthetic.main.dialog_radio_group.view.*
 import kotlinx.android.synthetic.main.dialog_select_radio_group.view.*
 import kotlinx.android.synthetic.main.item_attendee.view.*
 import kotlinx.android.synthetic.main.radio_button_with_color.view.*
 import kotlinx.android.synthetic.main.tag_holder_layout.view.*
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
 import kotlin.collections.ArrayList
@@ -107,6 +114,11 @@ class EventActivity : SimpleActivity() {
     private val NEW_EVENT_TYPE_ID = -2L
     private var eventTypes = java.util.ArrayList<EventType>()
 
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<RelativeLayout>
+    var displayList: MutableList<Int>? = mutableListOf()
+    var pickerLayout = 0
+    var model = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_event)
@@ -160,6 +172,17 @@ class EventActivity : SimpleActivity() {
         }
 
         back.setOnClickListener { onBackPressed() }
+
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+
+        displayList?.add(DateTimeConfig.DAY)
+        displayList?.add(DateTimeConfig.MONTH)
+        displayList?.add(DateTimeConfig.YEAR)
+        displayList?.add(DateTimeConfig.HOUR)
+        displayList?.add(DateTimeConfig.MIN)
+
+        pickerLayout = R.layout.layout_date_picker_globalization1
+        model = R.drawable.bottom_back
     }
 
     private fun addRadioButton(eventType: EventType) {
@@ -230,16 +253,60 @@ class EventActivity : SimpleActivity() {
         }
 
         event_show_on_map.setOnClickListener { showOnMap() }
-        event_start_date.setOnClickListener { setupStartDate() }
-        event_start_time.setOnClickListener { setupStartTime() }
-        event_end_date.setOnClickListener { setupEndDate() }
-        event_end_time.setOnClickListener { setupEndTime() }
+        event_start_time.setOnClickListener {
+            hideKeyboard()
+            CardDatePickerDialog.builder(this)
+                .setTitle("From")
+                .setDisplayType(displayList)
+                .setPickerLayout(pickerLayout)
+                .setWrapSelectorWheel(false)
+                .showDateLabel(false)
+                .showBackNow(false)
+                .showFocusDateInfo(true)
+                .setBackGroundModel(model)
+                .setOnChoose("Ok") {
+                    val date = Date(it)
+                    val format = SimpleDateFormat("E, dd MMM hh:mm a")
+                    event_start_time.text = format.format(date)
+                }
+                .setOnCancel("Cancel") {
+                }.build().show()
+
+        }
+
+        event_end_time.setOnClickListener {
+            hideKeyboard()
+            CardDatePickerDialog.builder(this)
+                .setTitle("To")
+                .setDisplayType(displayList)
+                .setPickerLayout(pickerLayout)
+                .setWrapSelectorWheel(false)
+                .showDateLabel(false)
+                .showBackNow(false)
+                .showFocusDateInfo(true)
+                .setBackGroundModel(model)
+                .setOnChoose("Ok") {
+                    val date = Date(it)
+                    val format = SimpleDateFormat("E, dd MMM hh:mm a")
+                    event_end_time.text = format.format(date)
+                }
+                .setOnCancel("Cancel") {
+                }.build().show()
+
+        }
+        event_start_date.setOnClickListener { if (mIsAllDayEvent) setupStartDate() }
+        event_end_date.setOnClickListener { if (mIsAllDayEvent) setupEndDate() }
+
+//        event_end_date.setOnClickListener { setupEndDate() }
+//        event_end_time.setOnClickListener { setupEndTime() }
         event_time_zone.setOnClickListener { setupTimeZone() }
 
         event_all_day.setOnCheckedChangeListener { compoundButton, isChecked ->
             toggleAllDay(
                 isChecked
             )
+            updateEndDateText()
+            updateStartDateText()
         }
         event_repetition.setOnClickListener { showRepeatIntervalDialog() }
         event_repetition_rule_holder.setOnClickListener { showRepetitionRuleDialog() }
@@ -695,8 +762,116 @@ class EventActivity : SimpleActivity() {
     }
 
     private fun showRepeatIntervalDialog() {
-        showEventRepeatIntervalDialog(mRepeatInterval) {
-            setRepeatInterval(it)
+        if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        } else {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            hideKeyboard()
+            val seconds = TreeSet<Int>()
+            seconds.apply {
+                add(0)
+                add(DAY)
+                add(WEEK)
+                add(MONTH)
+                add(YEAR)
+                add(mRepeatInterval)
+            }
+
+            val items = ArrayList<RadioItem>(seconds.size + 1)
+            seconds.mapIndexedTo(items) { index, value ->
+                RadioItem(index, getRepetitionText(value), value)
+            }
+
+            var selectedIndex = 0
+            seconds.forEachIndexed { index, value ->
+                if (value == mRepeatInterval)
+                    selectedIndex = index
+            }
+
+            items.add(RadioItem(-1, getString(R.string.custom)))
+            openRepeatBottomSheet(this, items, selectedIndex)
+//            **********
+            showEventRepeatIntervalDialog(mRepeatInterval) {
+                setRepeatInterval(it)
+            }
+        }
+
+    }
+
+    private var selectedItemId = -1
+    private var wasInit = false
+    fun openRepeatBottomSheet(
+        activity: Activity,
+        items: java.util.ArrayList<RadioItem>,
+        checkedItemId: Int = -1,
+        titleId: Int = 0,
+        showOKButton: Boolean = false,
+        cancelCallback: (() -> Unit)? = null,
+        callback: (newValue: Any) -> Unit
+    ) {
+        val view = layoutInflater.inflate(
+            com.simplemobiletools.commons.R.layout.dialog_radio_group,
+            null
+        )
+        view.dialog_radio_group1.apply {
+            for (i in 0 until items.size) {
+                val radioButton = (activity.layoutInflater.inflate(
+                    com.simplemobiletools.commons.R.layout.radio_button,
+                    null
+                ) as RadioButton).apply {
+                    text = items[i].title
+                    isChecked = items[i].id == checkedItemId
+                    id = i
+                    setOnClickListener { itemSelected(i, callback, items) }
+                }
+
+                if (items[i].id == checkedItemId) {
+                    selectedItemId = i
+                }
+
+                repeatRL.addView(
+                    radioButton,
+                    RadioGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
+                )
+            }
+        }
+
+        val builder = AlertDialog.Builder(activity)
+            .setOnCancelListener { cancelCallback?.invoke() }
+
+        if (selectedItemId != -1 && showOKButton) {
+            builder.setPositiveButton(com.simplemobiletools.commons.R.string.ok) { dialog, which ->
+                itemSelected(
+                    selectedItemId, callback, items
+                )
+            }
+        }
+
+
+
+        if (selectedItemId != -1) {
+            view.dialog_radio_holder1.apply {
+                onGlobalLayout {
+                    scrollY =
+                        view.dialog_radio_group.findViewById<View>(selectedItemId).bottom - height
+                }
+            }
+        }
+
+        wasInit = true
+    }
+
+    private fun itemSelected(
+        checkedId: Int,
+        callback: (newValue: Any) -> Unit,
+        items: java.util.ArrayList<RadioItem>
+    ) {
+        if (wasInit) {
+            callback(items[checkedId].value)
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
     }
 
@@ -1029,7 +1204,6 @@ class EventActivity : SimpleActivity() {
 
     private fun updateCalDAVVisibility() {
         val isSyncedEvent = mEventCalendarId != STORED_LOCALLY_ONLY
-        event_attendees_image.beVisibleIf(isSyncedEvent)
         event_attendees_holder.beVisibleIf(isSyncedEvent)
         event_attendees_divider.beVisibleIf(isSyncedEvent)
         event_availability_divider.beVisibleIf(isSyncedEvent)
@@ -1461,12 +1635,20 @@ class EventActivity : SimpleActivity() {
     }
 
     private fun updateStartDateText() {
-        event_start_date.text = Formatter.getDate(applicationContext, mEventStartDateTime)
+        if (mIsAllDayEvent) {
+            val date = Date()
+            val format = SimpleDateFormat("MMMM dd (E)")
+            event_start_date.text = format.format(date)
+        } else {
+            event_start_date.text = "From"
+        }
         checkStartEndValidity()
     }
 
     private fun updateStartTimeText() {
-        event_start_time.text = Formatter.getTime(this, mEventStartDateTime)
+        val date = Date()
+        val format = SimpleDateFormat("E, dd MMM hh:mm a")
+        event_start_time.text = format.format(date)
         checkStartEndValidity()
     }
 
@@ -1476,12 +1658,20 @@ class EventActivity : SimpleActivity() {
     }
 
     private fun updateEndDateText() {
-        event_end_date.text = Formatter.getDate(applicationContext, mEventEndDateTime)
+        if (mIsAllDayEvent) {
+            val date = Date()
+            val format = SimpleDateFormat("MMMM dd (E)")
+            event_end_date.text = format.format(date)
+        } else {
+            event_end_date.text = "To"
+        }
         checkStartEndValidity()
     }
 
     private fun updateEndTimeText() {
-        event_end_time.text = Formatter.getTime(this, mEventEndDateTime)
+        val date = Date()
+        val format = SimpleDateFormat("E, dd MMM hh:mm a")
+        event_end_time.text = format.format(date)
         checkStartEndValidity()
     }
 
@@ -1491,7 +1681,9 @@ class EventActivity : SimpleActivity() {
 
     private fun checkStartEndValidity() {
         val textColor =
-            if (mEventStartDateTime.isAfter(mEventEndDateTime)) resources.getColor(R.color.red_text) else config.textColor
+            if (mEventStartDateTime.isAfter(mEventEndDateTime)) resources.getColor(R.color.red_text) else resources.getColor(
+                R.color.black
+            )
         event_end_date.setTextColor(textColor)
         event_end_time.setTextColor(textColor)
     }
@@ -1708,14 +1900,7 @@ class EventActivity : SimpleActivity() {
             }
             addAttendee()
 
-            val imageHeight = event_repetition_image.height
-            if (imageHeight > 0) {
-                event_attendees_image.layoutParams.height = imageHeight
-            } else {
-                event_repetition_image.onGlobalLayout {
-                    event_attendees_image.layoutParams.height = event_repetition_image.height
-                }
-            }
+
         }
     }
 
@@ -2003,15 +2188,12 @@ class EventActivity : SimpleActivity() {
         event_show_on_map.applyColorFilter(getAdjustedPrimaryColor())
         val textColor = config.textColor
         arrayOf(
-            event_time_zone_image,
-            event_repetition_image,
             event_reminder_image,
             event_type_image,
             event_caldav_calendar_image,
             event_reminder_1_type,
             event_reminder_2_type,
             event_reminder_3_type,
-            event_attendees_image,
             event_availability_image
         ).forEach {
             it.applyColorFilter(textColor)

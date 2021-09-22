@@ -28,7 +28,7 @@ class RadioGroupDialog(
 
     init {
         val view = activity.layoutInflater.inflate(R.layout.dialog_radio_group, null)
-        view.dialog_radio_group.apply {
+        view.dialog_radio_group1.apply {
             for (i in 0 until items.size) {
                 val radioButton = (activity.layoutInflater.inflate(
                     R.layout.radio_button,
@@ -66,10 +66,10 @@ class RadioGroupDialog(
         }
 
         if (selectedItemId != -1) {
-            view.dialog_radio_holder.apply {
+            view.dialog_radio_holder1.apply {
                 onGlobalLayout {
                     scrollY =
-                        view.dialog_radio_group.findViewById<View>(selectedItemId).bottom - height
+                        view.dialog_radio_group1.findViewById<View>(selectedItemId).bottom - height
                 }
             }
         }

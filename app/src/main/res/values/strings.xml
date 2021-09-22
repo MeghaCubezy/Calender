@@ -50,7 +50,7 @@
 
     <!-- Event Repetition -->
     <string name="repetition">Repetition</string>
-    <string name="no_repetition">No repetition</string>
+    <string name="no_repetition">One time event</string>
     <string name="daily">Daily</string>
     <string name="weekly">Weekly</string>
     <string name="monthly">Monthly</string>
@@ -146,7 +146,7 @@
     <!-- Event details -->
     <string name="location">Location</string>
     <string name="description">Description</string>
-    <string name="all_day">All-day</string>
+    <string name="all_day">All day</string>
 
     <!-- Weekly view -->
     <string name="week">Week</string>

@@ -20,14 +20,14 @@ class MySwitchCompat : SwitchCompat {
     )
 
     fun setColors(textColor: Int, accentColor: Int, backgroundColor: Int) {
-        setTextColor(textColor)
+        setTextColor(resources.getColor(R.color.md_grey_black_dark))
         val states = arrayOf(
             intArrayOf(-android.R.attr.state_checked),
             intArrayOf(android.R.attr.state_checked)
         )
         val thumbColors = intArrayOf(resources.getColor(R.color.thumb_deactivated), accentColor)
         val trackColors =
-            intArrayOf(resources.getColor(R.color.track_deactivated), accentColor.adjustAlpha(0.3f))
+            intArrayOf(resources.getColor(R.color.hint_black), accentColor.adjustAlpha(0.3f))
         DrawableCompat.setTintList(
             DrawableCompat.wrap(thumbDrawable),
             ColorStateList(states, thumbColors)
