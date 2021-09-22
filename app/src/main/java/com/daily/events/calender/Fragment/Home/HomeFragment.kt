@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import com.daily.events.calender.Extensions.config
 import com.daily.events.calender.Extensions.seconds
 import com.daily.events.calender.Fragment.DayFragmentsHolder
-import com.daily.events.calender.Fragment.MonthScrollFragment
+import com.daily.events.calender.Fragment.MonthFragmentsHolder
 import com.daily.events.calender.Fragment.WeekFragmentsHolder
 import com.daily.events.calender.Fragment.YearFragmentsHolder
 import com.daily.events.calender.R
@@ -100,7 +100,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     private fun getFragmentsHolder() = when (requireActivity().config.storedView) {
         DAILY_VIEW -> DayFragmentsHolder()
-        MONTHLY_VIEW -> MonthScrollFragment()
+        MONTHLY_VIEW -> MonthFragmentsHolder()
         WEEKLY_VIEW -> WeekFragmentsHolder()
         YEARLY_VIEW -> YearFragmentsHolder()
 //        EVENTS_LIST_VIEW -> EventListFragment()

@@ -17,24 +17,18 @@ import pub.devrel.easypermissions.EasyPermissions.PermissionCallbacks
 
 abstract class BaseActivity : AppCompatActivity() , PermissionCallbacks{
 
-    companion object{
+    companion object {
         const val RC_READ_EXTERNAL_STORAGE = 123
+        var perms = arrayOf(
+            Manifest.permission.READ_CALENDAR,
+            Manifest.permission.WRITE_CALENDAR,
+        )
     }
 
-
-    var perms = arrayOf(
-        Manifest.permission.READ_CALENDAR,
-        Manifest.permission.WRITE_CALENDAR,
-
-    )
     val TAG = BaseActivity::class.java.name
 
 
     abstract fun permissionGranted()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)

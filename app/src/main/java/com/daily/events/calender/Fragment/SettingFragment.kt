@@ -1,14 +1,26 @@
 package com.daily.events.calender.Fragment
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.daily.events.calender.Activity.BaseActivity.Companion.perms
 import com.daily.events.calender.Activity.MainActivity
+import com.daily.events.calender.Extensions.calDAVHelper
+import com.daily.events.calender.Extensions.config
+import com.daily.events.calender.Extensions.eventTypesDB
 import com.daily.events.calender.R
 import com.daily.events.calender.databinding.FragmentSettingBinding
+import com.simplemobiletools.commons.helpers.*
+import pub.devrel.easypermissions.EasyPermissions
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,6 +33,13 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class SettingFragment : Fragment() {
+
+    var actionOnPermission: ((granted: Boolean) -> Unit)? = null
+    var isAskingPermissions = false
+    var useDynamicTheme = true
+    var checkedDocumentPath = ""
+
+    private val GENERIC_PERM_HANDLER = 100
 
     var fragmentSetting: FragmentSettingBinding? = null
 
@@ -36,6 +55,24 @@ class SettingFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        setupCaldavSync()
+    }
+
+    private fun setupCaldavSync() {
+        fragmentSetting?.imgSync?.setOnClickListener {
+            val isGranted = EasyPermissions.hasPermissions(requireContext(), *perms)
+            if (isGranted) {
+                if (!requireContext().config.caldavSync) {
+                    toggleCaldavSync(true)
+                } else {
+                    toggleCaldavSync(false)
+                }
+            }
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,6 +83,41 @@ class SettingFragment : Fragment() {
         MainActivity.mainBinding?.dateTitleTV?.text = resources.getString(R.string.settings)
 
         return fragmentSetting?.root
+    }
+
+    private fun toggleCaldavSync(enable: Boolean) {
+        if (enable) {
+            val lbm = LocalBroadcastManager.getInstance(requireContext())
+            val localIn = Intent("OPEN_ACCOUNT_SYNC")
+            lbm.sendBroadcast(localIn)
+        } else {
+            requireContext().config.caldavSync = false
+
+            ensureBackgroundThread {
+                requireContext().config.getSyncedCalendarIdsAsList().forEach {
+                    requireContext().calDAVHelper.deleteCalDAVCalendarEvents(it.toLong())
+                }
+                requireContext().eventTypesDB.deleteEventTypesWithCalendarId(requireContext().config.getSyncedCalendarIdsAsList())
+                updateDefaultEventTypeText()
+            }
+        }
+    }
+
+    private fun updateDefaultEventTypeText() {
+        if (requireContext().config.defaultEventTypeId == -1L) {
+
+        } else {
+            ensureBackgroundThread {
+                val eventType =
+                    requireContext().eventTypesDB.getEventTypeWithId(requireContext().config.defaultEventTypeId)
+                if (eventType != null) {
+                    requireContext().config.lastUsedCaldavCalendarId = eventType.caldavCalendarId
+                } else {
+                    requireContext().config.defaultEventTypeId = -1
+                    updateDefaultEventTypeText()
+                }
+            }
+        }
     }
 
     companion object {
@@ -67,4 +139,56 @@ class SettingFragment : Fragment() {
                 }
             }
     }
+
+    fun handlePermission(permissionId: Int, callback: (granted: Boolean) -> Unit) {
+        actionOnPermission = null
+        if (hasPermission(permissionId)) {
+            callback(true)
+        } else {
+            isAskingPermissions = true
+            actionOnPermission = callback
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(getPermissionString(permissionId)),
+                GENERIC_PERM_HANDLER
+            )
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        isAskingPermissions = false
+        if (requestCode == GENERIC_PERM_HANDLER && grantResults.isNotEmpty()) {
+            actionOnPermission?.invoke(grantResults[0] == 0)
+        }
+    }
+
+    fun hasPermission(permId: Int) = ContextCompat.checkSelfPermission(
+        requireContext(),
+        getPermissionString(permId)
+    ) == PackageManager.PERMISSION_GRANTED
+
+    fun getPermissionString(id: Int) = when (id) {
+        PERMISSION_READ_STORAGE -> Manifest.permission.READ_EXTERNAL_STORAGE
+        PERMISSION_WRITE_STORAGE -> Manifest.permission.WRITE_EXTERNAL_STORAGE
+        PERMISSION_CAMERA -> Manifest.permission.CAMERA
+        PERMISSION_RECORD_AUDIO -> Manifest.permission.RECORD_AUDIO
+        PERMISSION_READ_CONTACTS -> Manifest.permission.READ_CONTACTS
+        PERMISSION_WRITE_CONTACTS -> Manifest.permission.WRITE_CONTACTS
+        PERMISSION_READ_CALENDAR -> Manifest.permission.READ_CALENDAR
+        PERMISSION_WRITE_CALENDAR -> Manifest.permission.WRITE_CALENDAR
+        PERMISSION_CALL_PHONE -> Manifest.permission.CALL_PHONE
+        PERMISSION_READ_CALL_LOG -> Manifest.permission.READ_CALL_LOG
+        PERMISSION_WRITE_CALL_LOG -> Manifest.permission.WRITE_CALL_LOG
+        PERMISSION_GET_ACCOUNTS -> Manifest.permission.GET_ACCOUNTS
+        PERMISSION_READ_SMS -> Manifest.permission.READ_SMS
+        PERMISSION_SEND_SMS -> Manifest.permission.SEND_SMS
+        PERMISSION_READ_PHONE_STATE -> Manifest.permission.READ_PHONE_STATE
+        else -> ""
+    }
+
 }

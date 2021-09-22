@@ -23,6 +23,7 @@ import com.daily.events.calender.helpers.Formatter
 import com.daily.events.calender.helpers.MonthlyCalendarImpl
 import com.daily.events.calender.interfaces.MonthlyCalendar
 import com.daily.events.calender.interfaces.NavigationListener
+import com.daily.events.calender.views.MonthViewWrapper
 import com.simplemobiletools.commons.extensions.applyColorFilter
 import com.simplemobiletools.commons.extensions.beGone
 import com.simplemobiletools.commons.extensions.beVisible
@@ -51,10 +52,13 @@ class MonthFragment : Fragment(), MonthlyCalendar {
     private var mLastHash = 0L
     private var mCalendar: MonthlyCalendarImpl? = null
 
+    var isExpand: Boolean = true
+
     var listener: NavigationListener? = null
 
     lateinit var mRes: Resources
     lateinit var mHolder: ConstraintLayout
+    lateinit var mMonthViewWaraper: MonthViewWrapper
     lateinit var mConfig: Config
 
     // TODO: Rename and change types of parameters
@@ -78,12 +82,15 @@ class MonthFragment : Fragment(), MonthlyCalendar {
         mRes = resources
         mPackageName = requireActivity().packageName
         mHolder = view.month_calendar_holder
+        mMonthViewWaraper = view.month_view_wrapper
         mDayCode = requireArguments().getString(DAY_CODE)!!
         mConfig = requireContext().config
         storeStateVariables()
 
         setupButtons()
         mCalendar = MonthlyCalendarImpl(this, requireContext())
+
+
 
         return view
     }
