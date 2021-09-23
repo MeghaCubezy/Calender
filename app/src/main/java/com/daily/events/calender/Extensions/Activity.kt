@@ -2,12 +2,11 @@ package com.daily.events.calender.Extensions
 
 import android.app.Activity
 import com.daily.events.calender.BuildConfig
+import com.daily.events.calender.Dialogs.CustomEventRepeatIntervalDialog
 import com.daily.events.calender.Model.Event
 import com.daily.events.calender.R
-import com.daily.events.calender.dialogs.CustomEventRepeatIntervalDialog
 import com.daily.events.calender.helpers.*
 import com.simplemobiletools.commons.activities.BaseSimpleActivity
-
 import com.simplemobiletools.commons.dialogs.RadioGroupDialog
 import com.simplemobiletools.commons.extensions.*
 import com.simplemobiletools.commons.helpers.ensureBackgroundThread

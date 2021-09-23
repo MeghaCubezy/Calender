@@ -1104,7 +1104,11 @@ fun Activity.setupDialogStuff(
     if (view is ViewGroup)
         updateTextColors(view)
     else if (view is MyTextView) {
-        view.setColors(baseConfig.textColor, adjustedPrimaryColor, baseConfig.backgroundColor)
+        view.setColors(
+            resources.getColor(R.color.md_grey_black_dark),
+            adjustedPrimaryColor,
+            resources.getColor(R.color.white)
+        )
     }
 
     var title: TextView? = null
@@ -1116,16 +1120,12 @@ fun Activity.setupDialogStuff(
             } else {
                 setText(titleId)
             }
-            setTextColor(baseConfig.textColor)
+            setTextColor(resources.getColor(R.color.md_grey_black_dark))
         }
     }
 
     // if we use the same primary and background color, use the text color for dialog confirmation buttons
-    val dialogButtonColor = if (adjustedPrimaryColor == baseConfig.backgroundColor) {
-        baseConfig.textColor
-    } else {
-        adjustedPrimaryColor
-    }
+    val dialogButtonColor = resources.getColor(R.color.theme_color)
 
     dialog.apply {
         setView(view)
@@ -1138,7 +1138,10 @@ fun Activity.setupDialogStuff(
         getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(dialogButtonColor)
 
         val bgDrawable =
-            resources.getColoredDrawableWithColor(R.drawable.dialog_bg, baseConfig.backgroundColor)
+            resources.getColoredDrawableWithColor(
+                R.drawable.dialog_bg,
+                resources.getColor(R.color.white)
+            )
         window?.setBackgroundDrawable(bgDrawable)
     }
     callback?.invoke()

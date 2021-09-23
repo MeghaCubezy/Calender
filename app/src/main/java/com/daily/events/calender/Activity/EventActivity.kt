@@ -19,11 +19,7 @@ import android.text.TextUtils
 import android.text.method.LinkMovementMethod
 import android.view.*
 import android.view.inputmethod.EditorInfo
-import android.widget.ImageView
-import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.RelativeLayout
-import androidx.appcompat.app.AlertDialog
+import android.widget.*
 import androidx.core.app.NotificationManagerCompat
 import com.daily.events.calender.Adapter.AutoCompleteTextViewAdapter
 import com.daily.events.calender.Extensions.*
@@ -33,7 +29,6 @@ import com.daily.events.calender.dialogs.*
 import com.daily.events.calender.helpers.*
 import com.daily.events.calender.helpers.Formatter
 import com.daily.events.calender.models.*
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.loper7.date_time_picker.DateTimeConfig
@@ -46,8 +41,6 @@ import com.simplemobiletools.commons.models.RadioItem
 import com.simplemobiletools.commons.views.MyAutoCompleteTextView
 import kotlinx.android.synthetic.main.activity_event.*
 import kotlinx.android.synthetic.main.activity_event.view.*
-import kotlinx.android.synthetic.main.dialog_radio_group.view.*
-import kotlinx.android.synthetic.main.dialog_select_radio_group.view.*
 import kotlinx.android.synthetic.main.item_attendee.view.*
 import kotlinx.android.synthetic.main.radio_button_with_color.view.*
 import kotlinx.android.synthetic.main.tag_holder_layout.view.*
@@ -114,7 +107,6 @@ class EventActivity : SimpleActivity() {
     private val NEW_EVENT_TYPE_ID = -2L
     private var eventTypes = java.util.ArrayList<EventType>()
 
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<RelativeLayout>
     var displayList: MutableList<Int>? = mutableListOf()
     var pickerLayout = 0
     var model = 0
@@ -172,8 +164,6 @@ class EventActivity : SimpleActivity() {
         }
 
         back.setOnClickListener { onBackPressed() }
-
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
 
         displayList?.add(DateTimeConfig.DAY)
         displayList?.add(DateTimeConfig.MONTH)
@@ -308,7 +298,11 @@ class EventActivity : SimpleActivity() {
             updateEndDateText()
             updateStartDateText()
         }
-        event_repetition.setOnClickListener { showRepeatIntervalDialog() }
+        event_repetition.setOnClickListener {
+            showEventRepeatIntervalDialog(mRepeatInterval) {
+                setRepeatInterval(it)
+            }
+        }
         event_repetition_rule_holder.setOnClickListener { showRepetitionRuleDialog() }
         event_repetition_limit_holder.setOnClickListener { showRepetitionTypePicker() }
 
@@ -758,120 +752,6 @@ class EventActivity : SimpleActivity() {
         showPickSecondsDialogHelper(mReminder3Minutes, showDuringDayOption = mIsAllDayEvent) {
             mReminder3Minutes = if (it == -1 || it == 0) it else it / 60
             checkReminderTexts()
-        }
-    }
-
-    private fun showRepeatIntervalDialog() {
-        if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        } else {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-            hideKeyboard()
-            val seconds = TreeSet<Int>()
-            seconds.apply {
-                add(0)
-                add(DAY)
-                add(WEEK)
-                add(MONTH)
-                add(YEAR)
-                add(mRepeatInterval)
-            }
-
-            val items = ArrayList<RadioItem>(seconds.size + 1)
-            seconds.mapIndexedTo(items) { index, value ->
-                RadioItem(index, getRepetitionText(value), value)
-            }
-
-            var selectedIndex = 0
-            seconds.forEachIndexed { index, value ->
-                if (value == mRepeatInterval)
-                    selectedIndex = index
-            }
-
-            items.add(RadioItem(-1, getString(R.string.custom)))
-            openRepeatBottomSheet(this, items, selectedIndex)
-//            **********
-            showEventRepeatIntervalDialog(mRepeatInterval) {
-                setRepeatInterval(it)
-            }
-        }
-
-    }
-
-    private var selectedItemId = -1
-    private var wasInit = false
-    fun openRepeatBottomSheet(
-        activity: Activity,
-        items: java.util.ArrayList<RadioItem>,
-        checkedItemId: Int = -1,
-        titleId: Int = 0,
-        showOKButton: Boolean = false,
-        cancelCallback: (() -> Unit)? = null,
-        callback: (newValue: Any) -> Unit
-    ) {
-        val view = layoutInflater.inflate(
-            com.simplemobiletools.commons.R.layout.dialog_radio_group,
-            null
-        )
-        view.dialog_radio_group1.apply {
-            for (i in 0 until items.size) {
-                val radioButton = (activity.layoutInflater.inflate(
-                    com.simplemobiletools.commons.R.layout.radio_button,
-                    null
-                ) as RadioButton).apply {
-                    text = items[i].title
-                    isChecked = items[i].id == checkedItemId
-                    id = i
-                    setOnClickListener { itemSelected(i, callback, items) }
-                }
-
-                if (items[i].id == checkedItemId) {
-                    selectedItemId = i
-                }
-
-                repeatRL.addView(
-                    radioButton,
-                    RadioGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                    )
-                )
-            }
-        }
-
-        val builder = AlertDialog.Builder(activity)
-            .setOnCancelListener { cancelCallback?.invoke() }
-
-        if (selectedItemId != -1 && showOKButton) {
-            builder.setPositiveButton(com.simplemobiletools.commons.R.string.ok) { dialog, which ->
-                itemSelected(
-                    selectedItemId, callback, items
-                )
-            }
-        }
-
-
-
-        if (selectedItemId != -1) {
-            view.dialog_radio_holder1.apply {
-                onGlobalLayout {
-                    scrollY =
-                        view.dialog_radio_group.findViewById<View>(selectedItemId).bottom - height
-                }
-            }
-        }
-
-        wasInit = true
-    }
-
-    private fun itemSelected(
-        checkedId: Int,
-        callback: (newValue: Any) -> Unit,
-        items: java.util.ArrayList<RadioItem>
-    ) {
-        if (wasInit) {
-            callback(items[checkedId].value)
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
     }
 
@@ -1639,8 +1519,10 @@ class EventActivity : SimpleActivity() {
             val date = Date()
             val format = SimpleDateFormat("MMMM dd (E)")
             event_start_date.text = format.format(date)
+            event_start_date.setTextColor(resources.getColor(R.color.black))
         } else {
             event_start_date.text = "From"
+            event_start_date.setTextColor(resources.getColor(R.color.grey))
         }
         checkStartEndValidity()
     }
@@ -1662,8 +1544,10 @@ class EventActivity : SimpleActivity() {
             val date = Date()
             val format = SimpleDateFormat("MMMM dd (E)")
             event_end_date.text = format.format(date)
+            event_end_date.setTextColor(resources.getColor(R.color.black))
         } else {
             event_end_date.text = "To"
+            event_end_date.setTextColor(resources.getColor(R.color.grey))
         }
         checkStartEndValidity()
     }
@@ -1684,7 +1568,6 @@ class EventActivity : SimpleActivity() {
             if (mEventStartDateTime.isAfter(mEventEndDateTime)) resources.getColor(R.color.red_text) else resources.getColor(
                 R.color.black
             )
-        event_end_date.setTextColor(textColor)
         event_end_time.setTextColor(textColor)
     }
 

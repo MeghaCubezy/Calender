@@ -1,4 +1,4 @@
-package com.daily.events.calender.dialogs
+package com.daily.events.calender.Dialogs
 
 import android.app.Activity
 import android.view.ViewGroup
