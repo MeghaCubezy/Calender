@@ -211,12 +211,9 @@
                 android:id="@+id/event_repetition_rule_holder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/event_repetition"
-                android:layout_alignStart="@+id/event_repetition"
-                android:background="?attr/selectableItemBackground"
                 android:visibility="gone">
 
-                <com.simplemobiletools.commons.views.MyTextView
+                <TextView
                     android:id="@+id/event_repetition_rule_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -228,7 +225,7 @@
                     android:textColor="@color/grey"
                     android:textSize="@dimen/day_text_size" />
 
-                <com.simplemobiletools.commons.views.MyTextView
+                <TextView
                     android:id="@+id/event_repetition_rule"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -239,7 +236,8 @@
                     android:drawablePadding="@dimen/_5sdp"
                     android:fontFamily="@font/roboto"
                     android:gravity="end"
-                    android:padding="@dimen/activity_margin"
+                    android:paddingTop="@dimen/activity_margin"
+                    android:paddingBottom="@dimen/activity_margin"
                     android:text="@string/every_day"
                     android:textColor="@color/black"
                     android:textSize="@dimen/day_text_size" />
@@ -249,12 +247,9 @@
                 android:id="@+id/event_repetition_limit_holder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/event_repetition_rule_holder"
-                android:layout_alignStart="@+id/event_repetition"
-                android:background="?attr/selectableItemBackground"
                 android:visibility="gone">
 
-                <com.simplemobiletools.commons.views.MyTextView
+                <TextView
                     android:id="@+id/event_repetition_limit_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -267,7 +262,7 @@
                     android:textColor="@color/grey"
                     android:textSize="@dimen/day_text_size" />
 
-                <com.simplemobiletools.commons.views.MyTextView
+                <TextView
                     android:id="@+id/event_repetition_limit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -276,7 +271,8 @@
                     android:drawableRight="@drawable/ic_right_arrow"
                     android:drawablePadding="@dimen/_5sdp"
                     android:fontFamily="@font/roboto"
-                    android:padding="@dimen/activity_margin"
+                    android:paddingTop="@dimen/activity_margin"
+                    android:paddingBottom="@dimen/activity_margin"
                     android:text="@string/forever"
                     android:textColor="@color/black"
                     android:textSize="@dimen/day_text_size" />
@@ -285,10 +281,9 @@
             <View
                 android:id="@+id/divider1"
                 android:layout_width="match_parent"
-                android:layout_height="1px"
+                android:layout_height="2px"
                 android:layout_below="@+id/event_repetition"
-                android:layout_marginTop="@dimen/activity_margin"
-                android:layout_marginBottom="@dimen/normal_margin"
+                android:layout_marginVertical="@dimen/_8sdp"
                 android:background="@color/divider_grey"
                 android:importantForAccessibility="no" />
 
@@ -309,12 +304,11 @@
                     android:textColor="@color/grey"
                     android:textSize="@dimen/day_text_size" />
 
-                <com.simplemobiletools.commons.views.MyTextView
+                <TextView
                     android:id="@+id/event_reminder_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/small_margin"
-                    android:background="?attr/selectableItemBackground"
                     android:drawableRight="@drawable/ic_right_arrow"
                     android:drawablePadding="@dimen/_5sdp"
                     android:ellipsize="end"
@@ -322,12 +316,46 @@
                     android:gravity="right"
                     android:lines="1"
                     android:paddingTop="@dimen/activity_margin"
-                    android:paddingEnd="@dimen/activity_margin"
                     android:paddingBottom="@dimen/activity_margin"
                     android:textColor="@color/black"
                     android:textSize="@dimen/day_text_size"
                     tools:text="@string/add_another_reminder" />
             </RelativeLayout>
+
+            <TextView
+                android:id="@+id/event_reminder_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto"
+                android:gravity="right"
+                android:lines="1"
+
+                android:paddingTop="16dp"
+                android:paddingEnd="@dimen/activity_margin"
+                android:paddingBottom="@dimen/activity_margin"
+                android:text="@string/add_another_reminder"
+                android:textColor="@color/black"
+                android:textSize="@dimen/day_text_size"
+                android:visibility="gone"
+                tools:text="@string/add_another_reminder" />
+
+            <TextView
+                android:id="@+id/event_reminder_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto"
+                android:gravity="right"
+                android:lines="1"
+                android:paddingTop="16dp"
+                android:paddingEnd="@dimen/activity_margin"
+                android:paddingBottom="@dimen/activity_margin"
+                android:text="@string/add_another_reminder"
+                android:textColor="@color/black"
+                android:textSize="@dimen/day_text_size"
+                android:visibility="gone"
+                tools:text="@string/add_another_reminder" />
 
             <View
                 android:id="@+id/divider2"
@@ -340,108 +368,100 @@
                 android:importantForAccessibility="no" />
 
             <RelativeLayout
+                android:id="@+id/event_caldav_calendar_holder"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:visibility="visible">
 
                 <TextView
                     android:id="@+id/account"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto"
-                    android:paddingTop="@dimen/activity_margin"
+                    android:paddingTop="10dp"
                     android:paddingEnd="@dimen/activity_margin"
                     android:paddingBottom="@dimen/activity_margin"
                     android:text="Account"
                     android:textColor="@color/grey"
                     android:textSize="@dimen/day_text_size" />
 
-                <RelativeLayout
-                    android:id="@+id/event_caldav_calendar_holder"
+                <TextView
+                    android:id="@+id/event_caldav_calendar_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/account"
-                    android:background="?attr/selectableItemBackground"
-                    android:visibility="visible">
+                    android:ellipsize="end"
+                    android:fontFamily="@font/roboto"
+                    android:gravity="right"
+                    android:maxLines="1"
+                    android:paddingTop="@dimen/medium_margin"
+                    android:paddingEnd="@dimen/activity_margin"
+                    android:paddingBottom="@dimen/tiny_margin"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/day_text_size"
+                    tools:text="My calendar" />
 
-                    <com.simplemobiletools.commons.views.MyTextView
-                        android:id="@+id/event_caldav_calendar_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/_30sdp"
-                        android:ellipsize="end"
-                        android:gravity="right"
-                        android:maxLines="1"
-                        android:paddingTop="@dimen/medium_margin"
-                        android:paddingBottom="@dimen/tiny_margin"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/day_text_size"
-                        tools:text="My calendar" />
-
-                    <com.simplemobiletools.commons.views.MyTextView
-                        android:id="@+id/event_caldav_calendar_email"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/event_caldav_calendar_name"
-                        android:layout_marginStart="@dimen/small_margin"
-                        android:drawableRight="@drawable/ic_right_arrow"
-                        android:drawablePadding="@dimen/_5sdp"
-                        android:ellipsize="end"
-                        android:fontFamily="@font/roboto"
-                        android:gravity="right"
-                        android:maxLines="1"
-                        android:paddingEnd="@dimen/medium_margin"
-                        android:paddingBottom="@dimen/medium_margin"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/meta_text_size"
-                        tools:text="hello@simplemobiletools.com" />
-
-
-                </RelativeLayout>
+                <TextView
+                    android:id="@+id/event_caldav_calendar_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/event_caldav_calendar_name"
+                    android:drawableRight="@drawable/ic_right_arrow"
+                    android:drawablePadding="@dimen/_5sdp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/roboto"
+                    android:gravity="right"
+                    android:maxLines="1"
+                    android:paddingBottom="@dimen/medium_margin"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/meta_text_size"
+                    tools:text="hello@simplemobiletools.com" />
 
             </RelativeLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
+                android:layout_height="wrap_content"
+                android:weightSum="2">
 
                 <TextView
                     android:id="@+id/timeZone"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto"
+                    android:paddingTop="@dimen/activity_margin"
+                    android:paddingBottom="@dimen/activity_margin"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/day_text_size"
+                    android:textColor="@color/grey"
+                    tools:text="Time zone" />
+
+                <TextView
+                    android:id="@+id/event_time_zone"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/small_margin"
-                    android:background="?attr/selectableItemBackground"
+                    android:layout_weight="1"
                     android:drawableRight="@drawable/ic_right_arrow"
                     android:drawablePadding="@dimen/_5sdp"
+                    android:ellipsize="end"
                     android:fontFamily="@font/roboto"
                     android:gravity="right"
+                    android:lines="1"
                     android:paddingTop="@dimen/activity_margin"
                     android:paddingBottom="@dimen/activity_margin"
                     android:textColor="@color/black"
                     android:textSize="@dimen/day_text_size"
-                    tools:text="Gmt 5:30" />
+                    tools:text="Europe/Bratislava" />
 
-                <TextView
-                    android:id="@+id/event_time_zone"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_35sdp"
-                    android:layout_marginTop="@dimen/activity_margin"
-                    android:maxLength="180"
-                    android:maxLines="1"
-                    android:minEms="20"
-                    android:text="Time zone"
-                    android:textColor="@color/grey"
-                    android:textCursorDrawable="@null"
-                    android:textSize="@dimen/day_text_size" />
-
-            </RelativeLayout>
+            </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#F6F8FB">
 
-                <com.simplemobiletools.commons.views.MyEditText
+                <EditText
                     android:id="@+id/event_location"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_35sdp"
@@ -467,7 +487,14 @@
                     app:tint="@color/theme_color" />
             </RelativeLayout>
 
-            <com.simplemobiletools.commons.views.MyEditText
+            <LinearLayout
+                android:id="@+id/event_attendees_holder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:orientation="vertical" />
+
+            <EditText
                 android:id="@+id/event_description"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_35sdp"

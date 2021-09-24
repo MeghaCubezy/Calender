@@ -21,8 +21,13 @@
             android:ems="6"
             android:inputType="number"
             android:maxLength="5"
+            android:backgroundTint="@color/theme_color"
+            android:fontFamily="@font/roboto"
             android:textCursorDrawable="@null"
-            android:textSize="@dimen/normal_text_size" />
+            android:hint="Enter here..."
+            android:textColor="@color/md_grey_black_dark"
+            android:textColorHint="@color/grey"
+            android:textSize="@dimen/_12sdp" />
 
         <RadioGroup
             android:id="@+id/dialog_radio_view"
@@ -36,6 +41,10 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/activity_margin"
                 android:paddingBottom="@dimen/activity_margin"
+                android:fontFamily="@font/roboto"
+                android:layoutDirection="rtl"
+                android:textColor="@color/md_grey_black_dark"
+                android:textSize="@dimen/_12sdp"
                 android:text="@string/seconds_raw" />
 
             <com.simplemobiletools.commons.views.MyCompatRadioButton
@@ -44,6 +53,10 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/activity_margin"
                 android:paddingBottom="@dimen/activity_margin"
+                android:fontFamily="@font/roboto"
+                android:layoutDirection="rtl"
+                android:textColor="@color/md_grey_black_dark"
+                android:textSize="@dimen/_12sdp"
                 android:text="@string/minutes_raw" />
 
             <com.simplemobiletools.commons.views.MyCompatRadioButton
@@ -52,6 +65,10 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/activity_margin"
                 android:paddingBottom="@dimen/activity_margin"
+                android:fontFamily="@font/roboto"
+                android:layoutDirection="rtl"
+                android:textColor="@color/md_grey_black_dark"
+                android:textSize="@dimen/_12sdp"
                 android:text="@string/hours_raw" />
 
             <com.simplemobiletools.commons.views.MyCompatRadioButton
@@ -60,6 +77,10 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/activity_margin"
                 android:paddingBottom="@dimen/activity_margin"
+                android:fontFamily="@font/roboto"
+                android:layoutDirection="rtl"
+                android:textColor="@color/md_grey_black_dark"
+                android:textSize="@dimen/_12sdp"
                 android:text="@string/days_raw" />
 
         </RadioGroup>

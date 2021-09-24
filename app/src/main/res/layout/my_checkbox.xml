@@ -3,6 +3,7 @@
     android:id="@+id/my_checkbox"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
     android:paddingTop="@dimen/activity_margin"
+    android:layout_marginRight="16dp"
+    android:layoutDirection="rtl"
     android:paddingBottom="@dimen/activity_margin" />
