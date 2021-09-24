@@ -249,7 +249,7 @@ class DayFragment : Fragment(), WeeklyCalendar {
         mView.week_letters_holder.removeAllViews()
         for (i in 0 until 1) {
             val dayCode = Formatter.getDayCodeFromDateTime(curDay)
-            val labelIDs = R.array.week_days_short
+            val labelIDs = R.array.week_days
 
             val dayLetters = res.getStringArray(labelIDs).toMutableList() as ArrayList<String>
             val dayLetter = dayLetters[curDay.dayOfWeek - 1]
@@ -276,8 +276,7 @@ class DayFragment : Fragment(), WeeklyCalendar {
             label.background = null
             if (todayCode == dayCode) {
                 todayColumnIndex = i
-                label.background =
-                    requireContext().resources.getDrawable(R.drawable.selected_week_bg)
+                label.background = null
             }
 
             mView.week_letters_holder.addView(label)

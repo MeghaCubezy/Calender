@@ -12,10 +12,12 @@
         android:layout_height="wrap_content"
         android:background="@null"
         android:clickable="false"
-        android:paddingStart="@dimen/big_margin"
+        android:fontFamily="@font/plusjakarta"
         android:paddingTop="@dimen/activity_margin"
         android:paddingEnd="@dimen/activity_margin"
         android:paddingBottom="@dimen/activity_margin"
+        android:paddingStart="@dimen/_25sdp"
+        android:textSize="@dimen/_12sdp"
         tools:text="Calendar name" />
 
 </RelativeLayout>

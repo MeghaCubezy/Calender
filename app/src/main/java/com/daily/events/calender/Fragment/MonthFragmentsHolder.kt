@@ -7,8 +7,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.Transformation
 import android.widget.DatePicker
 import androidx.appcompat.app.AlertDialog
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewpager.widget.ViewPager
 import com.daily.events.calender.Activity.MainActivity
 import com.daily.events.calender.Adapter.MyMonthPagerAdapter
@@ -36,6 +39,9 @@ class MonthFragmentsHolder : MyFragmentHolder(), NavigationListener {
     private var currentDayCode = ""
     private var isGoToTodayVisible = false
 
+    var isExpand: Boolean = true
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         currentDayCode = arguments?.getString(DAY_CODE) ?: ""
@@ -52,6 +58,7 @@ class MonthFragmentsHolder : MyFragmentHolder(), NavigationListener {
         viewPager = view.fragment_months_viewpager
         viewPager!!.id = (System.currentTimeMillis() % 100000).toInt()
         setupFragment()
+
         return view
     }
 
@@ -72,6 +79,7 @@ class MonthFragmentsHolder : MyFragmentHolder(), NavigationListener {
                     positionOffset: Float,
                     positionOffsetPixels: Int
                 ) {
+
                 }
 
                 override fun onPageSelected(position: Int) {
@@ -88,8 +96,9 @@ class MonthFragmentsHolder : MyFragmentHolder(), NavigationListener {
                         "LLLL_CurrentMon: ",
                         Formatter.getMonthName(context, date.monthOfYear) + " Month: " + month
                     )
-
-                    MainActivity.mainBinding?.dateTitleTV?.text = month
+                    requireActivity().runOnUiThread {
+                        MainActivity.mainBinding?.dateTitleTV?.text = month
+                    }
 
                     val shouldGoToTodayBeVisible = shouldGoToTodayBeVisible()
                     if (isGoToTodayVisible != shouldGoToTodayBeVisible) {
@@ -98,7 +107,6 @@ class MonthFragmentsHolder : MyFragmentHolder(), NavigationListener {
                         )
                         isGoToTodayVisible = shouldGoToTodayBeVisible
                     }
-                    MainActivity.mainBinding?.dateTitleTV?.text = codes[position].toString()
 
                 }
             })
@@ -106,6 +114,59 @@ class MonthFragmentsHolder : MyFragmentHolder(), NavigationListener {
 
         }
         updateActionBarTitle()
+    }
+
+    fun expand(v: View) {
+        isExpand = true
+        val matchParentMeasureSpec =
+            View.MeasureSpec.makeMeasureSpec((v.parent as View).width, View.MeasureSpec.EXACTLY)
+        val wrapContentMeasureSpec =
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        v.measure(matchParentMeasureSpec, wrapContentMeasureSpec)
+        val targetHeight = v.measuredHeight
+
+        // Older versions of android (pre API 21) cancel animations for views with a height of 0.
+        v.layoutParams.height = 1
+        v.visibility = View.VISIBLE
+        val a: Animation = object : Animation() {
+            override fun applyTransformation(interpolatedTime: Float, t: Transformation) {
+                v.layoutParams.height = ConstraintLayout.LayoutParams.MATCH_PARENT
+                v.requestLayout()
+            }
+
+            override fun willChangeBounds(): Boolean {
+                return true
+            }
+        }
+
+        // Expansion speed of 1dp/ms
+        a.duration = ((targetHeight / v.context.resources.displayMetrics.density).toLong())
+        v.startAnimation(a)
+    }
+
+    fun collapse(v: View) {
+        isExpand = false
+        val initialHeight = v.measuredHeight
+        val a: Animation = object : Animation() {
+            override fun applyTransformation(interpolatedTime: Float, t: Transformation) {
+                if (interpolatedTime == 1f) {
+                    v.layoutParams.height =
+                        300
+                } else {
+                    v.layoutParams.height =
+                        300
+                    v.requestLayout()
+                }
+            }
+
+            override fun willChangeBounds(): Boolean {
+                return true
+            }
+        }
+
+        // Collapse speed of 1dp/ms
+        a.duration = (initialHeight / v.context.resources.displayMetrics.density).toLong()
+        v.startAnimation(a)
     }
 
     private fun getMonths(code: String): List<String> {

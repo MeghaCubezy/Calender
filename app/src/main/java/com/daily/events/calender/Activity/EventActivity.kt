@@ -189,13 +189,7 @@ class EventActivity : SimpleActivity() {
         view.eventTV.id = eventType.id!!.toInt()
 
 //        view.setOnClickListener { viewClicked(eventType) }
-        allEventTypeRL.addView(
-            view,
-            RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-        )
+
     }
 
 

@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import com.daily.events.calender.Activity.MainActivity
 import com.daily.events.calender.Adapter.MyDayPagerAdapter
 import com.daily.events.calender.Extensions.*
 import com.daily.events.calender.R
+import com.daily.events.calender.helpers.DAY_CODE
 import com.daily.events.calender.helpers.Formatter
 import com.daily.events.calender.helpers.WEEK_START_DATE_TIME
 import com.daily.events.calender.interfaces.WeekFragmentListener
@@ -37,10 +39,12 @@ class DayFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
     private var currentWeekTS = 0L
     private var isGoToTodayVisible = false
     private var weekScrollY = 0
+    private var mDayCode = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val dateTimeString = arguments?.getString(WEEK_START_DATE_TIME) ?: return
+        mDayCode = requireArguments().getString(DAY_CODE)!!
         currentWeekTS = (DateTime.parse(dateTimeString) ?: DateTime()).seconds()
         thisWeekTS = currentWeekTS
     }
@@ -78,7 +82,7 @@ class DayFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
         weekHolder!!.week_view_hours_scrollview.setOnTouchListener { view, motionEvent -> true }
 
         weekHolder!!.week_view_seekbar.apply {
-            progress = context?.config?.weeklyViewDays ?: 7
+            progress = 1
             max = MAX_SEEKBAR_VALUE
 
             onSeekBarChangeListener {
@@ -98,6 +102,7 @@ class DayFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
 
         defaultWeeklyPage = weekTSs.size / 2
 
+
         viewPager!!.apply {
             adapter = weeklyAdapter
             addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -112,6 +117,14 @@ class DayFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
 
                 override fun onPageSelected(position: Int) {
                     currentWeekTS = weekTSs[position]
+                    requireActivity().runOnUiThread {
+                        MainActivity.mainBinding?.dateTitleTV?.text =
+                            Formatter.getLongeDate(currentWeekTS)
+                        Log.e(
+                            "LLL_Week: ",
+                            Formatter.getLongeDate(currentWeekTS) + "    : " + "Done"
+                        )
+                    }
                     val shouldGoToTodayBeVisible = shouldGoToTodayBeVisible()
                     if (isGoToTodayVisible != shouldGoToTodayBeVisible) {
                         (activity as? MainActivity)?.toggleGoToTodayVisibility(
@@ -119,11 +132,20 @@ class DayFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
                         )
                         isGoToTodayVisible = shouldGoToTodayBeVisible
                     }
+
                     setupWeeklyActionbarTitle(weekTSs[position])
                 }
             })
-
-            currentItem = defaultWeeklyPage
+            for (i in weekTSs.indices) {
+                val var1 = Formatter.getDateTimeFromCode(Formatter.getDayCodeFromTS(weekTSs.get(i)))
+                    .toString()
+                val var2 = Formatter.getDateTimeFromCode(Formatter.getTodayCode()).toString()
+                if (var1 == var2) {
+                    currentItem = i
+                    Log.e("LLL_VCurrent12: ", "$var1 var2   : $var2")
+                    break
+                }
+            }
         }
 
         weekHolder!!.week_view_hours_scrollview.setOnScrollviewListener(object :
@@ -166,6 +188,7 @@ class DayFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
         val shownWeekDays = 1
         var currentWeek = dateTime.minusDays(PREFILLED_WEEKS / 2 * shownWeekDays)
         currentWeekTS = thisWeekTS
+        Log.e("LLL_VCurrent: ", Formatter.getLongestDate(currentWeekTS).toString())
 
         for (i in 0 until PREFILLED_WEEKS) {
             weekTSs.add(currentWeek.seconds())
@@ -194,7 +217,6 @@ class DayFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
                 startDateTime.plusDays(3).weekOfWeekyear
             }"
         )
-        MainActivity.mainBinding?.dateTitleTV?.text = str.toString()
     }
 
     override fun goToToday() {
@@ -254,12 +276,11 @@ class DayFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
             )
         }
 
-        updateDaysCount(context?.config?.weeklyViewDays ?: 7)
+        updateDaysCount(1)
     }
 
     private fun updateWeeklyViewDays(days: Int) {
         requireContext().config.weeklyViewDays = days
-
         updateDaysCount(days)
         setupWeeklyViewPager()
     }
@@ -332,9 +353,9 @@ class DayFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
             week_view_days_count.beGone()
             addHours(resources.getColor(R.color.theme_light_text_color))
             background = ColorDrawable(Color.WHITE)
-            (viewPager?.adapter as? MyDayPagerAdapter)?.togglePrintMode(
-                viewPager?.currentItem ?: 0
-            )
+//            (viewPager?.adapter as? MyDayPagerAdapter)?.togglePrintMode(
+//                viewPager?.currentItem ?: 0
+//            )
 
             Handler().postDelayed({
                 requireContext().printBitmap(weekHolder!!.week_view_holder.getViewBitmap())
@@ -345,9 +366,9 @@ class DayFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
                     week_view_days_count.beVisible()
                     addHours()
                     background = ColorDrawable(requireContext().config.backgroundColor)
-                    (viewPager?.adapter as? MyDayPagerAdapter)?.togglePrintMode(
-                        viewPager?.currentItem ?: 0
-                    )
+//                    (viewPager?.adapter as? MyDayPagerAdapter)?.togglePrintMode(
+//                        viewPager?.currentItem ?: 0
+//                    )
                 }, 1000)
             }, 1000)
         }
