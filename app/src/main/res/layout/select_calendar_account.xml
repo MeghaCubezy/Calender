@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/dialog_select_calendars_scrollview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -12,37 +13,83 @@
         android:layout_width="@dimen/_40sdp"
         android:layout_height="@dimen/_2sdp"
         android:layout_gravity="center_horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:background="@color/grey_view" />
 
-    <RelativeLayout
-        android:id="@+id/dialog_select_calendars_wrapper"
+    <ScrollView
+        android:id="@+id/ssView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_15sdp">
+        android:layout_above="@+id/llBottom"
+        android:layout_below="@+id/mView">
 
-        <com.simplemobiletools.commons.views.MyTextView
-            android:id="@+id/dialog_select_calendars_placeholder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:alpha="0.8"
-            android:fontFamily="@font/plusjakarta"
-            android:text="@string/no_synchronized_calendars"
-            android:textColor="@color/black" />
-
-        <LinearLayout
-            android:id="@+id/dialog_select_calendars_holder"
+        <RelativeLayout
+            android:id="@+id/dialog_select_calendars_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:layout_marginTop="@dimen/_15sdp">
 
-    </RelativeLayout>
+            <com.simplemobiletools.commons.views.MySwitchCompat
+                android:id="@+id/calendar_item_birthday_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:clickable="false"
+                android:fontFamily="@font/plusjakarta"
+                android:paddingStart="@dimen/_25sdp"
+                android:paddingTop="@dimen/activity_margin"
+                android:paddingEnd="@dimen/activity_margin"
+                android:paddingBottom="20dp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sdp"
+                tools:text="Add Contact Birthday" />
+
+            <com.simplemobiletools.commons.views.MySwitchCompat
+                android:id="@+id/calendar_item_anniversary_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/calendar_item_birthday_switch"
+                android:background="@null"
+                android:clickable="false"
+                android:fontFamily="@font/plusjakarta"
+                android:paddingStart="@dimen/_25sdp"
+                android:paddingTop="@dimen/activity_margin"
+                android:paddingEnd="@dimen/activity_margin"
+                android:paddingBottom="20dp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sdp"
+                tools:text="Add Contact Anniversary" />
+
+            <com.simplemobiletools.commons.views.MyTextView
+                android:id="@+id/dialog_select_calendars_placeholder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/calendar_item_anniversary_switch"
+                android:layout_centerHorizontal="true"
+                android:alpha="0.8"
+                android:fontFamily="@font/plusjakarta"
+                android:text="@string/no_synchronized_calendars"
+                android:textColor="@color/black" />
+
+            <LinearLayout
+                android:id="@+id/dialog_select_calendars_holder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/calendar_item_anniversary_switch"
+                android:orientation="vertical" />
+
+        </RelativeLayout>
+
+    </ScrollView>
 
     <LinearLayout
+        android:id="@+id/llBottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_20sdp"
         android:layout_marginVertical="@dimen/_15sdp"
+        android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
         <TextView
@@ -78,4 +125,4 @@
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
