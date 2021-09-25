@@ -171,6 +171,8 @@ class EventListAdapter(
             event_item_end?.beInvisibleIf(listEvent.startTS == listEvent.endTS)
             event_item_color_bar.background.applyColorFilter(listEvent.color)
 
+            rlMainView.background.applyColorFilter(listEvent.color)
+
             if (listEvent.startTS != listEvent.endTS) {
                 event_item_end?.apply {
                     val startCode = Formatter.getDayCodeFromTS(listEvent.startTS)
@@ -207,10 +209,10 @@ class EventListAdapter(
                 startTextColor = adjustedPrimaryColor
             }
 
-            event_item_start.setTextColor(startTextColor)
-            event_item_end?.setTextColor(endTextColor)
-            event_item_title.setTextColor(startTextColor)
-            event_item_description?.setTextColor(startTextColor)
+//            event_item_start.setTextColor(startTextColor)
+//            event_item_end?.setTextColor(endTextColor)
+//            event_item_title.setTextColor(startTextColor)
+//            event_item_description?.setTextColor(startTextColor)
         }
     }
 

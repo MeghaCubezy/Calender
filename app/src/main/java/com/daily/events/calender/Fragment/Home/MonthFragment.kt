@@ -12,10 +12,11 @@ import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.daily.events.calender.Activity.MainActivity
-import com.daily.events.calender.Extensions.config
-import com.daily.events.calender.Extensions.getViewBitmap
-import com.daily.events.calender.Extensions.printBitmap
+import com.daily.events.calender.Activity.SimpleActivity
+import com.daily.events.calender.Adapter.EventListAdapter
+import com.daily.events.calender.Extensions.*
 import com.daily.events.calender.Model.DayMonthly
+import com.daily.events.calender.Model.Event
 import com.daily.events.calender.R
 import com.daily.events.calender.helpers.Config
 import com.daily.events.calender.helpers.DAY_CODE
@@ -23,11 +24,16 @@ import com.daily.events.calender.helpers.Formatter
 import com.daily.events.calender.helpers.MonthlyCalendarImpl
 import com.daily.events.calender.interfaces.MonthlyCalendar
 import com.daily.events.calender.interfaces.NavigationListener
+import com.daily.events.calender.models.ListEvent
 import com.daily.events.calender.views.MonthViewWrapper
 import com.simplemobiletools.commons.extensions.applyColorFilter
 import com.simplemobiletools.commons.extensions.beGone
 import com.simplemobiletools.commons.extensions.beVisible
+import com.simplemobiletools.commons.extensions.beVisibleIf
+import com.simplemobiletools.commons.interfaces.RefreshRecyclerViewListener
 import kotlinx.android.synthetic.main.fragment_month.view.*
+import kotlinx.android.synthetic.main.layout_monthview_event.*
+import kotlinx.android.synthetic.main.layout_monthview_event.view.*
 import kotlinx.android.synthetic.main.top_navigation.view.*
 import org.joda.time.DateTime
 
@@ -42,7 +48,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [MonthFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MonthFragment : Fragment(), MonthlyCalendar {
+class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener {
 
     private var mTextColor = 0
     private var mSundayFirst = false
@@ -60,6 +66,10 @@ class MonthFragment : Fragment(), MonthlyCalendar {
     lateinit var mHolder: ConstraintLayout
     lateinit var mMonthViewWaraper: MonthViewWrapper
     lateinit var mConfig: Config
+
+    private var mSelectedDayCode = ""
+
+    private var mListEvents = ArrayList<Event>()
 
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -89,8 +99,6 @@ class MonthFragment : Fragment(), MonthlyCalendar {
 
         setupButtons()
         mCalendar = MonthlyCalendarImpl(this, requireContext())
-
-
 
         return view
     }
@@ -163,14 +171,19 @@ class MonthFragment : Fragment(), MonthlyCalendar {
         activity?.runOnUiThread {
             mHolder.top_value.apply {
 
-            text = month
+                text = month
                 contentDescription = text
                 setTextColor(resources.getColor(R.color.black))
             }
             Log.e("LLL_Month: ", mCalendar?.monthName.toString())
-
+            mHolder.month_view_wrapper.updateDays(days, false) {
+                mSelectedDayCode = it.code
+                updateVisibleEvents()
+            }
             updateDays(days)
         }
+
+        refreshItems()
     }
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
@@ -232,6 +245,71 @@ class MonthFragment : Fragment(), MonthlyCalendar {
             top_right_arrow.beVisible()
             top_value.setTextColor(resources.getColor(R.color.black))
             month_view_wrapper.togglePrintMode()
+        }
+    }
+
+    private fun updateVisibleEvents() {
+        if (activity == null) {
+            return
+        }
+
+        val filtered = mListEvents.filter {
+            if (mSelectedDayCode.isEmpty()) {
+                val shownMonthDateTime = Formatter.getDateTimeFromCode(mDayCode)
+                val startDateTime = Formatter.getDateTimeFromTS(it.startTS)
+                shownMonthDateTime.year == startDateTime.year && shownMonthDateTime.monthOfYear == startDateTime.monthOfYear
+            } else {
+                val selectionDate = Formatter.getDateTimeFromCode(mSelectedDayCode).toLocalDate()
+                val startDate = Formatter.getDateFromTS(it.startTS)
+                val endDate = Formatter.getDateFromTS(it.endTS)
+                selectionDate in startDate..endDate
+            }
+        }
+
+        val listItems = requireActivity().getEventListItems(filtered, false)
+//        if (mSelectedDayCode.isNotEmpty()) {
+//            mHolder.month_day_selected_day_label.text = Formatter.getDateFromCode(activity!!, mSelectedDayCode, false)
+//        }
+
+        activity?.runOnUiThread {
+            if (activity != null) {
+                mHolder.month_day_events_list.beVisibleIf(listItems.isNotEmpty())
+                mHolder.month_day_no_events_placeholder.beVisibleIf(listItems.isEmpty())
+
+                val currAdapter = mHolder.month_day_events_list.adapter
+                if (currAdapter == null) {
+                    EventListAdapter(
+                        activity as SimpleActivity,
+                        listItems,
+                        true,
+                        this,
+                        month_day_events_list
+                    ) {
+                        if (it is ListEvent) {
+                            activity?.editEvent(it)
+                        }
+                    }.apply {
+                        month_day_events_list.adapter = this
+                    }
+                    month_day_events_list.scheduleLayoutAnimation()
+                } else {
+                    (currAdapter as EventListAdapter).updateListItems(listItems)
+                }
+            }
+        }
+    }
+
+    override fun refreshItems() {
+        val startDateTime = Formatter.getLocalDateTimeFromCode(mDayCode).minusWeeks(1)
+        val endDateTime = startDateTime.plusWeeks(7)
+        activity?.eventsHelper?.getEvents(
+            startDateTime.seconds(),
+            endDateTime.seconds()
+        ) { events ->
+            mListEvents = events
+            activity?.runOnUiThread {
+                updateVisibleEvents()
+            }
         }
     }
 
