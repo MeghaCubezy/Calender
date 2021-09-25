@@ -3,9 +3,8 @@ package com.simplemobiletools.commons.views
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.EditText
-import com.simplemobiletools.commons.extensions.adjustAlpha
+import com.simplemobiletools.commons.R
 import com.simplemobiletools.commons.extensions.applyColorFilter
-import com.simplemobiletools.commons.helpers.MEDIUM_ALPHA
 
 class MyEditText : EditText {
     constructor(context: Context) : super(context)
@@ -22,8 +21,7 @@ class MyEditText : EditText {
         background?.mutate()?.applyColorFilter(accentColor)
 
         // requires android:textCursorDrawable="@null" in xml to color the cursor too
-        setTextColor(textColor)
-        setHintTextColor(textColor.adjustAlpha(MEDIUM_ALPHA))
+        setTextColor(resources.getColor(R.color.md_grey_black_dark))
         setLinkTextColor(accentColor)
     }
 }

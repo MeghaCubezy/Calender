@@ -1,25 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/event_attendee_holder"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="@dimen/medium_margin"
-    android:paddingBottom="@dimen/medium_margin">
+    android:layout_height="wrap_content">
 
-    <com.simplemobiletools.commons.views.MyAutoCompleteTextView
-        android:id="@+id/event_attendee"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="@dimen/activity_margin"
-        android:completionThreshold="2"
-        android:hint="@string/add_another_attendee"
-        android:lines="1"
-        android:maxLines="1"
-        android:singleLine="true"
-        android:textCursorDrawable="@null"
-        android:textSize="@dimen/bigger_text_size" />
+        app:cardBackgroundColor="#F6F8FB"
+        app:cardCornerRadius="@dimen/_5sdp"
+        app:cardElevation="0dp">
+
+        <com.simplemobiletools.commons.views.MyAutoCompleteTextView
+            android:id="@+id/event_attendee"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_35sdp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/activity_margin"
+            android:completionThreshold="2"
+            android:background="@null"
+            android:lines="1"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:hint="Guest"
+            android:paddingLeft="@dimen/_10sdp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/grey"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/day_text_size" />
 
     <RelativeLayout
         android:id="@+id/event_contact_attendee"
@@ -89,4 +99,5 @@
             tools:text="@string/invited" />
 
     </RelativeLayout>
+    </androidx.cardview.widget.CardView>
 </RelativeLayout>

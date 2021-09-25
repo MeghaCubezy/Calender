@@ -83,6 +83,9 @@ dependencies {
     //flaxbox
     implementation 'com.google.android:flexbox:1.1.0'
 
+    //date time picker
+    implementation 'com.github.loperSeven:DateTimePicker:0.3.4'
+
     implementation project(':commons')
     implementation project(':collapsiblecalendarview2')
 

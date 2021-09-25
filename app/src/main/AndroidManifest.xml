@@ -61,10 +61,21 @@
             <intent-filter>
                 <action android:name="android.intent.action.EDIT" />
                 <action android:name="android.intent.action.INSERT" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="vnd.android.cursor.dir/event" />
+            </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name=".Activity.SelectTimeZoneActivity"
+            android:parentActivityName=".Activity.EventActivity">
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:resource="@xml/searchable" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
     </application>

@@ -36,6 +36,11 @@ class RadioGroupDialog(
                 ) as RadioButton).apply {
                     text = items[i].title
                     isChecked = items[i].id == checkedItemId
+                    if (isChecked) {
+                        buttonTintList = activity.resources.getColorStateList(R.color.theme_color)
+                    } else {
+                        buttonTintList = activity.resources.getColorStateList(R.color.md_grey)
+                    }
                     id = i
                     setOnClickListener { itemSelected(i) }
                 }
@@ -78,7 +83,9 @@ class RadioGroupDialog(
     }
 
     private fun itemSelected(checkedId: Int) {
+
         if (wasInit) {
+
             callback(items[checkedId].value)
             dialog.dismiss()
         }

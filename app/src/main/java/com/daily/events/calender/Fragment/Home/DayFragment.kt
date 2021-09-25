@@ -239,6 +239,7 @@ class DayFragment : Fragment(), WeeklyCalendar {
     }
 
     private fun setupDayLabels() {
+
         var curDay = Formatter.getUTCDateTimeFromTS(weekTimestamp)
         val todayCode = Formatter.getDayCodeFromDateTime(DateTime())
         val screenWidth = context?.usableScreenSize?.x ?: return

@@ -41,9 +41,6 @@ class SelectTimeZoneAdapter(
                 item_time_zone_title.text = timeZone.zoneName
                 item_time_zone_shift.text = timeZone.title
 
-                item_time_zone_title.setTextColor(textColor)
-                item_time_zone_shift.setTextColor(textColor)
-
                 item_select_time_zone_holder.setOnClickListener {
                     itemClick(timeZone)
                 }
