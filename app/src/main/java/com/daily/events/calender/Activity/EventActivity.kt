@@ -119,8 +119,8 @@ class EventActivity : SimpleActivity() {
             return
         }
 
-        supportActionBar?.hide()
-//        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_cross_vector)
+//        supportActionBar?.hide()
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_cross_vector)
         val intent = intent ?: return
         mDialogTheme = getDialogTheme()
         mWasContactsPermissionChecked = hasPermission(PERMISSION_READ_CONTACTS)
@@ -146,6 +146,22 @@ class EventActivity : SimpleActivity() {
 
 //        ****************  Get Event type ***************
 
+        addTag()
+
+        displayList?.add(DateTimeConfig.DAY)
+        displayList?.add(DateTimeConfig.MONTH)
+        displayList?.add(DateTimeConfig.YEAR)
+        displayList?.add(DateTimeConfig.HOUR)
+        displayList?.add(DateTimeConfig.MIN)
+
+        pickerLayout = R.layout.layout_date_picker_globalization1
+        model = R.drawable.bottom_back
+
+        dialog_submit.setOnClickListener { saveCurrentEvent() }
+    }
+
+    private fun addTag() {
+        allEventTypeRL.removeAllViews()
         eventsHelper.getEventTypes(this, false) {
             eventTypes = it
             runOnUiThread {
@@ -158,24 +174,16 @@ class EventActivity : SimpleActivity() {
                     Color.TRANSPARENT,
                     0
                 )
+
                 addRadioButton(newEventType)
-//                updateTextColors(allEventTypeRL)
+                wasInit = true
             }
         }
-
-        back.setOnClickListener { onBackPressed() }
-
-        displayList?.add(DateTimeConfig.DAY)
-        displayList?.add(DateTimeConfig.MONTH)
-        displayList?.add(DateTimeConfig.YEAR)
-        displayList?.add(DateTimeConfig.HOUR)
-        displayList?.add(DateTimeConfig.MIN)
-
-        pickerLayout = R.layout.layout_date_picker_globalization1
-        model = R.drawable.bottom_back
     }
 
+    private var wasInit = false
     private fun addRadioButton(eventType: EventType) {
+
         val view = layoutInflater.inflate(R.layout.tag_holder_layout, null)
         view.eventTV.text = eventType.getDisplayTitle()
         view.eventTV.setTextColor(resources.getColor(R.color.grey))
@@ -188,7 +196,13 @@ class EventActivity : SimpleActivity() {
         }
         view.eventTV.id = eventType.id!!.toInt()
 
-//        view.setOnClickListener { viewClicked(eventType) }
+        if (mEventTypeId == eventType.id) {
+            selectedTag.text = eventType.getDisplayTitle()
+            selectedTag.setTextColor(eventType.color)
+        }
+
+        view.setOnClickListener { viewClicked(eventType, view) }
+
         allEventTypeRL.addView(
             view,
             RelativeLayout.LayoutParams(
@@ -198,6 +212,24 @@ class EventActivity : SimpleActivity() {
         )
     }
 
+    private fun viewClicked(eventType: EventType, view: View) {
+        if (!wasInit) {
+            return
+        }
+
+        if (eventType.id == NEW_EVENT_TYPE_ID) {
+            EditEventTypeDialog(this@EventActivity) {
+                mEventTypeId = it.id!!
+                hideKeyboard()
+                addTag()
+            }
+        } else {
+            mEventTypeId = eventType.id!!
+            selectedTag.text = eventType.getDisplayTitle()
+            selectedTag.setTextColor(eventType.color)
+        }
+
+    }
 
     private fun gotEvent(savedInstanceState: Bundle?, localEventType: EventType?, event: Event?) {
         if (localEventType == null || localEventType.caldavCalendarId != 0) {
@@ -376,28 +408,27 @@ class EventActivity : SimpleActivity() {
         mWasActivityInitialized = true
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-//        menuInflater.inflate(R.menu.menu_event, menu)
-//        if (mWasActivityInitialized) {
-//            menu.findItem(R.id.delete).isVisible = mEvent.id != null
-//            menu.findItem(R.id.share).isVisible = mEvent.id != null
-//            menu.findItem(R.id.duplicate).isVisible = mEvent.id != null
-//        }
-//
-//        updateMenuItemColors(menu)
-//        return true
-//    }
-//
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        when (item.itemId) {
-//            R.id.save -> saveCurrentEvent()
-//            R.id.delete -> deleteEvent()
-//            R.id.duplicate -> duplicateEvent()
-//            R.id.share -> shareEvent()
-//            else -> return super.onOptionsItemSelected(item)
-//        }
-//        return true
-//    }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_event, menu)
+        if (mWasActivityInitialized) {
+            menu.findItem(R.id.delete).isVisible = mEvent.id != null
+            menu.findItem(R.id.share).isVisible = mEvent.id != null
+            menu.findItem(R.id.duplicate).isVisible = mEvent.id != null
+        }
+
+        updateMenuItemColors(menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.delete -> deleteEvent()
+            R.id.duplicate -> duplicateEvent()
+            R.id.share -> shareEvent()
+            else -> return super.onOptionsItemSelected(item)
+        }
+        return true
+    }
 
     private fun getStartEndTimes(): Pair<Long, Long> {
         val offset = if (!config.allowChangingTimeZones || mEvent.getTimeZoneString()
@@ -611,7 +642,7 @@ class EventActivity : SimpleActivity() {
             mEventEndDateTime = Formatter.getDateTimeFromTS(realStart + duration)
         }
 
-        event_title.text = mEvent.title
+        event_title.setText(mEvent.title)
         event_location.setText(mEvent.location)
         event_description.setText(mEvent.description)
 
@@ -663,7 +694,7 @@ class EventActivity : SimpleActivity() {
                 toggleAllDay(true)
             }
 
-            event_title.text = intent.getStringExtra("title")
+            event_title.setText(intent.getStringExtra("title"))
             event_location.setText(intent.getStringExtra("eventLocation"))
             event_description.setText(intent.getStringExtra("description"))
             if (event_description.value.isNotEmpty()) {
@@ -1085,11 +1116,7 @@ class EventActivity : SimpleActivity() {
 
     private fun updateCalDAVVisibility() {
         val isSyncedEvent = mEventCalendarId != STORED_LOCALLY_ONLY
-        event_attendees_holder.beVisibleIf(isSyncedEvent)
-//        event_attendees_divider.beVisibleIf(isSyncedEvent)
-//        event_availability_divider.beVisibleIf(isSyncedEvent)
-//        event_availability_image.beVisibleIf(isSyncedEvent)
-//        event_availability.beVisibleIf(isSyncedEvent)
+//        event_attendees_holder.beVisibleIf(isSyncedEvent)
     }
 
     private fun updateReminderTypeImage(view: ImageView, reminder: Reminder) {
@@ -1123,6 +1150,7 @@ class EventActivity : SimpleActivity() {
             val eventType = eventTypesDB.getEventTypeWithId(mEventTypeId)
             if (eventType != null) {
                 runOnUiThread {
+
 //                    event_type.text = eventType.title
 //                    event_type_color.setFillWithStroke(
 //                        eventType.color,

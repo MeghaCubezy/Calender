@@ -17,5 +17,4 @@
         android:textColor="@color/theme_color"
         android:textSize="@dimen/_12sdp" />
 
-
 </RelativeLayout>

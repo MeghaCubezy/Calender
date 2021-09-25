@@ -55,13 +55,15 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/color_picker_top_holder">
 
-            <com.simplemobiletools.commons.views.MyTextView
+            <TextView
                 android:id="@+id/color_picker_old_hex"
                 android:layout_width="@dimen/colorpicker_color_width"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:layout_toStartOf="@+id/color_picker_hex_arrow"
                 android:gravity="center"
+                android:fontFamily="@font/roboto"
+                android:textColor="@color/md_grey_black_dark"
                 android:textSize="@dimen/normal_text_size" />
 
             <ImageView
@@ -76,7 +78,7 @@
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_arrow_right_vector" />
 
-            <com.simplemobiletools.commons.views.MyTextView
+            <TextView
                 android:id="@+id/color_picker_new_hex_label"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/colorpicker_items_height"
@@ -84,6 +86,8 @@
                 android:layout_alignBottom="@+id/color_picker_new_hex"
                 android:layout_toEndOf="@+id/color_picker_hex_arrow"
                 android:gravity="center"
+                android:fontFamily="@font/roboto"
+                android:textColor="@color/md_grey_black_dark"
                 android:text="#"
                 android:textSize="@dimen/normal_text_size" />
 
@@ -97,6 +101,9 @@
                 android:gravity="start"
                 android:lines="1"
                 android:maxLength="6"
+                android:backgroundTint="@color/theme_color"
+                android:fontFamily="@font/roboto"
+                android:textColor="@color/md_grey_black_dark"
                 android:textCursorDrawable="@null"
                 android:textSize="@dimen/normal_text_size" />
 
