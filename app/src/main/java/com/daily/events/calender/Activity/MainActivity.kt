@@ -405,15 +405,6 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
                 }
             }
 
-            calendarItem.calendar_item_calendar_switch.apply {
-                this.tag = tag
-                this.text = text
-                isChecked = shouldCheck
-                calendarItem.setOnClickListener {
-                    toggle()
-                }
-            }
-
             if (isEvent) {
                 calendarItem.calendar_item_calendar_switch.apply {
                     this.tag = tag
@@ -483,11 +474,11 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
                     syncCalDAVCalendars {
                         activity.calDAVHelper.refreshCalendars(true) {
                             if (newCalendarIds.isNotEmpty()) {
-                                Toast.makeText(
-                                    activity,
-                                    activity.resources.getString(R.string.synchronization_completed),
-                                    Toast.LENGTH_SHORT
-                                ).show()
+//                                Toast.makeText(
+//                                    activity,
+//                                    activity.resources.getString(R.string.synchronization_completed),
+//                                    Toast.LENGTH_SHORT
+//                                ).show()
                             }
                         }
                     }
