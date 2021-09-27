@@ -4,7 +4,9 @@ import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.*
 import android.database.ContentObserver
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
 import android.provider.CalendarContract
 import android.provider.ContactsContract
@@ -19,6 +21,7 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.databinding.DataBindingUtil
 import androidx.loader.content.CursorLoader
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.daily.events.calender.Activity.BaseActivity.Companion.perms
 import com.daily.events.calender.Extensions.*
 import com.daily.events.calender.Fragment.EventFragment
 import com.daily.events.calender.Fragment.Home.HomeFragment
@@ -47,12 +50,14 @@ import kotlinx.android.synthetic.main.calendar_item_calendar.view.*
 import kotlinx.android.synthetic.main.dialog_select_calendars.view.*
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
+import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
+class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSelectedListener,
+    EasyPermissions.PermissionCallbacks {
 
     private var selectAccountReceiver: SelectAccountReceiver? = null
 
@@ -188,12 +193,18 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         mainBinding =
             DataBindingUtil.setContentView(this@MainActivity, R.layout.activity_main)
         mainBinding?.bottomnavigationbar?.setOnNavigationItemSelectedListener(this)
-
+        supportActionBar?.hide()
         activity = this@MainActivity
 
         val isGranted = EasyPermissions.hasPermissions(this@MainActivity, *perms)
-        if (isGranted) {
+        if (!isGranted) {
+            EasyPermissions.requestPermissions(
+                this, getString(R.string.permission_str),
+                BaseActivity.RC_READ_EXTERNAL_STORAGE, *perms
+            )
             config.caldavSync = false
+        } else {
+            permissionGranted()
         }
 
         if (config.caldavSync) {
@@ -224,6 +235,55 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         config.isSundayFirst = false
     }
 
+    override fun onPermissionsGranted(requestCode: Int, perms: List<String?>?) {
+//        Log.d(TAG, "onPermissionsGranted:" + requestCode + ":" + perms.size());
+        permissionGranted()
+    }
+
+    private fun permissionGranted() {
+        homeFragment = HomeFragment()
+        eventFragment = EventFragment()
+        notificationFragment = NotificationFragment()
+        settingFragment = SettingFragment()
+
+        homeFragment?.let {
+            supportFragmentManager.beginTransaction().replace(R.id.container, it)
+                .commit()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+            // Do something after user returned from app settings screen, like showing a Toast.
+            if (EasyPermissions.hasPermissions(this, *perms)) {
+                permissionGranted()
+            } else {
+                EasyPermissions.requestPermissions(
+                    this, getString(R.string.permission_str),
+                    BaseActivity.RC_READ_EXTERNAL_STORAGE, *perms
+                )
+            }
+        }
+        if (requestCode == 2296) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                if (Environment.isExternalStorageManager()) {
+                    permissionGranted()
+                } else {
+                    EasyPermissions.requestPermissions(
+                        this, getString(R.string.permission_str),
+                        BaseActivity.RC_READ_EXTERNAL_STORAGE, *perms
+                    )
+                    //                    Toasty.info(this, "Allow permission for storage access!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>?) {
+        TODO("Not yet implemented")
+    }
+
     private fun refreshCalDAVCalendars(showRefreshToast: Boolean) {
         showCalDAVRefreshToast = showRefreshToast
         if (showRefreshToast) {
@@ -248,18 +308,6 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         if (selectAccountBehaviour.state == BottomSheetBehavior.STATE_EXPANDED) {
             selectAccountBehaviour.state = BottomSheetBehavior.STATE_COLLAPSED
             mainBinding?.hideBack?.beGone()
-        }
-    }
-
-    override fun permissionGranted() {
-        homeFragment = HomeFragment()
-        eventFragment = EventFragment()
-        notificationFragment = NotificationFragment()
-        settingFragment = SettingFragment()
-
-        homeFragment?.let {
-            supportFragmentManager.beginTransaction().replace(R.id.container, it)
-                .commit()
         }
     }
 
