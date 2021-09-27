@@ -6,6 +6,7 @@
     android:clickable="false"
     android:drawableTop="@drawable/divider_width"
     android:drawablePadding="@dimen/medium_margin"
+
     android:focusable="false"
     android:fontFamily="@font/plusjakarta"
     android:paddingStart="@dimen/activity_margin"

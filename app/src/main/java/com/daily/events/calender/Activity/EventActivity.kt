@@ -17,6 +17,7 @@ import android.provider.ContactsContract.CommonDataKinds.StructuredName
 import android.provider.ContactsContract.Data
 import android.text.TextUtils
 import android.text.method.LinkMovementMethod
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
@@ -105,7 +106,7 @@ class EventActivity : SimpleActivity() {
     private lateinit var mEvent: Event
 
     private val NEW_EVENT_TYPE_ID = -2L
-    private var eventTypes = java.util.ArrayList<EventType>()
+    private var eventTypes = ArrayList<EventType>()
 
     var displayList: MutableList<Int>? = mutableListOf()
     var pickerLayout = 0
@@ -162,10 +163,11 @@ class EventActivity : SimpleActivity() {
 
     private fun addTag() {
         allEventTypeRL.removeAllViews()
-        eventsHelper.getEventTypes(this, false) {
+        eventsHelper.getEventTypes(this, true) {
             eventTypes = it
             runOnUiThread {
                 eventTypes.filter { it.caldavCalendarId == 0 }.forEach {
+
                     addRadioButton(it)
                 }
                 val newEventType = EventType(
@@ -195,10 +197,10 @@ class EventActivity : SimpleActivity() {
             view.eventTV.setTextColor(resources.getColor(R.color.theme_color))
         }
         view.eventTV.id = eventType.id!!.toInt()
-
+        Log.e("event:", eventType.id.toString())
         if (mEventTypeId == eventType.id) {
             selectedTag.text = eventType.getDisplayTitle()
-            selectedTag.setTextColor(eventType.color)
+//            selectedTag.setTextColor(eventType.color)
         }
 
         view.setOnClickListener { viewClicked(eventType, view) }
@@ -239,6 +241,7 @@ class EventActivity : SimpleActivity() {
         mEventTypeId =
             if (config.defaultEventTypeId == -1L) config.lastUsedLocalEventTypeId else config.defaultEventTypeId
 
+        Log.e("mEventTypeId", mEventTypeId.toString())
         if (event != null) {
             mEvent = event
             mEventOccurrenceTS = intent.getLongExtra(EVENT_OCCURRENCE_TS, 0L)
@@ -644,6 +647,7 @@ class EventActivity : SimpleActivity() {
 
         event_title.setText(mEvent.title)
         event_location.setText(mEvent.location)
+
         event_description.setText(mEvent.description)
 
         mReminder1Minutes = mEvent.reminder1Minutes
@@ -658,6 +662,7 @@ class EventActivity : SimpleActivity() {
         mEventTypeId = mEvent.eventType
         mEventCalendarId = mEvent.getCalDAVCalendarId()
         mAvailability = mEvent.availability
+
 
         val token = object : TypeToken<List<Attendee>>() {}.type
         mAttendees = Gson().fromJson<ArrayList<Attendee>>(mEvent.attendees, token) ?: ArrayList()
@@ -697,6 +702,7 @@ class EventActivity : SimpleActivity() {
             event_title.setText(intent.getStringExtra("title"))
             event_location.setText(intent.getStringExtra("eventLocation"))
             event_description.setText(intent.getStringExtra("description"))
+
             if (event_description.value.isNotEmpty()) {
                 event_description.movementMethod = LinkMovementMethod.getInstance()
             }

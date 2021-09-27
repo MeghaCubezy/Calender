@@ -38,11 +38,13 @@ import com.daily.events.calender.helpers.Formatter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
+import com.simplemobiletools.commons.dialogs.RadioGroupDialog
 import com.simplemobiletools.commons.extensions.*
 import com.simplemobiletools.commons.helpers.MyContactsContentProvider
 import com.simplemobiletools.commons.helpers.ensureBackgroundThread
 import com.simplemobiletools.commons.helpers.getDateFormats
 import com.simplemobiletools.commons.helpers.getDateFormatsWithYear
+import com.simplemobiletools.commons.models.RadioItem
 import com.simplemobiletools.commons.models.SimpleContact
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.calendar_item_account.view.*
@@ -60,6 +62,7 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
     EasyPermissions.PermissionCallbacks {
 
     private var selectAccountReceiver: SelectAccountReceiver? = null
+
 
     companion object {
         val CALDAV_REFRESH_DELAY = 3000L
@@ -183,7 +186,6 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
                 }
             }
         }
-
     }
 
     private var showCalDAVRefreshToast = false
@@ -230,6 +232,11 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
         LocalBroadcastManager.getInstance(this@MainActivity).registerReceiver(
             selectAccountReceiver!!,
             IntentFilter("OPEN_ACCOUNT_SYNC")
+        )
+
+        LocalBroadcastManager.getInstance(this@MainActivity).registerReceiver(
+            holidayReceiver,
+            IntentFilter("ADD_HOLIDAYS")
         )
 
         config.isSundayFirst = false
@@ -816,4 +823,133 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
         }
 
     }
+
+
+//    ******************* Add holidays ************************
+
+    private val holidayReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            addHolidays()
+        }
+    }
+
+    private fun addHolidays() {
+        val items = getHolidayRadioItems()
+        RadioGroupDialog(this, items) {
+            toast(R.string.importing)
+            ensureBackgroundThread {
+                val holidays = getString(R.string.holidays)
+                var eventTypeId = eventsHelper.getEventTypeIdWithTitle(holidays)
+                if (eventTypeId == -1L) {
+                    val eventType = EventType(
+                        null,
+                        holidays,
+                        resources.getColor(R.color.default_holidays_color)
+                    )
+                    eventTypeId = eventsHelper.insertOrUpdateEventTypeSync(eventType)
+                }
+
+                val result = IcsImporter(this).importEvents(it as String, eventTypeId, 0, false)
+                handleParseResult(result)
+                if (result != IcsImporter.ImportResult.IMPORT_FAIL) {
+                    runOnUiThread {
+
+                        homeFragment?.let {
+                            supportFragmentManager.beginTransaction().replace(R.id.container, it)
+                                .commit()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getHolidayRadioItems(): ArrayList<RadioItem> {
+        val items = ArrayList<RadioItem>()
+
+        LinkedHashMap<String, String>().apply {
+            put("Algeria", "algeria.ics")
+            put("Argentina", "argentina.ics")
+            put("Australia", "australia.ics")
+            put("België", "belgium.ics")
+            put("Bolivia", "bolivia.ics")
+            put("Brasil", "brazil.ics")
+            put("България", "bulgaria.ics")
+            put("Canada", "canada.ics")
+            put("China", "china.ics")
+            put("Colombia", "colombia.ics")
+            put("Česká republika", "czech.ics")
+            put("Danmark", "denmark.ics")
+            put("Deutschland", "germany.ics")
+            put("Eesti", "estonia.ics")
+            put("España", "spain.ics")
+            put("Éire", "ireland.ics")
+            put("France", "france.ics")
+            put("Fürstentum Liechtenstein", "liechtenstein.ics")
+            put("Hellas", "greece.ics")
+            put("Hrvatska", "croatia.ics")
+            put("India", "india.ics")
+            put("Indonesia", "indonesia.ics")
+            put("Ísland", "iceland.ics")
+            put("Israel", "israel.ics")
+            put("Italia", "italy.ics")
+            put("Қазақстан Республикасы", "kazakhstan.ics")
+            put("المملكة المغربية", "morocco.ics")
+            put("Latvija", "latvia.ics")
+            put("Lietuva", "lithuania.ics")
+            put("Luxemburg", "luxembourg.ics")
+            put("Makedonija", "macedonia.ics")
+            put("Malaysia", "malaysia.ics")
+            put("Magyarország", "hungary.ics")
+            put("México", "mexico.ics")
+            put("Nederland", "netherlands.ics")
+            put("República de Nicaragua", "nicaragua.ics")
+            put("日本", "japan.ics")
+            put("Nigeria", "nigeria.ics")
+            put("Norge", "norway.ics")
+            put("Österreich", "austria.ics")
+            put("Pākistān", "pakistan.ics")
+            put("Polska", "poland.ics")
+            put("Portugal", "portugal.ics")
+            put("Россия", "russia.ics")
+            put("República de Costa Rica", "costarica.ics")
+            put("República Oriental del Uruguay", "uruguay.ics")
+            put("République d'Haïti", "haiti.ics")
+            put("România", "romania.ics")
+            put("Schweiz", "switzerland.ics")
+            put("Singapore", "singapore.ics")
+            put("한국", "southkorea.ics")
+            put("Srbija", "serbia.ics")
+            put("Slovenija", "slovenia.ics")
+            put("Slovensko", "slovakia.ics")
+            put("South Africa", "southafrica.ics")
+            put("Suomi", "finland.ics")
+            put("Sverige", "sweden.ics")
+            put("Taiwan", "taiwan.ics")
+            put("ราชอาณาจักรไทย", "thailand.ics")
+            put("Türkiye Cumhuriyeti", "turkey.ics")
+            put("Ukraine", "ukraine.ics")
+            put("United Kingdom", "unitedkingdom.ics")
+            put("United States", "unitedstates.ics")
+
+            var i = 0
+            for ((country, file) in this) {
+                items.add(RadioItem(i++, country, file))
+            }
+        }
+
+        return items
+    }
+
+    private fun handleParseResult(result: IcsImporter.ImportResult) {
+        toast(
+            when (result) {
+                IcsImporter.ImportResult.IMPORT_NOTHING_NEW -> R.string.no_new_items
+                IcsImporter.ImportResult.IMPORT_OK -> R.string.holidays_imported_successfully
+                IcsImporter.ImportResult.IMPORT_PARTIAL -> R.string.importing_some_holidays_failed
+                else -> R.string.importing_holidays_failed
+            }, Toast.LENGTH_LONG
+        )
+    }
+
 }

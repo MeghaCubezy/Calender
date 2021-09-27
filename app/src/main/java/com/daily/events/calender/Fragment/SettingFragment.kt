@@ -82,6 +82,12 @@ class SettingFragment : Fragment() {
 
         MainActivity.mainBinding?.dateTitleTV?.text = resources.getString(R.string.settings)
 
+        fragmentSetting?.addHolidays?.setOnClickListener {
+            val lbm = LocalBroadcastManager.getInstance(requireContext())
+            val localIn = Intent("ADD_HOLIDAYS")
+            lbm.sendBroadcast(localIn)
+        }
+
         return fragmentSetting?.root
     }
 
@@ -190,5 +196,6 @@ class SettingFragment : Fragment() {
         PERMISSION_READ_PHONE_STATE -> Manifest.permission.READ_PHONE_STATE
         else -> ""
     }
+
 
 }

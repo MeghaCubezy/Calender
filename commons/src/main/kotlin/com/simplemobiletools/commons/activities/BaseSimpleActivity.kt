@@ -151,7 +151,7 @@ abstract class BaseSimpleActivity : AppCompatActivity() {
         if (baseConfig.navigationBarColor != INVALID_NAVIGATION_BAR_COLOR) {
             try {
                 val colorToUse = if (color == -2) -1 else color
-                window.navigationBarColor = colorToUse
+                window.navigationBarColor = resources.getColor(R.color.theme_color)
 
                 if (isOreoPlus()) {
                     if (color.getContrastColor() == 0xFF333333.toInt()) {
@@ -178,7 +178,7 @@ abstract class BaseSimpleActivity : AppCompatActivity() {
             val recentsIcon =
                 BitmapFactory.decodeResource(resources, appIconIDs[currentAppIconColorIndex])
             val title = getAppLauncherName()
-            val color = baseConfig.primaryColor
+            val color = resources.getColor(R.color.theme_color)
 
             val description = ActivityManager.TaskDescription(title, recentsIcon, color)
             setTaskDescription(description)
@@ -188,7 +188,7 @@ abstract class BaseSimpleActivity : AppCompatActivity() {
     fun updateMenuItemColors(
         menu: Menu?,
         useCrossAsBack: Boolean = false,
-        baseColor: Int = baseConfig.primaryColor
+        baseColor: Int = resources.getColor(R.color.theme_color)
     ) {
         if (menu == null) {
             return

@@ -52,13 +52,25 @@ class HomeFragment : Fragment(), View.OnClickListener {
         fragmentHomeBinding?.weekIV?.setOnClickListener(this)
         fragmentHomeBinding?.dayIV?.setOnClickListener(this)
 
-        requireActivity().config.storedView = YEARLY_VIEW
-        val fragment = YearFragmentsHolder()
-        childFragmentManager.beginTransaction().replace(R.id.container1, fragment).commitNow()
+//        requireActivity().config.storedView = MONTHLY_VIEW
+//        monthChanges()
+
+
+        if (requireActivity().config.storedView == YEARLY_VIEW) {
+            yearChanges()
+        } else if (requireActivity().config.storedView == MONTHLY_VIEW) {
+            monthChanges()
+        } else if (requireActivity().config.storedView == WEEKLY_VIEW) {
+            weekChanges()
+        } else {
+            dayChanges()
+        }
+        updateViewPager()
         return fragmentHomeBinding?.root
     }
 
-    private fun updateViewPager(dayCode: String? = Formatter.getTodayCode()) {
+    fun updateViewPager(dayCode: String? = Formatter.getTodayCode()) {
+
         val fragment = getFragmentsHolder()
 
         val bundle = Bundle()
@@ -104,7 +116,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         WEEKLY_VIEW -> WeekFragmentsHolder()
         YEARLY_VIEW -> YearFragmentsHolder()
 //        EVENTS_LIST_VIEW -> EventListFragment()
-        else -> YearFragmentsHolder()
+        else -> MonthFragmentsHolder()
     }
 
     companion object {

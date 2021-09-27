@@ -42,7 +42,6 @@
 
         <include layout="@layout/layout_monthview_event" />
 
-
     </RelativeLayout>
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

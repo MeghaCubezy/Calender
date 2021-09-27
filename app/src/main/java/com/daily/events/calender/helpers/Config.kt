@@ -61,7 +61,7 @@ class Config(context: Context) : BaseConfig(context) {
             .putLong(LAST_REMINDER_CHANNEL_ID, lastReminderChannel).apply()
 
     var storedView: Int
-        get() = prefs.getInt(VIEW, YEARLY_VIEW)
+        get() = prefs.getInt(VIEW, MONTHLY_VIEW)
         set(view) = prefs.edit().putInt(VIEW, view).apply()
 
     var lastEventReminderMinutes1: Int
