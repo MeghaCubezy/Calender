@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -167,7 +166,7 @@ class MonthFragment : Fragment(), MonthlyCalendar {
                 contentDescription = text
                 setTextColor(resources.getColor(R.color.black))
             }
-            Log.e("LLL_Month: ", mCalendar?.monthName.toString())
+//            Log.e("LLL_Month: ", mCalendar?.monthName.toString())
 
             updateDays(days)
         }

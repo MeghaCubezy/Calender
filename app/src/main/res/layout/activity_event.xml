@@ -556,7 +556,7 @@
                     android:clickable="true"
                     android:gravity="center_horizontal"
                     android:padding="16dp"
-                    android:text="Create"
+                    android:text="Save"
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     android:textStyle="bold" />
