@@ -17,7 +17,6 @@ import android.provider.ContactsContract.CommonDataKinds.StructuredName
 import android.provider.ContactsContract.Data
 import android.text.TextUtils
 import android.text.method.LinkMovementMethod
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
@@ -176,7 +175,6 @@ class EventActivity : SimpleActivity() {
                     Color.TRANSPARENT,
                     0
                 )
-
                 addRadioButton(newEventType)
                 wasInit = true
             }
@@ -197,10 +195,9 @@ class EventActivity : SimpleActivity() {
             view.eventTV.setTextColor(resources.getColor(R.color.theme_color))
         }
         view.eventTV.id = eventType.id!!.toInt()
-        Log.e("event:", eventType.id.toString())
         if (mEventTypeId == eventType.id) {
             selectedTag.text = eventType.getDisplayTitle()
-//            selectedTag.setTextColor(eventType.color)
+            selectedTag.setTextColor(eventType.color)
         }
 
         view.setOnClickListener { viewClicked(eventType, view) }
@@ -227,9 +224,8 @@ class EventActivity : SimpleActivity() {
             }
         } else {
             mEventTypeId = eventType.id!!
-            selectedTag.text = eventType.getDisplayTitle()
-            selectedTag.setTextColor(eventType.color)
         }
+        updateEventType()
 
     }
 
@@ -241,7 +237,6 @@ class EventActivity : SimpleActivity() {
         mEventTypeId =
             if (config.defaultEventTypeId == -1L) config.lastUsedLocalEventTypeId else config.defaultEventTypeId
 
-        Log.e("mEventTypeId", mEventTypeId.toString())
         if (event != null) {
             mEvent = event
             mEventOccurrenceTS = intent.getLongExtra(EVENT_OCCURRENCE_TS, 0L)
@@ -317,7 +312,6 @@ class EventActivity : SimpleActivity() {
                 }
                 .setOnCancel("Cancel") {
                 }.build().show()
-
         }
         event_start_date.setOnClickListener { if (mIsAllDayEvent) setupStartDate() }
         event_end_date.setOnClickListener { if (mIsAllDayEvent) setupEndDate() }
@@ -362,35 +356,35 @@ class EventActivity : SimpleActivity() {
         event_reminder_2.setOnClickListener { showReminder2Dialog() }
         event_reminder_3.setOnClickListener { showReminder3Dialog() }
 
-//        event_reminder_1_type.setOnClickListener {
-//            showReminderTypePicker(mReminder1Type) {
-//                mReminder1Type = it
-//                updateReminderTypeImage(
-//                    event_reminder_1_type,
-//                    Reminder(mReminder1Minutes, mReminder1Type)
-//                )
-//            }
-//        }
+        event_reminder_1_type.setOnClickListener {
+            showReminderTypePicker(mReminder1Type) {
+                mReminder1Type = it
+                updateReminderTypeImage(
+                    event_reminder_1_type,
+                    Reminder(mReminder1Minutes, mReminder1Type)
+                )
+            }
+        }
 
-//        event_reminder_2_type.setOnClickListener {
-//            showReminderTypePicker(mReminder2Type) {
-//                mReminder2Type = it
-//                updateReminderTypeImage(
-//                    event_reminder_2_type,
-//                    Reminder(mReminder2Minutes, mReminder2Type)
-//                )
-//            }
-//        }
+        event_reminder_2_type.setOnClickListener {
+            showReminderTypePicker(mReminder2Type) {
+                mReminder2Type = it
+                updateReminderTypeImage(
+                    event_reminder_2_type,
+                    Reminder(mReminder2Minutes, mReminder2Type)
+                )
+            }
+        }
 
-//        event_reminder_3_type.setOnClickListener {
-//            showReminderTypePicker(mReminder3Type) {
-//                mReminder3Type = it
-//                updateReminderTypeImage(
-//                    event_reminder_3_type,
-//                    Reminder(mReminder3Minutes, mReminder3Type)
-//                )
-//            }
-//        }
+        event_reminder_3_type.setOnClickListener {
+            showReminderTypePicker(mReminder3Type) {
+                mReminder3Type = it
+                updateReminderTypeImage(
+                    event_reminder_3_type,
+                    Reminder(mReminder3Minutes, mReminder3Type)
+                )
+            }
+        }
 
 //        event_availability.setOnClickListener {
 //            showAvailabilityPicker(mAvailability) {
@@ -575,7 +569,6 @@ class EventActivity : SimpleActivity() {
             mReminder3Type = getInt(REMINDER_3_TYPE)
 
             mAvailability = getInt(AVAILABILITY)
-
             mRepeatInterval = getInt(REPEAT_INTERVAL)
             mRepeatRule = getInt(REPEAT_RULE)
             mRepeatLimit = getLong(REPEAT_LIMIT)
@@ -662,7 +655,6 @@ class EventActivity : SimpleActivity() {
         mEventTypeId = mEvent.eventType
         mEventCalendarId = mEvent.getCalDAVCalendarId()
         mAvailability = mEvent.availability
-
 
         val token = object : TypeToken<List<Attendee>>() {}.type
         mAttendees = Gson().fromJson<ArrayList<Attendee>>(mEvent.attendees, token) ?: ArrayList()
@@ -1115,21 +1107,22 @@ class EventActivity : SimpleActivity() {
     }
 
     private fun updateReminderTypeImages() {
-//        updateReminderTypeImage(event_reminder_1_type, Reminder(mReminder1Minutes, mReminder1Type))
-//        updateReminderTypeImage(event_reminder_2_type, Reminder(mReminder2Minutes, mReminder2Type))
-//        updateReminderTypeImage(event_reminder_3_type, Reminder(mReminder3Minutes, mReminder3Type))
+        updateReminderTypeImage(event_reminder_1_type, Reminder(mReminder1Minutes, mReminder1Type))
+        updateReminderTypeImage(event_reminder_2_type, Reminder(mReminder2Minutes, mReminder2Type))
+        updateReminderTypeImage(event_reminder_3_type, Reminder(mReminder3Minutes, mReminder3Type))
     }
 
     private fun updateCalDAVVisibility() {
         val isSyncedEvent = mEventCalendarId != STORED_LOCALLY_ONLY
-//        event_attendees_holder.beVisibleIf(isSyncedEvent)
+        event_attendees_holder.beVisibleIf(isSyncedEvent)
     }
 
     private fun updateReminderTypeImage(view: ImageView, reminder: Reminder) {
         view.beVisibleIf(reminder.minutes != REMINDER_OFF && mEventCalendarId != STORED_LOCALLY_ONLY)
         val drawable =
             if (reminder.type == REMINDER_NOTIFICATION) R.drawable.ic_bell_vector else R.drawable.ic_email_vector
-        val icon = resources.getColoredDrawableWithColor(drawable, config.textColor)
+        val icon =
+            resources.getColoredDrawableWithColor(drawable, resources.getColor(R.color.theme_color))
         view.setImageDrawable(icon)
     }
 
@@ -1156,13 +1149,8 @@ class EventActivity : SimpleActivity() {
             val eventType = eventTypesDB.getEventTypeWithId(mEventTypeId)
             if (eventType != null) {
                 runOnUiThread {
-
-//                    event_type.text = eventType.title
-//                    event_type_color.setFillWithStroke(
-//                        eventType.color,
-//                        config.backgroundColor,
-//                        getCornerRadius()
-//                    )
+                    selectedTag.text = eventType.title
+                    selectedTag.setTextColor(eventType.color)
                 }
             }
         }

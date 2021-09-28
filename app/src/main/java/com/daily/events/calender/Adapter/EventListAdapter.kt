@@ -1,5 +1,6 @@
 package com.daily.events.calender.Adapter
 
+import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
@@ -159,6 +160,7 @@ class EventListAdapter(
         view.apply {
             event_item_frame.isSelected = selectedKeys.contains(listEvent.hashCode())
             event_item_title.text = listEvent.title
+
             event_item_description?.text =
                 if (replaceDescription) listEvent.location else listEvent.description
             event_item_start.text =
@@ -172,6 +174,7 @@ class EventListAdapter(
             rlMainView?.background?.applyColorFilter(listEvent.color)
 
             if (listEvent.startTS != listEvent.endTS) {
+                Log.e("title:", listEvent.title)
                 event_item_end?.apply {
                     val startCode = Formatter.getDayCodeFromTS(listEvent.startTS)
                     val endCode = Formatter.getDayCodeFromTS(listEvent.endTS)
@@ -189,8 +192,8 @@ class EventListAdapter(
                 }
             }
 
-            var startTextColor = textColor
-            var endTextColor = textColor
+            var startTextColor = resources.getColor(R.color.black)
+            var endTextColor = resources.getColor(R.color.black)
             if (listEvent.isAllDay || listEvent.startTS <= now && listEvent.endTS <= now) {
                 if (listEvent.isAllDay && Formatter.getDayCodeFromTS(listEvent.startTS) == Formatter.getDayCodeFromTS(
                         now
@@ -203,10 +206,6 @@ class EventListAdapter(
                     startTextColor =
                         resources.getColor(R.color.grey)
                     endTextColor = resources.getColor(R.color.grey)
-                } else {
-                    startTextColor =
-                        resources.getColor(R.color.black)
-                    endTextColor = resources.getColor(R.color.black)
                 }
             } else if (listEvent.startTS <= now && listEvent.endTS >= now && !isPrintVersion) {
                 startTextColor = resources.getColor(R.color.black)

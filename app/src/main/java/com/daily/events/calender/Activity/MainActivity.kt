@@ -40,10 +40,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.simplemobiletools.commons.dialogs.RadioGroupDialog
 import com.simplemobiletools.commons.extensions.*
-import com.simplemobiletools.commons.helpers.MyContactsContentProvider
-import com.simplemobiletools.commons.helpers.ensureBackgroundThread
-import com.simplemobiletools.commons.helpers.getDateFormats
-import com.simplemobiletools.commons.helpers.getDateFormatsWithYear
+import com.simplemobiletools.commons.helpers.*
 import com.simplemobiletools.commons.models.RadioItem
 import com.simplemobiletools.commons.models.SimpleContact
 import kotlinx.android.synthetic.main.activity_main.*
@@ -240,7 +237,14 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
         )
 
         config.isSundayFirst = false
+
+        mainBinding?.fab?.setOnClickListener {
+            launchNewEventIntent(getNewEventDayCode())
+        }
     }
+
+
+    fun getNewEventDayCode() = Formatter.getTodayCode()
 
     override fun onPermissionsGranted(requestCode: Int, perms: List<String?>?) {
 //        Log.d(TAG, "onPermissionsGranted:" + requestCode + ":" + perms.size());

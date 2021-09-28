@@ -27,7 +27,6 @@ abstract class BaseActivity : AppCompatActivity() , PermissionCallbacks{
 
     val TAG = BaseActivity::class.java.name
 
-
     abstract fun permissionGranted()
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -45,7 +44,6 @@ abstract class BaseActivity : AppCompatActivity() , PermissionCallbacks{
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        // Forward results to EasyPermissions
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 
@@ -96,7 +94,6 @@ abstract class BaseActivity : AppCompatActivity() , PermissionCallbacks{
                     permissionGranted()
                 } else {
                     finish()
-                    //                    Toasty.info(this, "Allow permission for storage access!", Toast.LENGTH_SHORT).show();
                 }
             }
         }
