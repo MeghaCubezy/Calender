@@ -39,6 +39,9 @@ class CustomizationActivity : BaseSimpleActivity() {
     private var curPrimaryLineColorPicker: LineColorPickerDialog? = null
     private var storedSharedTheme: SharedTheme? = null
     private var menu: Menu? = null
+    override fun permissionGranted() {
+        TODO("Not yet implemented")
+    }
 
     override fun getAppIconIDs() = intent.getIntegerArrayListExtra(APP_ICON_IDS) ?: ArrayList()
 

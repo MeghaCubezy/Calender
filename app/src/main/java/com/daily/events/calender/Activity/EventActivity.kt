@@ -1,5 +1,6 @@
 package com.daily.events.calender.Activity
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -20,6 +21,7 @@ import android.text.method.LinkMovementMethod
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
+import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.app.NotificationManagerCompat
 import com.daily.events.calender.Adapter.AutoCompleteTextViewAdapter
 import com.daily.events.calender.Extensions.*
@@ -158,6 +160,10 @@ class EventActivity : SimpleActivity() {
         model = R.drawable.bottom_back
 
         dialog_submit.setOnClickListener { saveCurrentEvent() }
+    }
+
+    override fun permissionGranted() {
+
     }
 
     private fun addTag() {
@@ -405,14 +411,15 @@ class EventActivity : SimpleActivity() {
         mWasActivityInitialized = true
     }
 
+    @SuppressLint("RestrictedApi")
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        if (menu is MenuBuilder) menu.setOptionalIconsVisible(true)
         menuInflater.inflate(R.menu.menu_event, menu)
         if (mWasActivityInitialized) {
             menu.findItem(R.id.delete).isVisible = mEvent.id != null
             menu.findItem(R.id.share).isVisible = mEvent.id != null
             menu.findItem(R.id.duplicate).isVisible = mEvent.id != null
         }
-
         updateMenuItemColors(menu)
         return true
     }

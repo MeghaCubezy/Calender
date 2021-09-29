@@ -80,13 +80,20 @@
                         app:menu="@menu/bottom_menu" />
                 </com.google.android.material.bottomappbar.BottomAppBar>
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/fab"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_add_items"
-                    app:layout_anchor="@id/bottomappbar" />
+                    app:layout_anchor="@id/bottomnavigationbar">
+
+                    <ImageView
+                        android:id="@+id/fab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_add_items" />
+                </RelativeLayout>
+
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
             <View

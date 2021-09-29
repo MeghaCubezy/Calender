@@ -12,6 +12,10 @@ import kotlinx.android.synthetic.main.license_item.view.*
 import java.util.*
 
 class LicenseActivity : BaseSimpleActivity() {
+    override fun permissionGranted() {
+        TODO("Not yet implemented")
+    }
+
     override fun getAppIconIDs() = intent.getIntegerArrayListExtra(APP_ICON_IDS) ?: ArrayList()
 
     override fun getAppLauncherName() = intent.getStringExtra(APP_LAUNCHER_NAME) ?: ""

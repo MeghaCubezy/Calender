@@ -12,13 +12,13 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.daily.events.calender.Activity.BaseActivity.Companion.perms
 import com.daily.events.calender.Activity.MainActivity
 import com.daily.events.calender.Extensions.calDAVHelper
 import com.daily.events.calender.Extensions.config
 import com.daily.events.calender.Extensions.eventTypesDB
 import com.daily.events.calender.R
 import com.daily.events.calender.databinding.FragmentSettingBinding
+import com.simplemobiletools.commons.activities.BaseSimpleActivity.Companion.perms
 import com.simplemobiletools.commons.helpers.*
 import pub.devrel.easypermissions.EasyPermissions
 

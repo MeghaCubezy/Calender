@@ -37,7 +37,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Calender.NoActionBar">
 
-        <activity android:name=".Activity.BaseActivity" />
         <activity android:name=".Activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

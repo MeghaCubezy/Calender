@@ -12,6 +12,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="android:itemBackground">@color/white</item>
     </style>
 
     <style name="Theme.Calender.NoActionBar">
@@ -27,7 +28,9 @@
         <item name="colorOnSecondary">@color/theme_color</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:itemBackground">@color/white</item>
     </style>
+
 
     <style name="ArrowStyle">
         <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
@@ -69,4 +72,6 @@
         <item name="colorAccent">@color/theme_color</item>
         <item name="android:textColorSecondary">@color/grey</item>
     </style>
+
+
 </resources>

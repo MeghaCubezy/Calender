@@ -25,6 +25,9 @@ import java.util.*
 class ManageBlockedNumbersActivity : BaseSimpleActivity(), RefreshRecyclerViewListener {
     private val PICK_IMPORT_SOURCE_INTENT = 11
     private val PICK_EXPORT_FILE_INTENT = 21
+    override fun permissionGranted() {
+        TODO("Not yet implemented")
+    }
 
     override fun getAppIconIDs() = intent.getIntegerArrayListExtra(APP_ICON_IDS) ?: ArrayList()
 

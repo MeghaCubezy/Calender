@@ -1,6 +1,5 @@
 package com.daily.events.calender.Adapter
 
-import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
@@ -174,7 +173,6 @@ class EventListAdapter(
             rlMainView?.background?.applyColorFilter(listEvent.color)
 
             if (listEvent.startTS != listEvent.endTS) {
-                Log.e("title:", listEvent.title)
                 event_item_end?.apply {
                     val startCode = Formatter.getDayCodeFromTS(listEvent.startTS)
                     val endCode = Formatter.getDayCodeFromTS(listEvent.endTS)

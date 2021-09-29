@@ -21,13 +21,9 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.databinding.DataBindingUtil
 import androidx.loader.content.CursorLoader
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.daily.events.calender.Activity.BaseActivity.Companion.perms
 import com.daily.events.calender.Extensions.*
-import com.daily.events.calender.Fragment.EventFragment
+import com.daily.events.calender.Fragment.*
 import com.daily.events.calender.Fragment.Home.HomeFragment
-import com.daily.events.calender.Fragment.MonthFragmentsHolder
-import com.daily.events.calender.Fragment.NotificationFragment
-import com.daily.events.calender.Fragment.SettingFragment
 import com.daily.events.calender.Model.Event
 import com.daily.events.calender.Model.EventType
 import com.daily.events.calender.R
@@ -38,6 +34,7 @@ import com.daily.events.calender.helpers.Formatter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
+import com.simplemobiletools.commons.activities.BaseSimpleActivity
 import com.simplemobiletools.commons.dialogs.RadioGroupDialog
 import com.simplemobiletools.commons.extensions.*
 import com.simplemobiletools.commons.helpers.*
@@ -49,19 +46,17 @@ import kotlinx.android.synthetic.main.calendar_item_calendar.view.*
 import kotlinx.android.synthetic.main.dialog_select_calendars.view.*
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
-import pub.devrel.easypermissions.AppSettingsDialog
+import pub.devrel.easypermissions.AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE
 import pub.devrel.easypermissions.EasyPermissions
 import java.text.SimpleDateFormat
 import java.util.*
 
-
-class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSelectedListener,
-    EasyPermissions.PermissionCallbacks {
+class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
     private var selectAccountReceiver: SelectAccountReceiver? = null
 
-
     companion object {
+
         val CALDAV_REFRESH_DELAY = 3000L
         val calDAVRefreshHandler = Handler()
         var calDAVRefreshCallback: (() -> Unit)? = null
@@ -199,7 +194,7 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
         if (!isGranted) {
             EasyPermissions.requestPermissions(
                 this, getString(R.string.permission_str),
-                BaseActivity.RC_READ_EXTERNAL_STORAGE, *perms
+                DEFAULT_SETTINGS_REQ_CODE, *perms
             )
             config.caldavSync = false
         } else {
@@ -219,10 +214,8 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
                     mainBinding?.hideBack?.beGone()
                 }
             }
-
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
-
 
         selectAccountReceiver = SelectAccountReceiver()
 
@@ -243,15 +236,16 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (permissionApply)
+            permissionGranted()
+    }
 
     fun getNewEventDayCode() = Formatter.getTodayCode()
 
-    override fun onPermissionsGranted(requestCode: Int, perms: List<String?>?) {
-//        Log.d(TAG, "onPermissionsGranted:" + requestCode + ":" + perms.size());
-        permissionGranted()
-    }
 
-    private fun permissionGranted() {
+    override fun permissionGranted() {
         homeFragment = HomeFragment()
         eventFragment = EventFragment()
         notificationFragment = NotificationFragment()
@@ -265,34 +259,33 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+        if (requestCode == DEFAULT_SETTINGS_REQ_CODE) {
+            Log.e("requestCode", requestCode.toString())
             // Do something after user returned from app settings screen, like showing a Toast.
             if (EasyPermissions.hasPermissions(this, *perms)) {
+                Log.e("hasPermissions", "true")
                 permissionGranted()
             } else {
                 EasyPermissions.requestPermissions(
                     this, getString(R.string.permission_str),
-                    BaseActivity.RC_READ_EXTERNAL_STORAGE, *perms
+                    BaseSimpleActivity.RC_READ_EXTERNAL_STORAGE, *perms
                 )
             }
         }
         if (requestCode == 2296) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                Log.e("hasPermissions", "true")
                 if (Environment.isExternalStorageManager()) {
                     permissionGranted()
                 } else {
                     EasyPermissions.requestPermissions(
                         this, getString(R.string.permission_str),
-                        BaseActivity.RC_READ_EXTERNAL_STORAGE, *perms
+                        BaseSimpleActivity.RC_READ_EXTERNAL_STORAGE, *perms
                     )
                     //                    Toasty.info(this, "Allow permission for storage access!", Toast.LENGTH_SHORT).show();
                 }
             }
         }
-    }
-
-    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>?) {
-        TODO("Not yet implemented")
     }
 
     private fun refreshCalDAVCalendars(showRefreshToast: Boolean) {
@@ -334,6 +327,7 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
                     supportFragmentManager.beginTransaction().replace(R.id.container, it)
                         .commit()
                 }
+                mainBinding?.today?.beVisible()
                 return true
             }
             R.id.event -> {
@@ -341,6 +335,7 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
                     supportFragmentManager.beginTransaction().replace(R.id.container, it)
                         .commit()
                 }
+                mainBinding?.today?.beGone()
                 return true
             }
             R.id.notification -> {
@@ -348,6 +343,7 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
                     supportFragmentManager.beginTransaction().replace(R.id.container, it)
                         .commit()
                 }
+                mainBinding?.today?.beGone()
                 return true
             }
 
@@ -356,6 +352,7 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
                     supportFragmentManager.beginTransaction().replace(R.id.container, it)
                         .commit()
                 }
+                mainBinding?.today?.beGone()
                 return true
             }
         }
@@ -374,13 +371,12 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
 
     fun openDayFromMonthly(dateTime: DateTime) {
 //        val fragment = DayFragmentsHolder()
-//        currentFragments.add(fragment)
 //        val bundle = Bundle()
 //        bundle.putString(DAY_CODE, Formatter.getDayCodeFromDateTime(dateTime))
 //        fragment.arguments = bundle
 //        try {
-//            supportFragmentManager.beginTransaction().add(R.id.fragments_holder, fragment).commitNow()
-//            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+//            supportFragmentManager.beginTransaction().replace(R.id.container1, fragment).commitNow()
+//            homeFragment?.dayChanges()
 //        } catch (e: Exception) {
 //        }
     }
@@ -862,6 +858,8 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
                             supportFragmentManager.beginTransaction().replace(R.id.container, it)
                                 .commit()
                         }
+                        mainBinding?.bottomnavigationbar?.menu?.findItem(R.id.home)?.isChecked =
+                            true
                     }
                 }
             }
