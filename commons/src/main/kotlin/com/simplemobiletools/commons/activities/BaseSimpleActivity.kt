@@ -17,7 +17,6 @@ import android.os.Bundle
 import android.provider.DocumentsContract
 import android.provider.Settings
 import android.telecom.TelecomManager
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -114,14 +113,14 @@ abstract class BaseSimpleActivity : AppCompatActivity(), EasyPermissions.Permiss
         }
 
         super.onCreate(savedInstanceState)
-        Log.e("package", packageName)
+
         if (!packageName.startsWith("com.daily.events.calender", true)) {
             if ((0..50).random() == 10 || baseConfig.appRunCount % 100 == 0) {
-                val label =
-                    "You are using a fake version of the app. For your own safety download the original one from www.simplemobiletools.com. Thanks"
-                ConfirmationDialog(this, label, positive = R.string.ok, negative = 0) {
-                    launchViewIntent("https://play.google.com/store/apps/dev?id=9070296388022589266")
-                }
+//                val label =
+//                    "You are using a fake version of the app. For your own safety download the original one from www.simplemobiletools.com. Thanks"
+//                ConfirmationDialog(this, label, positive = R.string.ok, negative = 0) {
+//                    launchViewIntent("https://play.google.com/store/apps/dev?id=9070296388022589266")
+//                }
             }
         }
     }
@@ -243,7 +242,7 @@ abstract class BaseSimpleActivity : AppCompatActivity(), EasyPermissions.Permiss
             return
         }
 
-        val color = resources.getColor(R.color.md_grey_black_dark)
+        val color = resources.getColor(R.color.white)
         for (i in 0 until menu.size()) {
             try {
                 menu.getItem(i)?.icon?.setTint(color)

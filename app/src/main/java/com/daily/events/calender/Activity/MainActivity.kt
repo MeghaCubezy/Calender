@@ -188,6 +188,7 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
             DataBindingUtil.setContentView(this@MainActivity, R.layout.activity_main)
         mainBinding?.bottomnavigationbar?.setOnNavigationItemSelectedListener(this)
         supportActionBar?.hide()
+
         activity = this@MainActivity
 
         val isGranted = EasyPermissions.hasPermissions(this@MainActivity, *perms)

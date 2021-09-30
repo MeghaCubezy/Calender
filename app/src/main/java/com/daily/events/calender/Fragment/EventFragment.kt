@@ -137,6 +137,7 @@ class EventFragment : MyFragmentHolder(), RefreshRecyclerViewListener {
         }
     }
 
+
     private fun receivedEvents(
         events: ArrayList<Event>,
         updateStatus: Int,

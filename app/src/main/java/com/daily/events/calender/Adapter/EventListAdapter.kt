@@ -1,5 +1,6 @@
 package com.daily.events.calender.Adapter
 
+import android.annotation.SuppressLint
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
@@ -57,13 +58,17 @@ class EventListAdapter(
 
     override fun getActionMenuId() = R.menu.cab_event_list
 
-    override fun prepareActionMode(menu: Menu) {}
+    @SuppressLint("RestrictedApi")
+    override fun prepareActionMode(menu: Menu) {
+    }
+
     override fun actionItemPressed(id: Int) {
         when (id) {
             R.id.cab_share -> shareEvents()
             R.id.cab_delete -> askConfirmDelete()
         }
     }
+
     override fun getSelectableItemCount() = listItems.filter { it is ListEvent }.size
 
     override fun getIsItemSelectable(position: Int) = listItems[position] is ListEvent
@@ -205,11 +210,8 @@ class EventListAdapter(
                     endTextColor = resources.getColor(R.color.grey)
                 }
             } else if (listEvent.startTS <= now && listEvent.endTS >= now && !isPrintVersion) {
-                startTextColor = resources.getColor(R.color.green)
-                endTextColor = resources.getColor(R.color.green)
-            } else if (listEvent.startTS >= now && listEvent.endTS >= now && !isPrintVersion) {
-                startTextColor = resources.getColor(R.color.green)
-                endTextColor = resources.getColor(R.color.green)
+                startTextColor = resources.getColor(R.color.black)
+                endTextColor = resources.getColor(R.color.black)
             }
 
             event_item_start.setTextColor(startTextColor)
