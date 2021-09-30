@@ -1,6 +1,5 @@
 package com.daily.events.calender.Adapter
 
-import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
@@ -170,7 +169,6 @@ class EventListAdapter(
                 )
             event_item_end?.beInvisibleIf(listEvent.startTS == listEvent.endTS)
             event_item_color_bar.background.applyColorFilter(listEvent.color)
-            Log.e("list startTS: " + listEvent.startTS, "listendTS : " + listEvent.endTS)
             rlMainView?.background?.applyColorFilter(listEvent.color)
 
             if (listEvent.startTS != listEvent.endTS) {
@@ -207,6 +205,9 @@ class EventListAdapter(
                     endTextColor = resources.getColor(R.color.grey)
                 }
             } else if (listEvent.startTS <= now && listEvent.endTS >= now && !isPrintVersion) {
+                startTextColor = resources.getColor(R.color.green)
+                endTextColor = resources.getColor(R.color.green)
+            } else if (listEvent.startTS >= now && listEvent.endTS >= now && !isPrintVersion) {
                 startTextColor = resources.getColor(R.color.green)
                 endTextColor = resources.getColor(R.color.green)
             }

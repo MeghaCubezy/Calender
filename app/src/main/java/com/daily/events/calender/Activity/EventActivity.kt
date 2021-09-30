@@ -1468,7 +1468,6 @@ class EventActivity : SimpleActivity() {
         }
 
 
-
         mEvent.apply {
             startTS = newStartTS
             endTS = newEndTS
