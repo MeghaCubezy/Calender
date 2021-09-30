@@ -18,6 +18,7 @@ import android.provider.ContactsContract.CommonDataKinds.StructuredName
 import android.provider.ContactsContract.Data
 import android.text.TextUtils
 import android.text.method.LinkMovementMethod
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
@@ -129,7 +130,6 @@ class EventActivity : SimpleActivity() {
 
         val eventId = intent.getLongExtra(EVENT_ID, 0L)
         ensureBackgroundThread {
-
             mStoredEventTypes = eventTypesDB.getEventTypes().toMutableList() as ArrayList<EventType>
             val event = eventsDB.getEventWithId(eventId)
             if (eventId != 0L && event == null) {
@@ -160,6 +160,7 @@ class EventActivity : SimpleActivity() {
         model = R.drawable.bottom_back
 
         dialog_submit.setOnClickListener { saveCurrentEvent() }
+        dialog_cancel.setOnClickListener { onBackPressed() }
     }
 
     override fun permissionGranted() {
@@ -172,7 +173,6 @@ class EventActivity : SimpleActivity() {
             eventTypes = it
             runOnUiThread {
                 eventTypes.filter { it.caldavCalendarId == 0 }.forEach {
-
                     addRadioButton(it)
                 }
                 val newEventType = EventType(
@@ -281,19 +281,38 @@ class EventActivity : SimpleActivity() {
         event_show_on_map.setOnClickListener { showOnMap() }
         event_start_time.setOnClickListener {
             hideKeyboard()
+
+            val givenDateString = event_start_time.text
+            val sdf = SimpleDateFormat("E, dd MMM yyyy hh:mm a")
+
+            val mDate = sdf.parse(givenDateString as String)
+            val timeInMilliseconds = mDate.time
+
             CardDatePickerDialog.builder(this)
                 .setTitle("From")
                 .setDisplayType(displayList)
                 .setPickerLayout(pickerLayout)
                 .setWrapSelectorWheel(false)
                 .showDateLabel(false)
+                .setDefaultTime(timeInMilliseconds)
                 .showBackNow(false)
                 .showFocusDateInfo(true)
                 .setBackGroundModel(model)
                 .setOnChoose("Ok") {
                     val date = Date(it)
-                    val format = SimpleDateFormat("E, dd MMM hh:mm a")
+                    val format = SimpleDateFormat("E, dd MMM yyyy hh:mm a")
                     event_start_time.text = format.format(date)
+
+                    val cal = Calendar.getInstance()
+                    cal.time = date
+                    val hours = cal[Calendar.HOUR_OF_DAY]
+                    val mins = cal[Calendar.MINUTE]
+                    timeSet(hours, mins, true)
+                    val year = cal[Calendar.YEAR]
+                    val monthOfYear = cal[Calendar.MONTH]
+                    val dayOfMonth = cal[Calendar.DAY_OF_MONTH]
+                    dateSet(year, monthOfYear, dayOfMonth, true)
+
                 }
                 .setOnCancel("Cancel") {
                 }.build().show()
@@ -302,6 +321,12 @@ class EventActivity : SimpleActivity() {
 
         event_end_time.setOnClickListener {
             hideKeyboard()
+
+            val givenDateString = event_end_time.text
+            val sdf = SimpleDateFormat("E, dd MMM yyyy hh:mm a")
+
+            val mDate = sdf.parse(givenDateString as String)
+            val timeInMilliseconds = mDate.time
             CardDatePickerDialog.builder(this)
                 .setTitle("To")
                 .setDisplayType(displayList)
@@ -309,12 +334,23 @@ class EventActivity : SimpleActivity() {
                 .setWrapSelectorWheel(false)
                 .showDateLabel(false)
                 .showBackNow(false)
+                .setDefaultTime(timeInMilliseconds)
                 .showFocusDateInfo(true)
                 .setBackGroundModel(model)
                 .setOnChoose("Ok") {
                     val date = Date(it)
-                    val format = SimpleDateFormat("E, dd MMM hh:mm a")
+                    val format = SimpleDateFormat("E, dd MMM yyyy hh:mm a")
                     event_end_time.text = format.format(date)
+                    val cal = Calendar.getInstance()
+                    cal.time = date
+                    val hours = cal[Calendar.HOUR_OF_DAY]
+                    val mins = cal[Calendar.MINUTE]
+                    timeSet(hours, mins, false)
+                    val year = cal[Calendar.YEAR]
+                    val monthOfYear = cal[Calendar.MONTH]
+                    val dayOfMonth = cal[Calendar.DAY_OF_MONTH]
+                    dateSet(year, monthOfYear, dayOfMonth, false)
+
                 }
                 .setOnCancel("Cancel") {
                 }.build().show()
@@ -452,6 +488,8 @@ class EventActivity : SimpleActivity() {
             mEventStartDateTime.withSecondOfMinute(0).withMillisOfSecond(0).seconds() - offset
         val newEndTS =
             mEventEndDateTime.withSecondOfMinute(0).withMillisOfSecond(0).seconds() - offset
+
+
         return Pair(newStartTS, newEndTS)
     }
 
@@ -1234,11 +1272,6 @@ class EventActivity : SimpleActivity() {
                         ?: currentCalendar.color
 
                 runOnUiThread {
-//                    event_caldav_calendar_color.setFillWithStroke(
-//                        calendarColor,
-//                        config.backgroundColor,
-//                        getCornerRadius()
-//                    )
                     event_caldav_calendar_name.apply {
                         text = currentCalendar.displayName
                         setPadding(
@@ -1434,6 +1467,8 @@ class EventActivity : SimpleActivity() {
             }
         }
 
+
+
         mEvent.apply {
             startTS = newStartTS
             endTS = newEndTS
@@ -1558,9 +1593,8 @@ class EventActivity : SimpleActivity() {
     }
 
     private fun updateStartTimeText() {
-        val date = Date()
-        val format = SimpleDateFormat("E, dd MMM hh:mm a")
-        event_start_time.text = format.format(date)
+
+        event_start_time.text = Formatter.getTime1(this, mEventStartDateTime)
         checkStartEndValidity()
     }
 
@@ -1583,9 +1617,8 @@ class EventActivity : SimpleActivity() {
     }
 
     private fun updateEndTimeText() {
-        val date = Date()
-        val format = SimpleDateFormat("E, dd MMM hh:mm a")
-        event_end_time.text = format.format(date)
+
+        event_end_time.text = Formatter.getTime1(this, mEventEndDateTime)
         checkStartEndValidity()
     }
 
@@ -1714,15 +1747,17 @@ class EventActivity : SimpleActivity() {
             val diff = mEventEndDateTime.seconds() - mEventStartDateTime.seconds()
 
             mEventStartDateTime = mEventStartDateTime.withDate(year, month + 1, day)
-            updateStartDateText()
+//            updateStartDateText()
             checkRepeatRule()
 
             mEventEndDateTime = mEventStartDateTime.plusSeconds(diff.toInt())
-            updateEndTexts()
+//            updateEndTexts()
         } else {
             mEventEndDateTime = mEventEndDateTime.withDate(year, month + 1, day)
-            updateEndDateText()
+//            updateEndDateText()
         }
+        Log.e("start date", mEventStartDateTime.toString())
+        Log.e("end date", mEventEndDateTime.toString())
     }
 
     private fun timeSet(hours: Int, minutes: Int, isStart: Boolean) {
@@ -1732,14 +1767,19 @@ class EventActivity : SimpleActivity() {
 
                 mEventStartDateTime =
                     mEventStartDateTime.withHourOfDay(hours).withMinuteOfHour(minutes)
-                updateStartTimeText()
+//                updateStartTimeText()
 
                 mEventEndDateTime = mEventStartDateTime.plusSeconds(diff.toInt())
-                updateEndTexts()
+//                updateEndTexts()
+
+
             } else {
                 mEventEndDateTime = mEventEndDateTime.withHourOfDay(hours).withMinuteOfHour(minutes)
-                updateEndTimeText()
+//                updateEndTimeText()
             }
+
+            Log.e("start time", mEventStartDateTime.toString())
+            Log.e("end time", mEventEndDateTime.toString())
         } catch (e: Exception) {
             timeSet(hours + 1, minutes, isStart)
             return

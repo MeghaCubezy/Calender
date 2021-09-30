@@ -234,6 +234,11 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
         mainBinding?.fab?.setOnClickListener {
             launchNewEventIntent(getNewEventDayCode())
         }
+
+        homeFragment?.let {
+            supportFragmentManager.beginTransaction().replace(R.id.container, it)
+                .commit()
+        }
     }
 
     override fun onResume() {
@@ -250,11 +255,6 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
         eventFragment = EventFragment()
         notificationFragment = NotificationFragment()
         settingFragment = SettingFragment()
-
-        homeFragment?.let {
-            supportFragmentManager.beginTransaction().replace(R.id.container, it)
-                .commit()
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

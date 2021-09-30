@@ -18,8 +18,10 @@ object Formatter {
     private const val DAY_OF_WEEK_PATTERN = "EEE"
     private const val LONGEST_PATTERN = "MMMM d YYYY (EEEE)"
     private const val LONGEST_PATTERN1 = "MMMM d, YYYY"
+    private const val PATTERN_TIME_12_1 = "E, dd MMM yyyy hh:mm a"
     private const val PATTERN_TIME_12 = "hh:mm a"
     private const val PATTERN_TIME_24 = "HH:mm"
+    private const val PATTERN_TIME_24_1 = "E, dd MMM yyyy HH:mm"
 
     private const val PATTERN_HOURS_12 = "h a"
     private const val PATTERN_HOURS_24 = "HH"
@@ -72,6 +74,7 @@ object Formatter {
     fun getHours(context: Context, dateTime: DateTime) = dateTime.toString(getHourPattern(context))
 
     fun getTime(context: Context, dateTime: DateTime) = dateTime.toString(getTimePattern(context))
+    fun getTime1(context: Context, dateTime: DateTime) = dateTime.toString(getTimePattern1(context))
 
     fun getDateTimeFromCode(dayCode: String) =
         DateTimeFormat.forPattern(DAYCODE_PATTERN).withZone(DateTimeZone.UTC).parseDateTime(dayCode)
@@ -104,6 +107,9 @@ object Formatter {
 
     fun getTimePattern(context: Context) =
         if (context.config.use24HourFormat) PATTERN_TIME_24 else PATTERN_TIME_12
+
+    fun getTimePattern1(context: Context) =
+        if (context.config.use24HourFormat) PATTERN_TIME_24_1 else PATTERN_TIME_12_1
 
     fun getExportedTime(ts: Long): String {
         val dateTime = DateTime(ts, DateTimeZone.UTC)

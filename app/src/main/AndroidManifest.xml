@@ -48,7 +48,7 @@
             android:name=".Activity.EventActivity"
             android:launchMode="singleTask"
             android:theme="@style/Theme.Calender.NoActionBar"
-            android:parentActivityName=".Activity.MainActivity">
+           >
             <intent-filter>
                 <action android:name="android.intent.action.EDIT" />
                 <action android:name="android.intent.action.INSERT" />

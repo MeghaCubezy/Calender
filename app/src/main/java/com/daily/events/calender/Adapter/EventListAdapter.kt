@@ -1,5 +1,6 @@
 package com.daily.events.calender.Adapter
 
+import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
@@ -55,15 +56,15 @@ class EventListAdapter(
         }
     }
 
-    override fun getActionMenuId(): Int {
-        TODO("Not yet implemented")
-    }
+    override fun getActionMenuId() = R.menu.cab_event_list
 
     override fun prepareActionMode(menu: Menu) {}
     override fun actionItemPressed(id: Int) {
-        TODO("Not yet implemented")
+        when (id) {
+            R.id.cab_share -> shareEvents()
+            R.id.cab_delete -> askConfirmDelete()
+        }
     }
-
     override fun getSelectableItemCount() = listItems.filter { it is ListEvent }.size
 
     override fun getIsItemSelectable(position: Int) = listItems[position] is ListEvent
@@ -169,7 +170,7 @@ class EventListAdapter(
                 )
             event_item_end?.beInvisibleIf(listEvent.startTS == listEvent.endTS)
             event_item_color_bar.background.applyColorFilter(listEvent.color)
-
+            Log.e("list startTS: " + listEvent.startTS, "listendTS : " + listEvent.endTS)
             rlMainView?.background?.applyColorFilter(listEvent.color)
 
             if (listEvent.startTS != listEvent.endTS) {
@@ -206,7 +207,8 @@ class EventListAdapter(
                     endTextColor = resources.getColor(R.color.grey)
                 }
             } else if (listEvent.startTS <= now && listEvent.endTS >= now && !isPrintVersion) {
-                startTextColor = resources.getColor(R.color.black)
+                startTextColor = resources.getColor(R.color.green)
+                endTextColor = resources.getColor(R.color.green)
             }
 
             event_item_start.setTextColor(startTextColor)
