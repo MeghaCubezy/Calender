@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,12 +38,12 @@ class DayFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
     private var currentWeekTS = 0L
     private var isGoToTodayVisible = false
     private var weekScrollY = 0
-    private var mDayCode = ""
+    private var currentDayCode = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val dateTimeString = arguments?.getString(WEEK_START_DATE_TIME) ?: return
-        mDayCode = requireArguments().getString(DAY_CODE)!!
+        currentDayCode = requireArguments().getString(DAY_CODE)!!
         currentWeekTS = (DateTime.parse(dateTimeString) ?: DateTime()).seconds()
         thisWeekTS = currentWeekTS
     }
@@ -102,7 +101,6 @@ class DayFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
 
         defaultWeeklyPage = weekTSs.size / 2
 
-
         viewPager!!.apply {
             adapter = weeklyAdapter
             addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -120,10 +118,6 @@ class DayFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
                     requireActivity().runOnUiThread {
                         MainActivity.mainBinding?.dateTitleTV?.text =
                             Formatter.getLongeDate(currentWeekTS)
-                        Log.e(
-                            "LLL_Week: ",
-                            Formatter.getLongeDate(currentWeekTS) + "    : " + "Done"
-                        )
                     }
                     val shouldGoToTodayBeVisible = shouldGoToTodayBeVisible()
                     if (isGoToTodayVisible != shouldGoToTodayBeVisible) {
@@ -136,13 +130,13 @@ class DayFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
                     setupWeeklyActionbarTitle(weekTSs[position])
                 }
             })
+//            currentItem = defaultWeeklyPage
             for (i in weekTSs.indices) {
                 val var1 = Formatter.getDateTimeFromCode(Formatter.getDayCodeFromTS(weekTSs.get(i)))
                     .toString()
                 val var2 = Formatter.getDateTimeFromCode(Formatter.getTodayCode()).toString()
                 if (var1 == var2) {
                     currentItem = i
-                    Log.e("LLL_VCurrent12: ", "$var1 var2   : $var2")
                     break
                 }
             }
@@ -188,7 +182,6 @@ class DayFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
         val shownWeekDays = 1
         var currentWeek = dateTime.minusDays(PREFILLED_WEEKS / 2 * shownWeekDays)
         currentWeekTS = thisWeekTS
-        Log.e("LLL_VCurrent: ", Formatter.getLongestDate(currentWeekTS).toString())
 
         for (i in 0 until PREFILLED_WEEKS) {
             weekTSs.add(currentWeek.seconds())
@@ -196,6 +189,7 @@ class DayFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
         }
         return weekTSs
     }
+
 
     private fun setupWeeklyActionbarTitle(timestamp: Long) {
 
@@ -373,4 +367,6 @@ class DayFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
             }, 1000)
         }
     }
+
+
 }

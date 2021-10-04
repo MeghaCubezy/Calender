@@ -1,5 +1,6 @@
 package com.simplemobiletools.commons.activities
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
@@ -16,7 +17,6 @@ import android.os.Bundle
 import android.provider.DocumentsContract
 import android.provider.Settings
 import android.telecom.TelecomManager
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -37,12 +37,15 @@ import com.simplemobiletools.commons.helpers.*
 import com.simplemobiletools.commons.interfaces.CopyMoveListener
 import com.simplemobiletools.commons.models.FAQItem
 import com.simplemobiletools.commons.models.FileDirItem
+import pub.devrel.easypermissions.AfterPermissionGranted
+import pub.devrel.easypermissions.AppSettingsDialog
+import pub.devrel.easypermissions.EasyPermissions
 import java.io.File
 import java.io.OutputStream
 import java.util.*
 import java.util.regex.Pattern
 
-abstract class BaseSimpleActivity : AppCompatActivity() {
+abstract class BaseSimpleActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     var copyMoveCallback: ((destinationPath: String) -> Unit)? = null
     var actionOnPermission: ((granted: Boolean) -> Unit)? = null
     var isAskingPermissions = false
@@ -53,8 +56,51 @@ abstract class BaseSimpleActivity : AppCompatActivity() {
 
     private val GENERIC_PERM_HANDLER = 100
 
+
     companion object {
+        const val RC_READ_EXTERNAL_STORAGE = 123
+        var perms = arrayOf(
+            Manifest.permission.READ_CALENDAR,
+            Manifest.permission.WRITE_CALENDAR,
+        )
         var funAfterSAFPermission: ((success: Boolean) -> Unit)? = null
+        var permissionApply: Boolean = false
+    }
+
+    abstract fun permissionGranted()
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        readExternalStorage()
+        ActivityCompat.requestPermissions(
+            this,
+            perms, 1
+        )
+    }
+
+    override fun onPermissionsGranted(requestCode: Int, perms: List<String?>?) {
+//        Log.d(TAG, "onPermissionsGranted:" + requestCode + ":" + perms.size());
+        permissionGranted()
+    }
+
+    override fun onPermissionsDenied(requestCode: Int, perms: List<String?>?) {
+//        Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
+        // If Permission permanently denied, ask user again
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms!!)) {
+            AppSettingsDialog.Builder(this).build().show()
+        }
+    }
+
+    @AfterPermissionGranted(RC_READ_EXTERNAL_STORAGE)
+    private fun readExternalStorage() {
+        val isGranted = EasyPermissions.hasPermissions(this, *perms)
+        if (isGranted) {
+            permissionGranted()
+        } else {
+            EasyPermissions.requestPermissions(
+                this, "Need calender permission for access.",
+                RC_READ_EXTERNAL_STORAGE, *perms
+            )
+        }
     }
 
     abstract fun getAppIconIDs(): ArrayList<Int>
@@ -67,14 +113,14 @@ abstract class BaseSimpleActivity : AppCompatActivity() {
         }
 
         super.onCreate(savedInstanceState)
-        Log.e("package", packageName)
+
         if (!packageName.startsWith("com.daily.events.calender", true)) {
             if ((0..50).random() == 10 || baseConfig.appRunCount % 100 == 0) {
-                val label =
-                    "You are using a fake version of the app. For your own safety download the original one from www.simplemobiletools.com. Thanks"
-                ConfirmationDialog(this, label, positive = R.string.ok, negative = 0) {
-                    launchViewIntent("https://play.google.com/store/apps/dev?id=9070296388022589266")
-                }
+//                val label =
+//                    "You are using a fake version of the app. For your own safety download the original one from www.simplemobiletools.com. Thanks"
+//                ConfirmationDialog(this, label, positive = R.string.ok, negative = 0) {
+//                    launchViewIntent("https://play.google.com/store/apps/dev?id=9070296388022589266")
+//                }
             }
         }
     }
@@ -94,6 +140,8 @@ abstract class BaseSimpleActivity : AppCompatActivity() {
 
         updateRecentsAppIcon()
         updateNavigationBarColor()
+
+        readExternalStorage()
     }
 
     override fun onStop() {
@@ -151,7 +199,7 @@ abstract class BaseSimpleActivity : AppCompatActivity() {
         if (baseConfig.navigationBarColor != INVALID_NAVIGATION_BAR_COLOR) {
             try {
                 val colorToUse = if (color == -2) -1 else color
-                window.navigationBarColor = colorToUse
+                window.navigationBarColor = resources.getColor(R.color.theme_color)
 
                 if (isOreoPlus()) {
                     if (color.getContrastColor() == 0xFF333333.toInt()) {
@@ -178,7 +226,7 @@ abstract class BaseSimpleActivity : AppCompatActivity() {
             val recentsIcon =
                 BitmapFactory.decodeResource(resources, appIconIDs[currentAppIconColorIndex])
             val title = getAppLauncherName()
-            val color = baseConfig.primaryColor
+            val color = resources.getColor(R.color.theme_color)
 
             val description = ActivityManager.TaskDescription(title, recentsIcon, color)
             setTaskDescription(description)
@@ -188,13 +236,13 @@ abstract class BaseSimpleActivity : AppCompatActivity() {
     fun updateMenuItemColors(
         menu: Menu?,
         useCrossAsBack: Boolean = false,
-        baseColor: Int = baseConfig.primaryColor
+        baseColor: Int = resources.getColor(R.color.theme_color)
     ) {
         if (menu == null) {
             return
         }
 
-        val color = baseColor.getContrastColor()
+        val color = resources.getColor(R.color.white)
         for (i in 0 until menu.size()) {
             try {
                 menu.getItem(i)?.icon?.setTint(color)
@@ -204,7 +252,8 @@ abstract class BaseSimpleActivity : AppCompatActivity() {
 
         val drawableId =
             if (useCrossAsBack) R.drawable.ic_cross_vector else R.drawable.ic_arrow_left_vector
-        val icon = resources.getColoredDrawableWithColor(drawableId, color)
+        val icon =
+            resources.getColoredDrawableWithColor(drawableId, resources.getColor(R.color.white))
         supportActionBar?.setHomeAsUpIndicator(icon)
     }
 
@@ -264,6 +313,7 @@ abstract class BaseSimpleActivity : AppCompatActivity() {
                 if (isProperOTGFolder(resultData.data!!) && isProperPartition) {
                     if (resultData.dataString == baseConfig.treeUri) {
                         funAfterSAFPermission?.invoke(false)
+                        permissionApply = false
                         toast(R.string.sd_card_usb_same)
                         return
                     }
@@ -282,6 +332,7 @@ abstract class BaseSimpleActivity : AppCompatActivity() {
 
                     funAfterSAFPermission?.invoke(true)
                     funAfterSAFPermission = null
+                    permissionApply = true
                 } else {
                     toast(R.string.wrong_root_selected_usb)
                     val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
@@ -293,6 +344,20 @@ abstract class BaseSimpleActivity : AppCompatActivity() {
         } else if (requestCode == SELECT_EXPORT_SETTINGS_FILE_INTENT && resultCode == Activity.RESULT_OK && resultData != null && resultData.data != null) {
             val outputStream = contentResolver.openOutputStream(resultData.data!!)
             exportSettingsTo(outputStream, configItemsToExport)
+        }
+
+        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+            // Do something after user returned from app settings screen, like showing a Toast.
+            if (EasyPermissions.hasPermissions(this, *perms)) {
+                permissionGranted()
+            }
+        }
+
+        if (requestCode == RC_READ_EXTERNAL_STORAGE) {
+            // Do something after user returned from app settings screen, like showing a Toast.
+            if (EasyPermissions.hasPermissions(this, *perms)) {
+                permissionGranted()
+            }
         }
     }
 

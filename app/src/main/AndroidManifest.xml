@@ -37,7 +37,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Calender.NoActionBar">
 
-        <activity android:name=".Activity.BaseActivity" />
         <activity android:name=".Activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -49,7 +48,7 @@
             android:name=".Activity.EventActivity"
             android:launchMode="singleTask"
             android:theme="@style/Theme.Calender.NoActionBar"
-            android:parentActivityName=".Activity.MainActivity">
+           >
             <intent-filter>
                 <action android:name="android.intent.action.EDIT" />
                 <action android:name="android.intent.action.INSERT" />
@@ -78,6 +77,82 @@
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".helpers.MyWidgetMonthlyProvider"
+            android:icon="@drawable/img_widget_monthly_preview"
+            android:label="@string/widget_monthly">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_monthly_info" />
+        </receiver>
+
+        <receiver
+            android:name=".helpers.MyWidgetListProvider"
+            android:icon="@drawable/img_widget_list_preview"
+            android:label="@string/widget_list">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_list_info" />
+        </receiver>
+
+        <receiver
+            android:name=".helpers.MyWidgetDateProvider"
+            android:icon="@drawable/img_widget_date_preview"
+            android:label="@string/widget_todays_date">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_date_info" />
+        </receiver>
+
+        <service
+            android:name=".services.WidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <service
+            android:name=".services.WidgetServiceEmpty"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <service android:name=".services.SnoozeService" />
+
+        <service
+            android:name=".jobs.CalDAVUpdateListener"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <receiver android:name=".receivers.NotificationReceiver" />
+
+        <receiver android:name=".receivers.CalDAVSyncReceiver" />
+
+        <receiver android:name=".receivers.BootCompletedReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
     </application>
 
 </manifest>

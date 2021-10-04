@@ -21,13 +21,9 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.databinding.DataBindingUtil
 import androidx.loader.content.CursorLoader
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.daily.events.calender.Activity.BaseActivity.Companion.perms
 import com.daily.events.calender.Extensions.*
-import com.daily.events.calender.Fragment.EventFragment
+import com.daily.events.calender.Fragment.*
 import com.daily.events.calender.Fragment.Home.HomeFragment
-import com.daily.events.calender.Fragment.MonthFragmentsHolder
-import com.daily.events.calender.Fragment.NotificationFragment
-import com.daily.events.calender.Fragment.SettingFragment
 import com.daily.events.calender.Model.Event
 import com.daily.events.calender.Model.EventType
 import com.daily.events.calender.R
@@ -38,11 +34,11 @@ import com.daily.events.calender.helpers.Formatter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
+import com.simplemobiletools.commons.activities.BaseSimpleActivity
+import com.simplemobiletools.commons.dialogs.RadioGroupDialog
 import com.simplemobiletools.commons.extensions.*
-import com.simplemobiletools.commons.helpers.MyContactsContentProvider
-import com.simplemobiletools.commons.helpers.ensureBackgroundThread
-import com.simplemobiletools.commons.helpers.getDateFormats
-import com.simplemobiletools.commons.helpers.getDateFormatsWithYear
+import com.simplemobiletools.commons.helpers.*
+import com.simplemobiletools.commons.models.RadioItem
 import com.simplemobiletools.commons.models.SimpleContact
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.calendar_item_account.view.*
@@ -50,18 +46,17 @@ import kotlinx.android.synthetic.main.calendar_item_calendar.view.*
 import kotlinx.android.synthetic.main.dialog_select_calendars.view.*
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
-import pub.devrel.easypermissions.AppSettingsDialog
+import pub.devrel.easypermissions.AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE
 import pub.devrel.easypermissions.EasyPermissions
 import java.text.SimpleDateFormat
 import java.util.*
 
-
-class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSelectedListener,
-    EasyPermissions.PermissionCallbacks {
+class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
     private var selectAccountReceiver: SelectAccountReceiver? = null
 
     companion object {
+
         val CALDAV_REFRESH_DELAY = 3000L
         val calDAVRefreshHandler = Handler()
         var calDAVRefreshCallback: (() -> Unit)? = null
@@ -183,7 +178,6 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
                 }
             }
         }
-
     }
 
     private var showCalDAVRefreshToast = false
@@ -194,13 +188,14 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
             DataBindingUtil.setContentView(this@MainActivity, R.layout.activity_main)
         mainBinding?.bottomnavigationbar?.setOnNavigationItemSelectedListener(this)
         supportActionBar?.hide()
+
         activity = this@MainActivity
 
         val isGranted = EasyPermissions.hasPermissions(this@MainActivity, *perms)
         if (!isGranted) {
             EasyPermissions.requestPermissions(
                 this, getString(R.string.permission_str),
-                BaseActivity.RC_READ_EXTERNAL_STORAGE, *perms
+                DEFAULT_SETTINGS_REQ_CODE, *perms
             )
             config.caldavSync = false
         } else {
@@ -220,10 +215,8 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
                     mainBinding?.hideBack?.beGone()
                 }
             }
-
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
-
 
         selectAccountReceiver = SelectAccountReceiver()
 
@@ -232,19 +225,16 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
             IntentFilter("OPEN_ACCOUNT_SYNC")
         )
 
+        LocalBroadcastManager.getInstance(this@MainActivity).registerReceiver(
+            holidayReceiver,
+            IntentFilter("ADD_HOLIDAYS")
+        )
+
         config.isSundayFirst = false
-    }
 
-    override fun onPermissionsGranted(requestCode: Int, perms: List<String?>?) {
-//        Log.d(TAG, "onPermissionsGranted:" + requestCode + ":" + perms.size());
-        permissionGranted()
-    }
-
-    private fun permissionGranted() {
-        homeFragment = HomeFragment()
-        eventFragment = EventFragment()
-        notificationFragment = NotificationFragment()
-        settingFragment = SettingFragment()
+        mainBinding?.fab?.setOnClickListener {
+            launchNewEventIntent(getNewEventDayCode())
+        }
 
         homeFragment?.let {
             supportFragmentManager.beginTransaction().replace(R.id.container, it)
@@ -252,36 +242,51 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (permissionApply)
+            permissionGranted()
+    }
+
+    fun getNewEventDayCode() = Formatter.getTodayCode()
+
+
+    override fun permissionGranted() {
+        homeFragment = HomeFragment()
+        eventFragment = EventFragment()
+        notificationFragment = NotificationFragment()
+        settingFragment = SettingFragment()
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+        if (requestCode == DEFAULT_SETTINGS_REQ_CODE) {
+            Log.e("requestCode", requestCode.toString())
             // Do something after user returned from app settings screen, like showing a Toast.
             if (EasyPermissions.hasPermissions(this, *perms)) {
+                Log.e("hasPermissions", "true")
                 permissionGranted()
             } else {
                 EasyPermissions.requestPermissions(
                     this, getString(R.string.permission_str),
-                    BaseActivity.RC_READ_EXTERNAL_STORAGE, *perms
+                    BaseSimpleActivity.RC_READ_EXTERNAL_STORAGE, *perms
                 )
             }
         }
         if (requestCode == 2296) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                Log.e("hasPermissions", "true")
                 if (Environment.isExternalStorageManager()) {
                     permissionGranted()
                 } else {
                     EasyPermissions.requestPermissions(
                         this, getString(R.string.permission_str),
-                        BaseActivity.RC_READ_EXTERNAL_STORAGE, *perms
+                        BaseSimpleActivity.RC_READ_EXTERNAL_STORAGE, *perms
                     )
                     //                    Toasty.info(this, "Allow permission for storage access!", Toast.LENGTH_SHORT).show();
                 }
             }
         }
-    }
-
-    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>?) {
-        TODO("Not yet implemented")
     }
 
     private fun refreshCalDAVCalendars(showRefreshToast: Boolean) {
@@ -323,6 +328,7 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
                     supportFragmentManager.beginTransaction().replace(R.id.container, it)
                         .commit()
                 }
+                mainBinding?.today?.beVisible()
                 return true
             }
             R.id.event -> {
@@ -330,6 +336,7 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
                     supportFragmentManager.beginTransaction().replace(R.id.container, it)
                         .commit()
                 }
+                mainBinding?.today?.beGone()
                 return true
             }
             R.id.notification -> {
@@ -337,6 +344,7 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
                     supportFragmentManager.beginTransaction().replace(R.id.container, it)
                         .commit()
                 }
+                mainBinding?.today?.beGone()
                 return true
             }
 
@@ -345,6 +353,7 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
                     supportFragmentManager.beginTransaction().replace(R.id.container, it)
                         .commit()
                 }
+                mainBinding?.today?.beGone()
                 return true
             }
         }
@@ -363,13 +372,12 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
 
     fun openDayFromMonthly(dateTime: DateTime) {
 //        val fragment = DayFragmentsHolder()
-//        currentFragments.add(fragment)
 //        val bundle = Bundle()
 //        bundle.putString(DAY_CODE, Formatter.getDayCodeFromDateTime(dateTime))
 //        fragment.arguments = bundle
 //        try {
-//            supportFragmentManager.beginTransaction().add(R.id.fragments_holder, fragment).commitNow()
-//            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+//            supportFragmentManager.beginTransaction().replace(R.id.container1, fragment).commitNow()
+//            homeFragment?.dayChanges()
 //        } catch (e: Exception) {
 //        }
     }
@@ -816,4 +824,135 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
         }
 
     }
+
+
+//    ******************* Add holidays ************************
+
+    private val holidayReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            addHolidays()
+        }
+    }
+
+    private fun addHolidays() {
+        val items = getHolidayRadioItems()
+        RadioGroupDialog(this, items) {
+            toast(R.string.importing)
+            ensureBackgroundThread {
+                val holidays = getString(R.string.holidays)
+                var eventTypeId = eventsHelper.getEventTypeIdWithTitle(holidays)
+                if (eventTypeId == -1L) {
+                    val eventType = EventType(
+                        null,
+                        holidays,
+                        resources.getColor(R.color.default_holidays_color)
+                    )
+                    eventTypeId = eventsHelper.insertOrUpdateEventTypeSync(eventType)
+                }
+
+                val result = IcsImporter(this).importEvents(it as String, eventTypeId, 0, false)
+                handleParseResult(result)
+                if (result != IcsImporter.ImportResult.IMPORT_FAIL) {
+                    runOnUiThread {
+
+                        homeFragment?.let {
+                            supportFragmentManager.beginTransaction().replace(R.id.container, it)
+                                .commit()
+                        }
+                        mainBinding?.bottomnavigationbar?.menu?.findItem(R.id.home)?.isChecked =
+                            true
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getHolidayRadioItems(): ArrayList<RadioItem> {
+        val items = ArrayList<RadioItem>()
+
+        LinkedHashMap<String, String>().apply {
+            put("Algeria", "algeria.ics")
+            put("Argentina", "argentina.ics")
+            put("Australia", "australia.ics")
+            put("België", "belgium.ics")
+            put("Bolivia", "bolivia.ics")
+            put("Brasil", "brazil.ics")
+            put("България", "bulgaria.ics")
+            put("Canada", "canada.ics")
+            put("China", "china.ics")
+            put("Colombia", "colombia.ics")
+            put("Česká republika", "czech.ics")
+            put("Danmark", "denmark.ics")
+            put("Deutschland", "germany.ics")
+            put("Eesti", "estonia.ics")
+            put("España", "spain.ics")
+            put("Éire", "ireland.ics")
+            put("France", "france.ics")
+            put("Fürstentum Liechtenstein", "liechtenstein.ics")
+            put("Hellas", "greece.ics")
+            put("Hrvatska", "croatia.ics")
+            put("India", "india.ics")
+            put("Indonesia", "indonesia.ics")
+            put("Ísland", "iceland.ics")
+            put("Israel", "israel.ics")
+            put("Italia", "italy.ics")
+            put("Қазақстан Республикасы", "kazakhstan.ics")
+            put("المملكة المغربية", "morocco.ics")
+            put("Latvija", "latvia.ics")
+            put("Lietuva", "lithuania.ics")
+            put("Luxemburg", "luxembourg.ics")
+            put("Makedonija", "macedonia.ics")
+            put("Malaysia", "malaysia.ics")
+            put("Magyarország", "hungary.ics")
+            put("México", "mexico.ics")
+            put("Nederland", "netherlands.ics")
+            put("República de Nicaragua", "nicaragua.ics")
+            put("日本", "japan.ics")
+            put("Nigeria", "nigeria.ics")
+            put("Norge", "norway.ics")
+            put("Österreich", "austria.ics")
+            put("Pākistān", "pakistan.ics")
+            put("Polska", "poland.ics")
+            put("Portugal", "portugal.ics")
+            put("Россия", "russia.ics")
+            put("República de Costa Rica", "costarica.ics")
+            put("República Oriental del Uruguay", "uruguay.ics")
+            put("République d'Haïti", "haiti.ics")
+            put("România", "romania.ics")
+            put("Schweiz", "switzerland.ics")
+            put("Singapore", "singapore.ics")
+            put("한국", "southkorea.ics")
+            put("Srbija", "serbia.ics")
+            put("Slovenija", "slovenia.ics")
+            put("Slovensko", "slovakia.ics")
+            put("South Africa", "southafrica.ics")
+            put("Suomi", "finland.ics")
+            put("Sverige", "sweden.ics")
+            put("Taiwan", "taiwan.ics")
+            put("ราชอาณาจักรไทย", "thailand.ics")
+            put("Türkiye Cumhuriyeti", "turkey.ics")
+            put("Ukraine", "ukraine.ics")
+            put("United Kingdom", "unitedkingdom.ics")
+            put("United States", "unitedstates.ics")
+
+            var i = 0
+            for ((country, file) in this) {
+                items.add(RadioItem(i++, country, file))
+            }
+        }
+
+        return items
+    }
+
+    private fun handleParseResult(result: IcsImporter.ImportResult) {
+        toast(
+            when (result) {
+                IcsImporter.ImportResult.IMPORT_NOTHING_NEW -> R.string.no_new_items
+                IcsImporter.ImportResult.IMPORT_OK -> R.string.holidays_imported_successfully
+                IcsImporter.ImportResult.IMPORT_PARTIAL -> R.string.importing_some_holidays_failed
+                else -> R.string.importing_holidays_failed
+            }, Toast.LENGTH_LONG
+        )
+    }
+
 }

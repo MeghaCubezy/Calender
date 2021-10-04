@@ -49,6 +49,7 @@ class YearFragment : Fragment(), YearlyCalendar {
     lateinit var mView: View
     private var lastHash = 0
     private var isPrintVersion = false
+    private var mSundayFirst = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -187,5 +188,20 @@ class YearFragment : Fragment(), YearlyCalendar {
             )
             monthView.togglePrintMode()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val sundayFirst = context!!.config.isSundayFirst
+        if (sundayFirst != mSundayFirst) {
+            mSundayFirst = sundayFirst
+            setupMonths()
+        }
+        updateCalendar()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mSundayFirst = context!!.config.isSundayFirst
     }
 }

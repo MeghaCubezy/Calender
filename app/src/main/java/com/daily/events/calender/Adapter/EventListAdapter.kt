@@ -1,5 +1,6 @@
 package com.daily.events.calender.Adapter
 
+import android.annotation.SuppressLint
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
@@ -16,11 +17,9 @@ import com.daily.events.calender.helpers.Formatter
 import com.daily.events.calender.models.ListEvent
 import com.daily.events.calender.models.ListSection
 import com.simplemobiletools.commons.adapters.MyRecyclerViewAdapter
-import com.simplemobiletools.commons.extensions.adjustAlpha
 import com.simplemobiletools.commons.extensions.applyColorFilter
 import com.simplemobiletools.commons.extensions.beInvisible
 import com.simplemobiletools.commons.extensions.beInvisibleIf
-import com.simplemobiletools.commons.helpers.LOWER_ALPHA
 import com.simplemobiletools.commons.helpers.ensureBackgroundThread
 import com.simplemobiletools.commons.interfaces.RefreshRecyclerViewListener
 import com.simplemobiletools.commons.views.MyRecyclerView
@@ -57,13 +56,17 @@ class EventListAdapter(
         }
     }
 
-    override fun getActionMenuId(): Int {
-        TODO("Not yet implemented")
+    override fun getActionMenuId() = R.menu.cab_event_list
+
+    @SuppressLint("RestrictedApi")
+    override fun prepareActionMode(menu: Menu) {
     }
 
-    override fun prepareActionMode(menu: Menu) {}
     override fun actionItemPressed(id: Int) {
-        TODO("Not yet implemented")
+        when (id) {
+            R.id.cab_share -> shareEvents()
+            R.id.cab_delete -> askConfirmDelete()
+        }
     }
 
     override fun getSelectableItemCount() = listItems.filter { it is ListEvent }.size
@@ -116,12 +119,12 @@ class EventListAdapter(
         if (detailField.isNotEmpty()) {
             ITEM_EVENT
         } else if (event.startTS == event.endTS) {
-            ITEM_EVENT_SIMPLE
+            ITEM_EVENT
         } else if (event.isAllDay) {
             val startCode = Formatter.getDayCodeFromTS(event.startTS)
             val endCode = Formatter.getDayCodeFromTS(event.endTS)
             if (startCode == endCode) {
-                ITEM_EVENT_SIMPLE
+                ITEM_EVENT
             } else {
                 ITEM_EVENT
             }
@@ -161,6 +164,7 @@ class EventListAdapter(
         view.apply {
             event_item_frame.isSelected = selectedKeys.contains(listEvent.hashCode())
             event_item_title.text = listEvent.title
+
             event_item_description?.text =
                 if (replaceDescription) listEvent.location else listEvent.description
             event_item_start.text =
@@ -170,8 +174,7 @@ class EventListAdapter(
                 )
             event_item_end?.beInvisibleIf(listEvent.startTS == listEvent.endTS)
             event_item_color_bar.background.applyColorFilter(listEvent.color)
-
-            rlMainView.background.applyColorFilter(listEvent.color)
+            rlMainView?.background?.applyColorFilter(listEvent.color)
 
             if (listEvent.startTS != listEvent.endTS) {
                 event_item_end?.apply {
@@ -191,28 +194,30 @@ class EventListAdapter(
                 }
             }
 
-            var startTextColor = textColor
-            var endTextColor = textColor
+            var startTextColor = resources.getColor(R.color.black)
+            var endTextColor = resources.getColor(R.color.black)
             if (listEvent.isAllDay || listEvent.startTS <= now && listEvent.endTS <= now) {
                 if (listEvent.isAllDay && Formatter.getDayCodeFromTS(listEvent.startTS) == Formatter.getDayCodeFromTS(
                         now
                     ) && !isPrintVersion
                 ) {
-                    startTextColor = adjustedPrimaryColor
+                    startTextColor = resources.getColor(R.color.black)
                 }
 
                 if (dimPastEvents && listEvent.isPastEvent && !isPrintVersion) {
-                    startTextColor = startTextColor.adjustAlpha(LOWER_ALPHA)
-                    endTextColor = endTextColor.adjustAlpha(LOWER_ALPHA)
+                    startTextColor =
+                        resources.getColor(R.color.grey)
+                    endTextColor = resources.getColor(R.color.grey)
                 }
             } else if (listEvent.startTS <= now && listEvent.endTS >= now && !isPrintVersion) {
-                startTextColor = adjustedPrimaryColor
+                startTextColor = resources.getColor(R.color.black)
+                endTextColor = resources.getColor(R.color.black)
             }
 
-//            event_item_start.setTextColor(startTextColor)
-//            event_item_end?.setTextColor(endTextColor)
-//            event_item_title.setTextColor(startTextColor)
-//            event_item_description?.setTextColor(startTextColor)
+            event_item_start.setTextColor(startTextColor)
+            event_item_end?.setTextColor(endTextColor)
+            event_item_title.setTextColor(startTextColor)
+            event_item_description?.setTextColor(startTextColor)
         }
     }
 
@@ -228,9 +233,9 @@ class EventListAdapter(
             var color =
                 if (listSection.isToday && !isPrintVersion) adjustedPrimaryColor else textColor
             if (dimPastEvents && listSection.isPastSection && !isPrintVersion) {
-                color = color.adjustAlpha(LOWER_ALPHA)
+                color = color
             }
-            setTextColor(color)
+            setTextColor(resources.getColor(R.color.black))
         }
     }
 

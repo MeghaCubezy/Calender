@@ -15,6 +15,9 @@ open class SimpleActivity : BaseSimpleActivity() {
     val CALDAV_REFRESH_DELAY = 3000L
     val calDAVRefreshHandler = Handler()
     var calDAVRefreshCallback: (() -> Unit)? = null
+    override fun permissionGranted() {
+        TODO("Not yet implemented")
+    }
 
     override fun getAppIconIDs() = arrayListOf(
         R.mipmap.ic_launcher,

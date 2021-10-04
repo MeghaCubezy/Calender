@@ -52,13 +52,14 @@
                 android:id="@+id/container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@id/coordinator"
+                android:layout_marginBottom="@dimen/_40sdp"
                 android:layout_below="@id/topRL" />
 
             <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:id="@+id/coordinator"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_70sdp"
+                android:background="@android:color/transparent"
                 android:layout_alignParentBottom="true">
 
                 <com.google.android.material.bottomappbar.BottomAppBar
@@ -74,16 +75,25 @@
                         android:layout_height="match_parent"
                         app:itemRippleColor="@null"
                         app:labelVisibilityMode="labeled"
+                        app:itemIconTint="@color/bottom_nav_color"
+                        app:itemTextColor="@color/bottom_nav_color"
                         app:menu="@menu/bottom_menu" />
                 </com.google.android.material.bottomappbar.BottomAppBar>
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/fab"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_add_items"
-                    app:layout_anchor="@id/bottomappbar" />
+                    app:layout_anchor="@id/bottomnavigationbar">
+
+                    <ImageView
+                        android:id="@+id/fab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_add_items" />
+                </RelativeLayout>
+
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
             <View

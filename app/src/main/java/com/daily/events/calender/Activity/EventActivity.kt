@@ -1,5 +1,6 @@
 package com.daily.events.calender.Activity
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -17,9 +18,11 @@ import android.provider.ContactsContract.CommonDataKinds.StructuredName
 import android.provider.ContactsContract.Data
 import android.text.TextUtils
 import android.text.method.LinkMovementMethod
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
+import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.app.NotificationManagerCompat
 import com.daily.events.calender.Adapter.AutoCompleteTextViewAdapter
 import com.daily.events.calender.Extensions.*
@@ -105,7 +108,7 @@ class EventActivity : SimpleActivity() {
     private lateinit var mEvent: Event
 
     private val NEW_EVENT_TYPE_ID = -2L
-    private var eventTypes = java.util.ArrayList<EventType>()
+    private var eventTypes = ArrayList<EventType>()
 
     var displayList: MutableList<Int>? = mutableListOf()
     var pickerLayout = 0
@@ -127,7 +130,6 @@ class EventActivity : SimpleActivity() {
 
         val eventId = intent.getLongExtra(EVENT_ID, 0L)
         ensureBackgroundThread {
-
             mStoredEventTypes = eventTypesDB.getEventTypes().toMutableList() as ArrayList<EventType>
             val event = eventsDB.getEventWithId(eventId)
             if (eventId != 0L && event == null) {
@@ -158,11 +160,16 @@ class EventActivity : SimpleActivity() {
         model = R.drawable.bottom_back
 
         dialog_submit.setOnClickListener { saveCurrentEvent() }
+        dialog_cancel.setOnClickListener { onBackPressed() }
+    }
+
+    override fun permissionGranted() {
+
     }
 
     private fun addTag() {
         allEventTypeRL.removeAllViews()
-        eventsHelper.getEventTypes(this, false) {
+        eventsHelper.getEventTypes(this, true) {
             eventTypes = it
             runOnUiThread {
                 eventTypes.filter { it.caldavCalendarId == 0 }.forEach {
@@ -174,7 +181,6 @@ class EventActivity : SimpleActivity() {
                     Color.TRANSPARENT,
                     0
                 )
-
                 addRadioButton(newEventType)
                 wasInit = true
             }
@@ -195,7 +201,6 @@ class EventActivity : SimpleActivity() {
             view.eventTV.setTextColor(resources.getColor(R.color.theme_color))
         }
         view.eventTV.id = eventType.id!!.toInt()
-
         if (mEventTypeId == eventType.id) {
             selectedTag.text = eventType.getDisplayTitle()
             selectedTag.setTextColor(eventType.color)
@@ -225,9 +230,8 @@ class EventActivity : SimpleActivity() {
             }
         } else {
             mEventTypeId = eventType.id!!
-            selectedTag.text = eventType.getDisplayTitle()
-            selectedTag.setTextColor(eventType.color)
         }
+        updateEventType()
 
     }
 
@@ -277,19 +281,38 @@ class EventActivity : SimpleActivity() {
         event_show_on_map.setOnClickListener { showOnMap() }
         event_start_time.setOnClickListener {
             hideKeyboard()
+
+            val givenDateString = event_start_time.text
+            val sdf = SimpleDateFormat("E, dd MMM yyyy hh:mm a")
+
+            val mDate = sdf.parse(givenDateString as String)
+            val timeInMilliseconds = mDate.time
+
             CardDatePickerDialog.builder(this)
                 .setTitle("From")
                 .setDisplayType(displayList)
                 .setPickerLayout(pickerLayout)
                 .setWrapSelectorWheel(false)
                 .showDateLabel(false)
+                .setDefaultTime(timeInMilliseconds)
                 .showBackNow(false)
                 .showFocusDateInfo(true)
                 .setBackGroundModel(model)
                 .setOnChoose("Ok") {
                     val date = Date(it)
-                    val format = SimpleDateFormat("E, dd MMM hh:mm a")
+                    val format = SimpleDateFormat("E, dd MMM yyyy hh:mm a")
                     event_start_time.text = format.format(date)
+
+                    val cal = Calendar.getInstance()
+                    cal.time = date
+                    val hours = cal[Calendar.HOUR_OF_DAY]
+                    val mins = cal[Calendar.MINUTE]
+                    timeSet(hours, mins, true)
+                    val year = cal[Calendar.YEAR]
+                    val monthOfYear = cal[Calendar.MONTH]
+                    val dayOfMonth = cal[Calendar.DAY_OF_MONTH]
+                    dateSet(year, monthOfYear, dayOfMonth, true)
+
                 }
                 .setOnCancel("Cancel") {
                 }.build().show()
@@ -298,6 +321,12 @@ class EventActivity : SimpleActivity() {
 
         event_end_time.setOnClickListener {
             hideKeyboard()
+
+            val givenDateString = event_end_time.text
+            val sdf = SimpleDateFormat("E, dd MMM yyyy hh:mm a")
+
+            val mDate = sdf.parse(givenDateString as String)
+            val timeInMilliseconds = mDate.time
             CardDatePickerDialog.builder(this)
                 .setTitle("To")
                 .setDisplayType(displayList)
@@ -305,16 +334,26 @@ class EventActivity : SimpleActivity() {
                 .setWrapSelectorWheel(false)
                 .showDateLabel(false)
                 .showBackNow(false)
+                .setDefaultTime(timeInMilliseconds)
                 .showFocusDateInfo(true)
                 .setBackGroundModel(model)
                 .setOnChoose("Ok") {
                     val date = Date(it)
-                    val format = SimpleDateFormat("E, dd MMM hh:mm a")
+                    val format = SimpleDateFormat("E, dd MMM yyyy hh:mm a")
                     event_end_time.text = format.format(date)
+                    val cal = Calendar.getInstance()
+                    cal.time = date
+                    val hours = cal[Calendar.HOUR_OF_DAY]
+                    val mins = cal[Calendar.MINUTE]
+                    timeSet(hours, mins, false)
+                    val year = cal[Calendar.YEAR]
+                    val monthOfYear = cal[Calendar.MONTH]
+                    val dayOfMonth = cal[Calendar.DAY_OF_MONTH]
+                    dateSet(year, monthOfYear, dayOfMonth, false)
+
                 }
                 .setOnCancel("Cancel") {
                 }.build().show()
-
         }
         event_start_date.setOnClickListener { if (mIsAllDayEvent) setupStartDate() }
         event_end_date.setOnClickListener { if (mIsAllDayEvent) setupEndDate() }
@@ -359,35 +398,35 @@ class EventActivity : SimpleActivity() {
         event_reminder_2.setOnClickListener { showReminder2Dialog() }
         event_reminder_3.setOnClickListener { showReminder3Dialog() }
 
-//        event_reminder_1_type.setOnClickListener {
-//            showReminderTypePicker(mReminder1Type) {
-//                mReminder1Type = it
-//                updateReminderTypeImage(
-//                    event_reminder_1_type,
-//                    Reminder(mReminder1Minutes, mReminder1Type)
-//                )
-//            }
-//        }
+        event_reminder_1_type.setOnClickListener {
+            showReminderTypePicker(mReminder1Type) {
+                mReminder1Type = it
+                updateReminderTypeImage(
+                    event_reminder_1_type,
+                    Reminder(mReminder1Minutes, mReminder1Type)
+                )
+            }
+        }
 
-//        event_reminder_2_type.setOnClickListener {
-//            showReminderTypePicker(mReminder2Type) {
-//                mReminder2Type = it
-//                updateReminderTypeImage(
-//                    event_reminder_2_type,
-//                    Reminder(mReminder2Minutes, mReminder2Type)
-//                )
-//            }
-//        }
+        event_reminder_2_type.setOnClickListener {
+            showReminderTypePicker(mReminder2Type) {
+                mReminder2Type = it
+                updateReminderTypeImage(
+                    event_reminder_2_type,
+                    Reminder(mReminder2Minutes, mReminder2Type)
+                )
+            }
+        }
 
-//        event_reminder_3_type.setOnClickListener {
-//            showReminderTypePicker(mReminder3Type) {
-//                mReminder3Type = it
-//                updateReminderTypeImage(
-//                    event_reminder_3_type,
-//                    Reminder(mReminder3Minutes, mReminder3Type)
-//                )
-//            }
-//        }
+        event_reminder_3_type.setOnClickListener {
+            showReminderTypePicker(mReminder3Type) {
+                mReminder3Type = it
+                updateReminderTypeImage(
+                    event_reminder_3_type,
+                    Reminder(mReminder3Minutes, mReminder3Type)
+                )
+            }
+        }
 
 //        event_availability.setOnClickListener {
 //            showAvailabilityPicker(mAvailability) {
@@ -408,14 +447,15 @@ class EventActivity : SimpleActivity() {
         mWasActivityInitialized = true
     }
 
+    @SuppressLint("RestrictedApi")
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        if (menu is MenuBuilder) menu.setOptionalIconsVisible(true)
         menuInflater.inflate(R.menu.menu_event, menu)
         if (mWasActivityInitialized) {
             menu.findItem(R.id.delete).isVisible = mEvent.id != null
             menu.findItem(R.id.share).isVisible = mEvent.id != null
             menu.findItem(R.id.duplicate).isVisible = mEvent.id != null
         }
-
         updateMenuItemColors(menu)
         return true
     }
@@ -448,6 +488,8 @@ class EventActivity : SimpleActivity() {
             mEventStartDateTime.withSecondOfMinute(0).withMillisOfSecond(0).seconds() - offset
         val newEndTS =
             mEventEndDateTime.withSecondOfMinute(0).withMillisOfSecond(0).seconds() - offset
+
+
         return Pair(newStartTS, newEndTS)
     }
 
@@ -572,7 +614,6 @@ class EventActivity : SimpleActivity() {
             mReminder3Type = getInt(REMINDER_3_TYPE)
 
             mAvailability = getInt(AVAILABILITY)
-
             mRepeatInterval = getInt(REPEAT_INTERVAL)
             mRepeatRule = getInt(REPEAT_RULE)
             mRepeatLimit = getLong(REPEAT_LIMIT)
@@ -644,6 +685,7 @@ class EventActivity : SimpleActivity() {
 
         event_title.setText(mEvent.title)
         event_location.setText(mEvent.location)
+
         event_description.setText(mEvent.description)
 
         mReminder1Minutes = mEvent.reminder1Minutes
@@ -697,6 +739,7 @@ class EventActivity : SimpleActivity() {
             event_title.setText(intent.getStringExtra("title"))
             event_location.setText(intent.getStringExtra("eventLocation"))
             event_description.setText(intent.getStringExtra("description"))
+
             if (event_description.value.isNotEmpty()) {
                 event_description.movementMethod = LinkMovementMethod.getInstance()
             }
@@ -1109,21 +1152,22 @@ class EventActivity : SimpleActivity() {
     }
 
     private fun updateReminderTypeImages() {
-//        updateReminderTypeImage(event_reminder_1_type, Reminder(mReminder1Minutes, mReminder1Type))
-//        updateReminderTypeImage(event_reminder_2_type, Reminder(mReminder2Minutes, mReminder2Type))
-//        updateReminderTypeImage(event_reminder_3_type, Reminder(mReminder3Minutes, mReminder3Type))
+        updateReminderTypeImage(event_reminder_1_type, Reminder(mReminder1Minutes, mReminder1Type))
+        updateReminderTypeImage(event_reminder_2_type, Reminder(mReminder2Minutes, mReminder2Type))
+        updateReminderTypeImage(event_reminder_3_type, Reminder(mReminder3Minutes, mReminder3Type))
     }
 
     private fun updateCalDAVVisibility() {
         val isSyncedEvent = mEventCalendarId != STORED_LOCALLY_ONLY
-//        event_attendees_holder.beVisibleIf(isSyncedEvent)
+        event_attendees_holder.beVisibleIf(isSyncedEvent)
     }
 
     private fun updateReminderTypeImage(view: ImageView, reminder: Reminder) {
         view.beVisibleIf(reminder.minutes != REMINDER_OFF && mEventCalendarId != STORED_LOCALLY_ONLY)
         val drawable =
             if (reminder.type == REMINDER_NOTIFICATION) R.drawable.ic_bell_vector else R.drawable.ic_email_vector
-        val icon = resources.getColoredDrawableWithColor(drawable, config.textColor)
+        val icon =
+            resources.getColoredDrawableWithColor(drawable, resources.getColor(R.color.theme_color))
         view.setImageDrawable(icon)
     }
 
@@ -1150,13 +1194,8 @@ class EventActivity : SimpleActivity() {
             val eventType = eventTypesDB.getEventTypeWithId(mEventTypeId)
             if (eventType != null) {
                 runOnUiThread {
-
-//                    event_type.text = eventType.title
-//                    event_type_color.setFillWithStroke(
-//                        eventType.color,
-//                        config.backgroundColor,
-//                        getCornerRadius()
-//                    )
+                    selectedTag.text = eventType.title
+                    selectedTag.setTextColor(eventType.color)
                 }
             }
         }
@@ -1233,11 +1272,6 @@ class EventActivity : SimpleActivity() {
                         ?: currentCalendar.color
 
                 runOnUiThread {
-//                    event_caldav_calendar_color.setFillWithStroke(
-//                        calendarColor,
-//                        config.backgroundColor,
-//                        getCornerRadius()
-//                    )
                     event_caldav_calendar_name.apply {
                         text = currentCalendar.displayName
                         setPadding(
@@ -1433,6 +1467,7 @@ class EventActivity : SimpleActivity() {
             }
         }
 
+
         mEvent.apply {
             startTS = newStartTS
             endTS = newEndTS
@@ -1557,9 +1592,8 @@ class EventActivity : SimpleActivity() {
     }
 
     private fun updateStartTimeText() {
-        val date = Date()
-        val format = SimpleDateFormat("E, dd MMM hh:mm a")
-        event_start_time.text = format.format(date)
+
+        event_start_time.text = Formatter.getTime1(this, mEventStartDateTime)
         checkStartEndValidity()
     }
 
@@ -1582,9 +1616,8 @@ class EventActivity : SimpleActivity() {
     }
 
     private fun updateEndTimeText() {
-        val date = Date()
-        val format = SimpleDateFormat("E, dd MMM hh:mm a")
-        event_end_time.text = format.format(date)
+
+        event_end_time.text = Formatter.getTime1(this, mEventEndDateTime)
         checkStartEndValidity()
     }
 
@@ -1713,15 +1746,17 @@ class EventActivity : SimpleActivity() {
             val diff = mEventEndDateTime.seconds() - mEventStartDateTime.seconds()
 
             mEventStartDateTime = mEventStartDateTime.withDate(year, month + 1, day)
-            updateStartDateText()
+//            updateStartDateText()
             checkRepeatRule()
 
             mEventEndDateTime = mEventStartDateTime.plusSeconds(diff.toInt())
-            updateEndTexts()
+//            updateEndTexts()
         } else {
             mEventEndDateTime = mEventEndDateTime.withDate(year, month + 1, day)
-            updateEndDateText()
+//            updateEndDateText()
         }
+        Log.e("start date", mEventStartDateTime.toString())
+        Log.e("end date", mEventEndDateTime.toString())
     }
 
     private fun timeSet(hours: Int, minutes: Int, isStart: Boolean) {
@@ -1731,14 +1766,19 @@ class EventActivity : SimpleActivity() {
 
                 mEventStartDateTime =
                     mEventStartDateTime.withHourOfDay(hours).withMinuteOfHour(minutes)
-                updateStartTimeText()
+//                updateStartTimeText()
 
                 mEventEndDateTime = mEventStartDateTime.plusSeconds(diff.toInt())
-                updateEndTexts()
+//                updateEndTexts()
+
+
             } else {
                 mEventEndDateTime = mEventEndDateTime.withHourOfDay(hours).withMinuteOfHour(minutes)
-                updateEndTimeText()
+//                updateEndTimeText()
             }
+
+            Log.e("start time", mEventStartDateTime.toString())
+            Log.e("end time", mEventEndDateTime.toString())
         } catch (e: Exception) {
             timeSet(hours + 1, minutes, isStart)
             return

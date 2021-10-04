@@ -3,6 +3,7 @@ package com.simplemobiletools.commons.views
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.AutoCompleteTextView
+import com.simplemobiletools.commons.R
 import com.simplemobiletools.commons.extensions.applyColorFilter
 
 class MyAutoCompleteTextView : AutoCompleteTextView {
@@ -20,7 +21,7 @@ class MyAutoCompleteTextView : AutoCompleteTextView {
         background?.mutate()?.applyColorFilter(accentColor)
 
         // requires android:textCursorDrawable="@null" in xml to color the cursor too
-        setTextColor(textColor)
+        setTextColor(resources.getColor(R.color.md_grey_black_dark))
         setLinkTextColor(accentColor)
     }
 }

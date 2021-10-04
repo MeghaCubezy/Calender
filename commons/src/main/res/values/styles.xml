@@ -9,8 +9,8 @@
         <item name="android:spinnerDropDownItemStyle">@style/SpinnerItem.DropDownItem</item>
         <item name="buttonStyle">@style/MyTransparentButton</item>
         <item name="android:buttonStyle">@style/MyTransparentButton</item>
-        <item name="android:itemBackground">@color/default_background_color</item>
-        <item name="android:textColor">@color/default_text_color</item>
+        <item name="android:itemBackground">@color/white</item>
+        <item name="android:textColor">@color/md_grey_black_dark</item>
         <item name="android:colorControlHighlight">@color/activated_item_foreground</item>
         <item name="colorControlHighlight">@color/activated_item_foreground</item>
         <item name="bottomSheetDialogTheme">@style/BottomSheetDialogTheme</item>

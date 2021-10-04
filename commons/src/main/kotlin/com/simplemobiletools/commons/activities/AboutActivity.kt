@@ -20,6 +20,9 @@ import java.util.*
 class AboutActivity : BaseSimpleActivity() {
     private var appName = ""
     private var linkColor = 0
+    override fun permissionGranted() {
+        TODO("Not yet implemented")
+    }
 
     override fun getAppIconIDs() = intent.getIntegerArrayListExtra(APP_ICON_IDS) ?: ArrayList()
 
