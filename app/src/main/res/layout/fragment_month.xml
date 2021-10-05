@@ -1,47 +1,33 @@
-<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/month_calendar_holder"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    app:layoutDescription="@xml/fragment_month_scene">
+    android:background="@color/white">
 
-    <include
-        android:id="@+id/include"
-        layout="@layout/top_navigation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <RelativeLayout
-        android:id="@+id/rlMotion"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="73dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/month_view_wrapper" />
 
     <com.daily.events.calender.views.MonthViewWrapper
         android:id="@+id/month_view_wrapper"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="73dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:id="@+id/mainRL"
+        android:layout_marginTop="@dimen/_10sdp" />
 
     <RelativeLayout
         android:id="@+id/rlMainView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/month_view_wrapper"
         android:paddingBottom="@dimen/_60sdp"
-        app:layout_constraintTop_toBottomOf="@+id/month_view_wrapper">
+        android:visibility="visible">
 
         <include layout="@layout/layout_monthview_event" />
 
     </RelativeLayout>
 
-</androidx.constraintlayout.motion.widget.MotionLayout>
+</RelativeLayout>
