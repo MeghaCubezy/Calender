@@ -17,12 +17,28 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <com.shrikanthravi.customnavigationdrawer2.widget.SNavigationDrawer
+                android:id="@+id/navigationDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_5sdp">
+
+                <FrameLayout
+                    android:id="@+id/container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </com.shrikanthravi.customnavigationdrawer2.widget.SNavigationDrawer>
+
             <RelativeLayout
                 android:id="@+id/topRL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginVertical="@dimen/_5sdp"
+                android:layout_marginStart="@dimen/_40sdp"
+                android:layout_marginLeft="@dimen/_40sdp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -40,6 +56,7 @@
                     android:id="@+id/today"
                     android:layout_width="@dimen/_30sdp"
                     android:layout_height="@dimen/_30sdp"
+                    android:layout_marginRight="@dimen/_7sdp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:padding="@dimen/_4sdp"
@@ -48,17 +65,29 @@
 
             </RelativeLayout>
 
-            <FrameLayout
-                android:id="@+id/container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/_40sdp"
-                android:layout_below="@id/topRL" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/_26sdp">
+
+                <ImageView
+                    android:id="@+id/fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_add_items" />
+
+            </RelativeLayout>
+
 
             <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:id="@+id/coordinator"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_70sdp"
+                android:visibility="gone"
                 android:background="@android:color/transparent"
                 android:layout_alignParentBottom="true">
 
@@ -80,19 +109,6 @@
                         app:menu="@menu/bottom_menu" />
                 </com.google.android.material.bottomappbar.BottomAppBar>
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_anchor="@id/bottomnavigationbar">
-
-                    <ImageView
-                        android:id="@+id/fab"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_add_items" />
-                </RelativeLayout>
 
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

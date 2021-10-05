@@ -20,7 +20,7 @@ class MySwitchCompat : SwitchCompat {
     )
 
     fun setColors(textColor: Int, accentColor: Int, backgroundColor: Int) {
-
+        setTextColor(textColor)
         val states = arrayOf(
             intArrayOf(-android.R.attr.state_checked),
             intArrayOf(android.R.attr.state_checked)

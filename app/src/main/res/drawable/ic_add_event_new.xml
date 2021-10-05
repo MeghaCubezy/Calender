@@ -1,0 +1,40 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="34dp"
+    android:height="34dp"
+    android:viewportWidth="34"
+    android:viewportHeight="34">
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M11.6948,2.9028V7.0421"
+        android:strokeWidth="2.06965"
+        android:strokeColor="#6E7781"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M22.7329,2.9028V7.0421"
+        android:strokeWidth="2.06965"
+        android:strokeColor="#6E7781"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M5.4856,12.6853H28.9417"
+        android:strokeWidth="2.06965"
+        android:strokeColor="#6E7781"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M29.6315,11.8713V23.5993C29.6315,27.7386 27.5618,30.4981 22.7326,30.4981H11.6945C6.8653,30.4981 4.7957,27.7386 4.7957,23.5993V11.8713C4.7957,7.7319 6.8653,4.9724 11.6945,4.9724H22.7326C27.5618,4.9724 29.6315,7.7319 29.6315,11.8713Z"
+        android:strokeWidth="2.06965"
+        android:strokeColor="#6E7781"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:fillColor="#6E7781"
+        android:pathData="M21.9084,21.1268L21.9084,21.1268A0.7315,0.7315 0,0 1,21.1769 21.8584L13.2505,21.8584A0.7315,0.7315 0,0 1,12.519 21.1268L12.519,21.1268A0.7315,0.7315 0,0 1,13.2505 20.3953L21.1769,20.3953A0.7315,0.7315 0,0 1,21.9084 21.1268z" />
+    <path
+        android:fillColor="#6E7781"
+        android:pathData="M17.2137,16.7006L17.2137,16.7006A0.7315,0.7315 0,0 1,17.9453 17.4321L17.9453,25.3585A0.7315,0.7315 0,0 1,17.2137 26.09L17.2137,26.09A0.7315,0.7315 0,0 1,16.4822 25.3585L16.4822,17.4321A0.7315,0.7315 0,0 1,17.2137 16.7006z" />
+</vector>

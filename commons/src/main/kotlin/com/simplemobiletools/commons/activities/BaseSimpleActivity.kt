@@ -62,6 +62,7 @@ abstract class BaseSimpleActivity : AppCompatActivity(), EasyPermissions.Permiss
         var perms = arrayOf(
             Manifest.permission.READ_CALENDAR,
             Manifest.permission.WRITE_CALENDAR,
+            Manifest.permission.READ_CONTACTS,
         )
         var funAfterSAFPermission: ((success: Boolean) -> Unit)? = null
         var permissionApply: Boolean = false

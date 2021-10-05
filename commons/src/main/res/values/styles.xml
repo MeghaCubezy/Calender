@@ -205,9 +205,9 @@
     </style>
 
     <style name="AppTheme.Red_400" parent="AppTheme.Base">
-        <item name="colorPrimary">@color/md_red_400</item>
-        <item name="colorPrimaryDark">@color/md_red_400_dark</item>
-        <item name="colorAccent">@color/md_red_400</item>
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorAccent">@color/color_accent</item>
         <item name="actionBarTheme">@style/LightActionBarItems</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:textColorPrimary">@color/theme_light_background_color</item>

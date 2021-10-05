@@ -13,13 +13,22 @@
         android:layout_height="match_parent"
         tools:context=".Fragment.HomeFragment">
 
+        <FrameLayout
+            android:id="@+id/container1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/line"
+            android:layout_marginBottom="@dimen/_20sdp" />
+
         <LinearLayout
             android:id="@+id/topLL"
             android:layout_margin="@dimen/_5sdp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="4">
+            android:layout_alignParentBottom="true"
+            android:paddingBottom="@dimen/_5sdp"
+            android:weightSum="4.5">
 
             <ImageView
                 android:id="@+id/yearIV"
@@ -37,6 +46,13 @@
                 android:src="@drawable/ic_month" />
 
             <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:src="@drawable/ic_month"
+                android:visibility="invisible" />
+
+            <ImageView
                 android:id="@+id/weekIV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -49,23 +65,16 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:src="@drawable/ic_day" />
+
         </LinearLayout>
 
         <View
             android:id="@+id/line"
+            android:layout_height="1dp"
             android:layout_marginVertical="@dimen/_5sdp"
-            android:layout_marginHorizontal="@dimen/_20sdp"
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/grey"
-            android:layout_below="@id/topLL" />
-
-
-        <FrameLayout
-            android:id="@+id/container1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/line"/>
+            android:layout_above="@id/topLL"
+            android:background="#CBCDD0" />
 
     </RelativeLayout>
 </layout>

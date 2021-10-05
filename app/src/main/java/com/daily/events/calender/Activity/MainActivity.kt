@@ -19,6 +19,8 @@ import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.widget.SwitchCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.loader.content.CursorLoader
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.daily.events.calender.Extensions.*
@@ -34,6 +36,7 @@ import com.daily.events.calender.helpers.Formatter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
+import com.shrikanthravi.customnavigationdrawer2.widget.SNavigationDrawer
 import com.simplemobiletools.commons.activities.BaseSimpleActivity
 import com.simplemobiletools.commons.dialogs.RadioGroupDialog
 import com.simplemobiletools.commons.extensions.*
@@ -52,11 +55,17 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
-
+    //    var fragmentClass: Intrinsics.Kotlin<*>? = null
     private var selectAccountReceiver: SelectAccountReceiver? = null
+
+    var homeFragment: HomeFragment? = null
+    var eventFragment: EventFragment? = null
+    var notificationFragment: NotificationFragment? = null
+    var settingFragment: SettingFragment? = null
 
     companion object {
 
+        var fragment: Fragment? = null
         val CALDAV_REFRESH_DELAY = 3000L
         val calDAVRefreshHandler = Handler()
         var calDAVRefreshCallback: (() -> Unit)? = null
@@ -206,6 +215,8 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
             refreshCalDAVCalendars(false)
         }
 
+        setNavigationItems()
+
         selectAccountBehaviour =
             BottomSheetBehavior.from(llBottom)
 
@@ -316,10 +327,104 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
         }
     }
 
-    var homeFragment: HomeFragment? = null
-    var eventFragment: EventFragment? = null
-    var notificationFragment: NotificationFragment? = null
-    var settingFragment: SettingFragment? = null
+    fun setNavigationItems() {
+        val menuItems: MutableList<com.shrikanthravi.customnavigationdrawer2.data.MenuItem> =
+            ArrayList()
+        menuItems.add(
+            com.shrikanthravi.customnavigationdrawer2.data.MenuItem(
+                "Home",
+                R.drawable.ic_side_select,
+                R.drawable.ic_home_new
+            )
+        )
+        menuItems.add(
+            com.shrikanthravi.customnavigationdrawer2.data.MenuItem(
+                "Event",
+                R.drawable.ic_side_select,
+                R.drawable.ic_event_new
+            )
+        )
+        menuItems.add(
+            com.shrikanthravi.customnavigationdrawer2.data.MenuItem(
+                "Notification",
+                R.drawable.ic_side_select,
+                R.drawable.ic_notification_new
+            )
+        )
+        menuItems.add(
+            com.shrikanthravi.customnavigationdrawer2.data.MenuItem(
+                "Setting",
+                R.drawable.ic_side_select,
+                R.drawable.ic_setting_new
+            )
+        )
+        mainBinding?.navigationDrawer?.menuItemList = menuItems
+
+        try {
+            fragment = HomeFragment()
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+        val fragmentManager: FragmentManager = supportFragmentManager
+        fragment?.let {
+            fragmentManager.beginTransaction()
+                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                .replace(
+                    R.id.container,
+                    it
+                ).commit()
+        }
+
+        mainBinding?.navigationDrawer?.onMenuItemClickListener =
+            SNavigationDrawer.OnMenuItemClickListener { position ->
+                println("Position $position")
+                when (position) {
+                    0 -> {
+                        mainBinding?.fab?.visibility = View.VISIBLE
+                        fragment = HomeFragment()
+                    }
+                    1 -> {
+                        mainBinding?.fab?.visibility = View.GONE
+                        fragment = EventFragment()
+                    }
+                    2 -> {
+                        mainBinding?.fab?.visibility = View.GONE
+                        fragment = NotificationFragment()
+                    }
+                    3 -> {
+                        mainBinding?.fab?.visibility = View.GONE
+                        fragment = SettingFragment()
+                    }
+                }
+                mainBinding?.navigationDrawer?.drawerListener =
+                    object : SNavigationDrawer.DrawerListener {
+                        override fun onDrawerOpened() {
+                            mainBinding?.topRL?.visibility = View.GONE
+                        }
+
+                        override fun onDrawerOpening() {}
+                        override fun onDrawerClosing() {
+                            println("Drawer closed")
+                            mainBinding?.topRL?.visibility = View.VISIBLE
+                            if (fragment != null) {
+                                val fragmentManager = supportFragmentManager
+                                fragmentManager.beginTransaction().setCustomAnimations(
+                                    android.R.animator.fade_in,
+                                    android.R.animator.fade_out
+                                ).replace(
+                                    R.id.container,
+                                    fragment!!
+                                ).commit()
+                            }
+                        }
+
+                        override fun onDrawerClosed() {}
+                        override fun onDrawerStateChanged(newState: Int) {
+                            println("State $newState")
+                        }
+                    }
+            }
+    }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -367,7 +472,6 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
         fragment.arguments = bundle
         supportFragmentManager.beginTransaction().replace(R.id.container1, fragment).commitNow()
         homeFragment?.monthChanges()
-
     }
 
     fun openDayFromMonthly(dateTime: DateTime) {
@@ -417,12 +521,11 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
             }
 
             mainBinding?.llMain?.dialogSubmit?.setOnClickListener {
-
-                mainBinding?.llMain?.calendarItemBirthdaySwitch?.isSelected?.let { it1 ->
-                    confirmSelection(
-                        it1
-                    )
-                }
+                Log.e(
+                    "LLL_Bool: ",
+                    mainBinding?.llMain?.calendarItemBirthdaySwitch?.isChecked.toString()
+                )
+                confirmSelection(mainBinding?.llMain?.calendarItemBirthdaySwitch?.isChecked!!)
             }
 
             mainBinding?.llMain?.dialogCancel?.setOnClickListener {
@@ -826,8 +929,7 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
     }
 
 
-//    ******************* Add holidays ************************
-
+    /******************** Add holidays *************************/
     private val holidayReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             addHolidays()

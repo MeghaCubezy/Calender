@@ -82,7 +82,7 @@ class SettingFragment : Fragment() {
 
         MainActivity.mainBinding?.dateTitleTV?.text = resources.getString(R.string.settings)
 
-        fragmentSetting?.addHolidays?.setOnClickListener {
+        fragmentSetting?.icAddHolidays?.setOnClickListener {
             val lbm = LocalBroadcastManager.getInstance(requireContext())
             val localIn = Intent("ADD_HOLIDAYS")
             lbm.sendBroadcast(localIn)

@@ -20,6 +20,30 @@
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ic_add_holidays"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_add_holidays" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginVertical="@dimen/_15sdp"
+                android:background="@color/divider_grey" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imgSync"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_sync" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginVertical="@dimen/_15sdp"
+                android:background="@color/divider_grey" />
+
+            <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_privacy" />
@@ -53,18 +77,6 @@
                 android:background="@color/divider_grey" />
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/imgSync"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_sync" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginVertical="@dimen/_15sdp"
-                android:background="@color/divider_grey" />
-
-            <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_share" />
@@ -74,17 +86,6 @@
                 android:layout_height="0.5dp"
                 android:layout_marginVertical="@dimen/_15sdp"
                 android:background="@color/divider_grey" />
-
-
-            <TextView
-                android:id="@+id/add_holidays"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto"
-                android:paddingVertical="@dimen/_5sdp"
-                android:text="@string/add_holidays"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp" />
 
 
         </LinearLayout>

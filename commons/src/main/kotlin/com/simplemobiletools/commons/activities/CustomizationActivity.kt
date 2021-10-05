@@ -40,7 +40,7 @@ class CustomizationActivity : BaseSimpleActivity() {
     private var storedSharedTheme: SharedTheme? = null
     private var menu: Menu? = null
     override fun permissionGranted() {
-        TODO("Not yet implemented")
+
     }
 
     override fun getAppIconIDs() = intent.getIntegerArrayListExtra(APP_ICON_IDS) ?: ArrayList()
@@ -201,7 +201,7 @@ class CustomizationActivity : BaseSimpleActivity() {
                     themePickerClicked()
                 }
             }
-        }
+         }
     }
 
     private fun themePickerClicked() {
@@ -597,7 +597,7 @@ class CustomizationActivity : BaseSimpleActivity() {
         ) { wasPositivePressed, color ->
             if (wasPositivePressed) {
                 if (hasColorChanged(curAppIconColor, color)) {
-                    curAppIconColor = color
+                    curAppIconColor = R.color.theme_color
                     colorChanged()
                     updateColorTheme(getUpdatedTheme())
                 }

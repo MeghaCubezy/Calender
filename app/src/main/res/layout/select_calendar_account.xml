@@ -28,7 +28,8 @@
             android:id="@+id/dialog_select_calendars_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_15sdp">
+            android:layout_marginTop="@dimen/_10sdp"
+            android:paddingBottom="@dimen/_7sdp">
 
             <com.simplemobiletools.commons.views.MySwitchCompat
                 android:id="@+id/calendar_item_birthday_switch"
