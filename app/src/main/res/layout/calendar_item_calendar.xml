@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/calendar_item_calendar_holder"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground">
+    android:layout_height="wrap_content">
 
     <com.simplemobiletools.commons.views.MySwitchCompat
         android:id="@+id/calendar_item_calendar_switch"
@@ -18,6 +17,7 @@
         android:paddingBottom="@dimen/activity_margin"
         android:paddingStart="@dimen/_25sdp"
         android:textSize="@dimen/_12sdp"
+        android:textColor="@color/md_grey_black_dark"
         tools:text="Calendar name" />
 
 </RelativeLayout>

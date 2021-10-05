@@ -11,10 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:clipToPadding="false"
-        android:layoutAnimation="@anim/layout_animation"
         android:overScrollMode="never"
-        android:paddingTop="@dimen/medium_margin"
+        android:paddingTop="@dimen/_10sdp"
         android:scrollbars="vertical"
         android:visibility="gone"
         app:layoutManager="com.simplemobiletools.commons.views.MyLinearLayoutManager" />

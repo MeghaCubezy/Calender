@@ -17,7 +17,7 @@ import java.util.*
 
 class FAQActivity : BaseSimpleActivity() {
     override fun permissionGranted() {
-        TODO("Not yet implemented")
+
     }
 
     override fun getAppIconIDs() = intent.getIntegerArrayListExtra(APP_ICON_IDS) ?: ArrayList()

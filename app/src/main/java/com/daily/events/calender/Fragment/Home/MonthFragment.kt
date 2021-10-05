@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.RelativeLayout
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -64,6 +66,8 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener {
     lateinit var mRes: Resources
     lateinit var mHolder: ConstraintLayout
     lateinit var mMonthViewWaraper: MonthViewWrapper
+    lateinit var mRlMainView: RelativeLayout
+    lateinit var mImgAddEvent: ImageView
     lateinit var mConfig: Config
 
     private var mSelectedDayCode = ""
@@ -99,8 +103,17 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener {
         setupButtons()
         mCalendar = MonthlyCalendarImpl(this, requireContext())
 
+        mRlMainView = view.rlMainView
+        mImgAddEvent = mRlMainView.imgAddEvent
+
+        mImgAddEvent.setOnClickListener {
+            requireContext().launchNewEventIntent(getNewEventDayCode())
+        }
+
         return view
     }
+
+    fun getNewEventDayCode() = Formatter.getTodayCode()
 
     override fun onPause() {
         super.onPause()

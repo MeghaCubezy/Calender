@@ -21,8 +21,8 @@
         tools:node="remove" />
 
     <queries>
-        <package android:name="com.daily.events.calender.debug" />
-        <package android:name="com.daily.events.calender.pro" />
+        <package android:name="com.simplemobiletools.contacts.pro.debug" />
+        <package android:name="com.simplemobiletools.contacts.pro" />
     </queries>
 
     <uses-feature
