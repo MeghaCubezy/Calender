@@ -22,9 +22,10 @@ import com.simplemobiletools.commons.helpers.MONTH_SECONDS
 import com.simplemobiletools.commons.interfaces.RefreshRecyclerViewListener
 import com.simplemobiletools.commons.views.MyLinearLayoutManager
 import com.simplemobiletools.commons.views.MyRecyclerView
-import kotlinx.android.synthetic.main.fragment_event.view.*
+import kotlinx.android.synthetic.main.fragment_notification.view.*
 import org.joda.time.DateTime
 import java.util.*
+import kotlin.collections.ArrayList
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -128,7 +129,7 @@ class NotificationFragment : MyFragmentHolder(), RefreshRecyclerViewListener {
         }
     }
 
-
+    var listItems: ArrayList<ListItem> = ArrayList()
     private fun receivedEvents(
         events: ArrayList<Event>,
         updateStatus: Int,
@@ -139,7 +140,7 @@ class NotificationFragment : MyFragmentHolder(), RefreshRecyclerViewListener {
         }
 
         mEvents = events
-        val listItems = context!!.getNotificationListItems(mEvents)
+        listItems = context!!.getNotificationListItems(mEvents)
 
         activity?.runOnUiThread {
             if (activity == null) {
@@ -203,9 +204,9 @@ class NotificationFragment : MyFragmentHolder(), RefreshRecyclerViewListener {
     }
 
     private fun checkPlaceholderVisibility() {
-        mView.calendar_empty_list_placeholder.beVisibleIf(mEvents.isEmpty())
-        mView.calendar_empty_list_placeholder_2.beVisibleIf(mEvents.isEmpty())
-        mView.calendar_events_list.beGoneIf(mEvents.isEmpty())
+        mView.calendar_empty_list_placeholder.beVisibleIf(listItems.isEmpty())
+        mView.calendar_empty_list_placeholder_2.beVisibleIf(listItems.isEmpty())
+        mView.calendar_events_list.beGoneIf(listItems.isEmpty())
 
     }
 

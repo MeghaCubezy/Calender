@@ -2,15 +2,14 @@ package com.daily.events.calender.Fragment.Home
 
 import android.content.Context
 import android.content.res.Resources
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import android.view.animation.TranslateAnimation
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
-import androidx.annotation.RequiresApi
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.daily.events.calender.Activity.MainActivity
 import com.daily.events.calender.Activity.SimpleActivity
@@ -27,15 +26,11 @@ import com.daily.events.calender.interfaces.MonthlyCalendar
 import com.daily.events.calender.interfaces.NavigationListener
 import com.daily.events.calender.models.ListEvent
 import com.daily.events.calender.views.MonthViewWrapper
-import com.simplemobiletools.commons.extensions.applyColorFilter
-import com.simplemobiletools.commons.extensions.beGone
-import com.simplemobiletools.commons.extensions.beVisible
 import com.simplemobiletools.commons.extensions.beVisibleIf
 import com.simplemobiletools.commons.interfaces.RefreshRecyclerViewListener
 import kotlinx.android.synthetic.main.fragment_month.view.*
 import kotlinx.android.synthetic.main.layout_monthview_event.*
 import kotlinx.android.synthetic.main.layout_monthview_event.view.*
-import kotlinx.android.synthetic.main.top_navigation.view.*
 import org.joda.time.DateTime
 
 
@@ -49,7 +44,8 @@ private const val ARG_PARAM2 = "param2"
  * Use the [MonthFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener {
+class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener,
+    View.OnTouchListener {
 
     private var mTextColor = 0
     private var mSundayFirst = false
@@ -59,15 +55,12 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener {
     private var mLastHash = 0L
     private var mCalendar: MonthlyCalendarImpl? = null
 
-    var isExpand: Boolean = true
-
     var listener: NavigationListener? = null
 
     lateinit var mRes: Resources
-    lateinit var mHolder: ConstraintLayout
+    lateinit var mHolder: RelativeLayout
+    lateinit var mMainRL: RelativeLayout
     lateinit var mMonthViewWaraper: MonthViewWrapper
-    lateinit var mRlMainView: RelativeLayout
-    lateinit var mImgAddEvent: ImageView
     lateinit var mConfig: Config
 
     private var mSelectedDayCode = ""
@@ -92,28 +85,21 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_month, container, false)
+
         mRes = resources
         mPackageName = requireActivity().packageName
         mHolder = view.month_calendar_holder
         mMonthViewWaraper = view.month_view_wrapper
+        mMainRL = view.mainRL
+        mMainRL.setOnTouchListener(this)
         mDayCode = requireArguments().getString(DAY_CODE)!!
         mConfig = requireContext().config
         storeStateVariables()
 
-        setupButtons()
+//        setupButtons()
         mCalendar = MonthlyCalendarImpl(this, requireContext())
-
-        mRlMainView = view.rlMainView
-        mImgAddEvent = mRlMainView.imgAddEvent
-
-        mImgAddEvent.setOnClickListener {
-            requireContext().launchNewEventIntent(getNewEventDayCode())
-        }
-
         return view
     }
-
-    fun getNewEventDayCode() = Formatter.getTodayCode()
 
     override fun onPause() {
         super.onPause()
@@ -143,19 +129,17 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener {
     }
 
     fun updateCalendar() {
+//        if(isExpand) {
+//            expand(mMonthViewWaraper)
+//        }else{
+//            collapse(mMonthViewWaraper)
+//        }
         mCalendar?.updateMonthlyCalendar(Formatter.getDateTimeFromCode(mDayCode))
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MonthFragment.
-         */
-        // TODO: Rename and change types and number of parameters
+        var isExpand: Boolean = true
+
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             MonthFragment().apply {
@@ -181,13 +165,6 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener {
         mLastHash = newHash
 
         activity?.runOnUiThread {
-            mHolder.top_value.apply {
-
-                text = month
-                contentDescription = text
-                setTextColor(resources.getColor(R.color.black))
-            }
-
             mHolder.month_view_wrapper.updateDays(days, false) {
                 mSelectedDayCode = it.code
                 updateVisibleEvents()
@@ -198,45 +175,6 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener {
         refreshItems()
     }
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
-    private fun setupButtons() {
-        mTextColor = mConfig.textColor
-
-        mHolder.top_left_arrow.apply {
-            applyColorFilter(mTextColor)
-            background = null
-            setOnClickListener {
-                listener?.goLeft()
-            }
-
-            val pointerLeft = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                requireContext().getDrawable(R.drawable.ic_chevron_left_vector)
-            } else {
-                TODO("VERSION.SDK_INT < LOLLIPOP")
-            }
-            pointerLeft?.isAutoMirrored = true
-            setImageDrawable(pointerLeft)
-        }
-
-        mHolder.top_right_arrow.apply {
-            applyColorFilter(mTextColor)
-            background = null
-            setOnClickListener {
-                listener?.goRight()
-            }
-
-            val pointerRight = requireContext().getDrawable(R.drawable.ic_chevron_right_vector)
-            pointerRight?.isAutoMirrored = true
-            setImageDrawable(pointerRight)
-        }
-
-        mHolder.top_value.apply {
-            setTextColor(resources.getColor(R.color.black))
-            setOnClickListener {
-//                (activity as MainActivity).showGoToDateDialog()
-            }
-        }
-    }
 
     private fun updateDays(days: ArrayList<DayMonthly>) {
         mHolder.month_view_wrapper.updateDays(days, true) {
@@ -246,17 +184,12 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener {
 
     fun printCurrentView() {
         mHolder.apply {
-            top_left_arrow.beGone()
-            top_right_arrow.beGone()
-            top_value.setTextColor(resources.getColor(R.color.black))
             month_view_wrapper.togglePrintMode()
 
             requireContext().printBitmap(month_calendar_holder.getViewBitmap())
 
-            top_left_arrow.beVisible()
-            top_right_arrow.beVisible()
-            top_value.setTextColor(resources.getColor(R.color.black))
             month_view_wrapper.togglePrintMode()
+
         }
     }
 
@@ -279,9 +212,7 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener {
         }
 
         val listItems = requireActivity().getEventListItems(filtered, false)
-//        if (mSelectedDayCode.isNotEmpty()) {
-//            mHolder.month_day_selected_day_label.text = Formatter.getDateFromCode(activity!!, mSelectedDayCode, false)
-//        }
+
 
         activity?.runOnUiThread {
             if (activity != null) {
@@ -323,6 +254,60 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener {
                 updateVisibleEvents()
             }
         }
+    }
+
+    fun expand(v: View) {
+        isExpand = true
+        val matchParentMeasureSpec =
+            View.MeasureSpec.makeMeasureSpec((v.parent as View).width, View.MeasureSpec.EXACTLY)
+        val wrapContentMeasureSpec =
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        v.measure(matchParentMeasureSpec, wrapContentMeasureSpec)
+        v.layoutParams.height = 1
+
+        val a = TranslateAnimation(
+            0F,
+            0F,
+            0F,
+            0F
+        )
+        v.layoutParams.height = LinearLayout.LayoutParams.MATCH_PARENT
+        v.requestLayout()
+        a.duration = 20000
+        a.fillAfter = true
+        v.startAnimation(a)
+
+    }
+
+    fun collapse(v: View) {
+        isExpand = false
+
+        val a = TranslateAnimation(
+            0F,
+            0F,
+            LinearLayout.LayoutParams.MATCH_PARENT.toFloat(),  // fromYDelta
+            0F
+        )
+        v.layoutParams.height = 700
+        v.requestLayout()
+        a.duration = 20000
+        a.fillAfter = true
+        v.startAnimation(a)
+
+    }
+
+    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+        when (event?.action) {
+            MotionEvent.ACTION_UP -> {
+                if (isExpand) {
+                    collapse(mMonthViewWaraper)
+                } else {
+                    expand(mMonthViewWaraper)
+                }
+            }
+        }
+
+        return true
     }
 
 }

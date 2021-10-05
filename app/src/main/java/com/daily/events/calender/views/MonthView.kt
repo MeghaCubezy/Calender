@@ -293,7 +293,7 @@ class MonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
             } else if (highlightWeekends && isWeekend(i, config.isSundayFirst)) {
                 weekDayLetterPaint = getColoredPaint(redTextColor)
             }
-            canvas.drawText(dayLetters[i], xPos, weekDaysLetterHeight * 0.7f, weekDayLetterPaint)
+            canvas.drawText(dayLetters[i], xPos, weekDaysLetterHeight * 0.4f, weekDayLetterPaint)
         }
     }
 
