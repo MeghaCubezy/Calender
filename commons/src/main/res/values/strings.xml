@@ -1,4 +1,5 @@
 <resources>
+    <string name="permission_str">Need calender and read contacts permission for access</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="nothing">Nothing</string>

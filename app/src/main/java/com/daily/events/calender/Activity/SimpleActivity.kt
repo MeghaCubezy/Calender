@@ -16,7 +16,6 @@ open class SimpleActivity : BaseSimpleActivity() {
     val calDAVRefreshHandler = Handler()
     var calDAVRefreshCallback: (() -> Unit)? = null
     override fun permissionGranted() {
-
     }
 
     override fun getAppIconIDs() = arrayListOf(

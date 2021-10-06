@@ -56,8 +56,8 @@ abstract class BaseSimpleActivity : AppCompatActivity(), EasyPermissions.Permiss
 
     private val GENERIC_PERM_HANDLER = 100
 
-
     companion object {
+
         const val RC_READ_EXTERNAL_STORAGE = 123
         var perms = arrayOf(
             Manifest.permission.READ_CALENDAR,
@@ -81,13 +81,21 @@ abstract class BaseSimpleActivity : AppCompatActivity(), EasyPermissions.Permiss
     override fun onPermissionsGranted(requestCode: Int, perms: List<String?>?) {
 //        Log.d(TAG, "onPermissionsGranted:" + requestCode + ":" + perms.size());
         permissionGranted()
+
     }
 
-    override fun onPermissionsDenied(requestCode: Int, perms: List<String?>?) {
+    override fun onPermissionsDenied(requestCode: Int, perms1: List<String?>?) {
 //        Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
         // If Permission permanently denied, ask user again
-        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms!!)) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms1!!)) {
             AppSettingsDialog.Builder(this).build().show()
+        } else {
+            EasyPermissions.requestPermissions(
+                this@BaseSimpleActivity,
+                getString(R.string.permission_str),
+                RC_READ_EXTERNAL_STORAGE,
+                *perms
+            )
         }
     }
 
@@ -98,7 +106,7 @@ abstract class BaseSimpleActivity : AppCompatActivity(), EasyPermissions.Permiss
             permissionGranted()
         } else {
             EasyPermissions.requestPermissions(
-                this, "Need calender permission for access.",
+                this@BaseSimpleActivity, getString(R.string.permission_str),
                 RC_READ_EXTERNAL_STORAGE, *perms
             )
         }
@@ -142,7 +150,6 @@ abstract class BaseSimpleActivity : AppCompatActivity(), EasyPermissions.Permiss
         updateRecentsAppIcon()
         updateNavigationBarColor()
 
-        readExternalStorage()
     }
 
     override fun onStop() {
@@ -283,6 +290,25 @@ abstract class BaseSimpleActivity : AppCompatActivity(), EasyPermissions.Permiss
             ""
         }
         val sdOtgPattern = Pattern.compile(SD_OTG_SHORT)
+
+        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+            // Do something after user returned from app settings screen, like showing a Toast.
+            if (EasyPermissions.hasPermissions(this, *perms)) {
+                permissionGranted()
+            }
+        }
+
+        if (requestCode == RC_READ_EXTERNAL_STORAGE) {
+            // Do something after user returned from app settings screen, like showing a Toast.
+            if (EasyPermissions.hasPermissions(this, *perms)) {
+                permissionGranted()
+            } else {
+                EasyPermissions.requestPermissions(
+                    this, getString(R.string.permission_str),
+                    RC_READ_EXTERNAL_STORAGE, *perms
+                )
+            }
+        }
 
         if (requestCode == OPEN_DOCUMENT_TREE) {
             if (resultCode == Activity.RESULT_OK && resultData != null && resultData.data != null) {
@@ -695,10 +721,12 @@ abstract class BaseSimpleActivity : AppCompatActivity(), EasyPermissions.Permiss
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        isAskingPermissions = false
-        if (requestCode == GENERIC_PERM_HANDLER && grantResults.isNotEmpty()) {
-            actionOnPermission?.invoke(grantResults[0] == 0)
-        }
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+//        isAskingPermissions = false
+//        if (requestCode == GENERIC_PERM_HANDLER && grantResults.isNotEmpty()) {
+//            actionOnPermission?.invoke(grantResults[0] == 0)
+//        }
     }
 
     val copyMoveListener = object : CopyMoveListener {

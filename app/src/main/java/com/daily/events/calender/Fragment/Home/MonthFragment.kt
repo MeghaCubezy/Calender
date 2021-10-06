@@ -93,7 +93,6 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener,
         mMonthViewWaraper = view.month_view_wrapper
         mMainRL = view.mainRL
         mMainRL.setOnTouchListener(this)
-
         mDayCode = requireArguments().getString(DAY_CODE)!!
         mConfig = requireContext().config
         storeStateVariables()
@@ -278,7 +277,6 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener,
         a.duration = 20000
         a.fillAfter = true
         v.startAnimation(a)
-
     }
 
     fun collapse(v: View) {
@@ -290,12 +288,11 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener,
             LinearLayout.LayoutParams.MATCH_PARENT.toFloat(),  // fromYDelta
             0F
         )
-
         val displayMetrics = DisplayMetrics()
         activity?.windowManager?.defaultDisplay?.getMetrics(displayMetrics)
         val height: Int = displayMetrics.heightPixels
 
-        v.layoutParams.height = (height / 2.5).toInt()
+        v.layoutParams.height = ((height / 2.5).toInt())
         v.requestLayout()
         a.duration = 20000
         a.fillAfter = true
@@ -313,7 +310,6 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener,
                 }
             }
         }
-
         return true
     }
 

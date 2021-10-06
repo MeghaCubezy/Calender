@@ -57,7 +57,7 @@ import java.util.*
 class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
     //    var fragmentClass: Intrinsics.Kotlin<*>? = null
     private var selectAccountReceiver: SelectAccountReceiver? = null
-
+    var IsSet = false
     var homeFragment: HomeFragment? = null
     var eventFragment: EventFragment? = null
     var notificationFragment: NotificationFragment? = null
@@ -195,27 +195,16 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
         super.onCreate(savedInstanceState)
         mainBinding =
             DataBindingUtil.setContentView(this@MainActivity, R.layout.activity_main)
-        mainBinding?.bottomnavigationbar?.setOnNavigationItemSelectedListener(this)
+
         supportActionBar?.hide()
 
         activity = this@MainActivity
-
-        val isGranted = EasyPermissions.hasPermissions(this@MainActivity, *perms)
-        if (!isGranted) {
-            EasyPermissions.requestPermissions(
-                this, getString(R.string.permission_str),
-                DEFAULT_SETTINGS_REQ_CODE, *perms
-            )
-            config.caldavSync = false
-        } else {
-            permissionGranted()
-        }
 
         if (config.caldavSync) {
             refreshCalDAVCalendars(false)
         }
 
-        setNavigationItems()
+
 
         selectAccountBehaviour =
             BottomSheetBehavior.from(llBottom)
@@ -247,26 +236,27 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
             launchNewEventIntent(getNewEventDayCode())
         }
 
-        homeFragment?.let {
-            supportFragmentManager.beginTransaction().replace(R.id.container, it)
-                .commit()
-        }
-    }
 
-    override fun onResume() {
-        super.onResume()
-        if (permissionApply)
-            permissionGranted()
     }
 
     fun getNewEventDayCode() = Formatter.getTodayCode()
 
-
     override fun permissionGranted() {
+        if (!IsSet) SetFragments()
+    }
+
+    fun SetFragments() {
+        IsSet = true
         homeFragment = HomeFragment()
         eventFragment = EventFragment()
         notificationFragment = NotificationFragment()
         settingFragment = SettingFragment()
+        mainBinding?.bottomnavigationbar?.setOnNavigationItemSelectedListener(this)
+        setNavigationItems()
+        homeFragment?.let {
+            supportFragmentManager.beginTransaction().replace(R.id.container, it)
+                .commit()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -377,8 +367,8 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
 
         mainBinding?.navigationDrawer?.onMenuItemClickListener =
             SNavigationDrawer.OnMenuItemClickListener { position ->
-                println("Position $position")
-                when (position) {
+
+            when (position) {
                     0 -> {
                         mainBinding?.fab?.visibility = View.VISIBLE
                         fragment = HomeFragment()
