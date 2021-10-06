@@ -23,7 +23,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/month_view_wrapper"
-        android:paddingBottom="@dimen/_60sdp"
         android:visibility="visible">
 
         <include layout="@layout/layout_monthview_event" />
