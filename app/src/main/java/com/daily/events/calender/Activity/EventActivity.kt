@@ -122,7 +122,6 @@ class EventActivity : SimpleActivity() {
             return
         }
 
-//        supportActionBar?.hide()
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_cross_vector)
         val intent = intent ?: return
         mDialogTheme = getDialogTheme()

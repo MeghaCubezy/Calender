@@ -44,6 +44,7 @@
                 android:paddingBottom="20dp"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12sdp"
+                android:visibility="gone"
                 tools:text="Add Contact Birthday" />
 
             <com.simplemobiletools.commons.views.MySwitchCompat
@@ -60,6 +61,7 @@
                 android:paddingBottom="20dp"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12sdp"
+                android:visibility="gone"
                 tools:text="Add Contact Anniversary" />
 
             <com.simplemobiletools.commons.views.MyTextView

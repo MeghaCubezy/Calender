@@ -88,6 +88,18 @@ class SettingFragment : Fragment() {
             lbm.sendBroadcast(localIn)
         }
 
+        fragmentSetting?.icAddBirthday?.setOnClickListener {
+            val lbm = LocalBroadcastManager.getInstance(requireContext())
+            val localIn = Intent("ADD_BIRTHDAY")
+            lbm.sendBroadcast(localIn)
+        }
+
+        fragmentSetting?.icAddAnniversary?.setOnClickListener {
+            val lbm = LocalBroadcastManager.getInstance(requireContext())
+            val localIn = Intent("ADD_ANNIVERSARY")
+            lbm.sendBroadcast(localIn)
+        }
+
         return fragmentSetting?.root
     }
 

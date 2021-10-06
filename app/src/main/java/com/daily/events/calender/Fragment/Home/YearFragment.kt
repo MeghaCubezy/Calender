@@ -192,7 +192,7 @@ class YearFragment : Fragment(), YearlyCalendar {
 
     override fun onResume() {
         super.onResume()
-        val sundayFirst = context!!.config.isSundayFirst
+        val sundayFirst = requireContext().config.isSundayFirst
         if (sundayFirst != mSundayFirst) {
             mSundayFirst = sundayFirst
             setupMonths()
@@ -202,6 +202,6 @@ class YearFragment : Fragment(), YearlyCalendar {
 
     override fun onPause() {
         super.onPause()
-        mSundayFirst = context!!.config.isSundayFirst
+        mSundayFirst = requireContext().config.isSundayFirst
     }
 }

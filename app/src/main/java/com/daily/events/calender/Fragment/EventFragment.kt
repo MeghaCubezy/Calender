@@ -81,7 +81,7 @@ class EventFragment : MyFragmentHolder(), RefreshRecyclerViewListener {
             }
         }
 
-        use24HourFormat = context!!.config.use24HourFormat
+        use24HourFormat = requireContext().config.use24HourFormat
         MainActivity.mainBinding?.dateTitleTV?.text = resources.getString(R.string.event)
         return mView
     }
@@ -101,7 +101,7 @@ class EventFragment : MyFragmentHolder(), RefreshRecyclerViewListener {
     override fun onResume() {
         super.onResume()
         checkEvents()
-        val use24Hour = context!!.config.use24HourFormat
+        val use24Hour = requireContext().config.use24HourFormat
         if (use24Hour != use24HourFormat) {
             use24HourFormat = use24Hour
             (mView.calendar_events_list.adapter as? EventListAdapter)?.toggle24HourFormat(
@@ -112,23 +112,24 @@ class EventFragment : MyFragmentHolder(), RefreshRecyclerViewListener {
 
     override fun onPause() {
         super.onPause()
-        use24HourFormat = context!!.config.use24HourFormat
+        use24HourFormat = requireContext().config.use24HourFormat
     }
 
     private fun checkEvents() {
         if (!wereInitialEventsAdded) {
-            minFetchedTS = DateTime().minusMinutes(context!!.config.displayPastEvents).seconds()
+            minFetchedTS =
+                DateTime().minusMinutes(requireContext().config.displayPastEvents).seconds()
             maxFetchedTS = DateTime().plusMonths(6).seconds()
         }
 
-        context!!.eventsHelper.getEvents(minFetchedTS, maxFetchedTS) {
+        requireContext().eventsHelper.getEvents(minFetchedTS, maxFetchedTS) {
             if (it.size >= MIN_EVENTS_TRESHOLD) {
                 receivedEvents(it, NOT_UPDATING)
             } else {
                 if (!wereInitialEventsAdded) {
                     maxFetchedTS += FETCH_INTERVAL
                 }
-                context!!.eventsHelper.getEvents(minFetchedTS, maxFetchedTS) {
+                requireContext().eventsHelper.getEvents(minFetchedTS, maxFetchedTS) {
                     mEvents = it
                     receivedEvents(mEvents, NOT_UPDATING, !wereInitialEventsAdded)
                 }
@@ -148,7 +149,7 @@ class EventFragment : MyFragmentHolder(), RefreshRecyclerViewListener {
         }
 
         mEvents = events
-        val listItems = context!!.getEventListItems(mEvents)
+        val listItems = requireContext().getEventListItems(mEvents)
 
         activity?.runOnUiThread {
             if (activity == null) {
@@ -203,7 +204,8 @@ class EventFragment : MyFragmentHolder(), RefreshRecyclerViewListener {
                 } else if (updateStatus == UPDATE_BOTTOM) {
                     mView.calendar_events_list.smoothScrollBy(
                         0,
-                        context!!.resources.getDimension(R.dimen.endless_scroll_move_height).toInt()
+                        requireContext().resources.getDimension(R.dimen.endless_scroll_move_height)
+                            .toInt()
                     )
                 }
             }
@@ -226,7 +228,7 @@ class EventFragment : MyFragmentHolder(), RefreshRecyclerViewListener {
 
         val oldMinFetchedTS = minFetchedTS - 1
         minFetchedTS -= FETCH_INTERVAL
-        context!!.eventsHelper.getEvents(minFetchedTS, oldMinFetchedTS) {
+        requireContext().eventsHelper.getEvents(minFetchedTS, oldMinFetchedTS) {
             mEvents.addAll(0, it)
             receivedEvents(mEvents, UPDATE_TOP)
         }
@@ -235,7 +237,7 @@ class EventFragment : MyFragmentHolder(), RefreshRecyclerViewListener {
     private fun fetchNextPeriod() {
         val oldMaxFetchedTS = maxFetchedTS + 1
         maxFetchedTS += FETCH_INTERVAL
-        context!!.eventsHelper.getEvents(oldMaxFetchedTS, maxFetchedTS) {
+        requireContext().eventsHelper.getEvents(oldMaxFetchedTS, maxFetchedTS) {
             mEvents.addAll(it)
             receivedEvents(mEvents, UPDATE_BOTTOM)
         }
@@ -246,7 +248,7 @@ class EventFragment : MyFragmentHolder(), RefreshRecyclerViewListener {
     }
 
     override fun goToToday() {
-        val listItems = context!!.getEventListItems(mEvents)
+        val listItems = requireContext().getEventListItems(mEvents)
         val firstNonPastSectionIndex =
             listItems.indexOfFirst { it is ListSection && !it.isPastSection }
         if (firstNonPastSectionIndex != -1) {
@@ -284,7 +286,7 @@ class EventFragment : MyFragmentHolder(), RefreshRecyclerViewListener {
 
             (calendar_events_list.adapter as? EventListAdapter)?.togglePrintMode()
             Handler().postDelayed({
-                context!!.printBitmap(calendar_events_list.getViewBitmap())
+                requireContext().printBitmap(calendar_events_list.getViewBitmap())
 
                 Handler().postDelayed({
                     (calendar_events_list.adapter as? EventListAdapter)?.togglePrintMode()
