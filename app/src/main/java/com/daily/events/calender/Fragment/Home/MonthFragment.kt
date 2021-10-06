@@ -3,6 +3,7 @@ package com.daily.events.calender.Fragment.Home
 import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -276,7 +277,6 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener,
         a.duration = 20000
         a.fillAfter = true
         v.startAnimation(a)
-
     }
 
     fun collapse(v: View) {
@@ -288,7 +288,11 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener,
             LinearLayout.LayoutParams.MATCH_PARENT.toFloat(),  // fromYDelta
             0F
         )
-        v.layoutParams.height = 700
+        val displayMetrics = DisplayMetrics()
+        activity?.windowManager?.defaultDisplay?.getMetrics(displayMetrics)
+        val height: Int = displayMetrics.heightPixels
+
+        v.layoutParams.height = ((height / 2.5).toInt())
         v.requestLayout()
         a.duration = 20000
         a.fillAfter = true
@@ -306,7 +310,6 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener,
                 }
             }
         }
-
         return true
     }
 

@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/_30sdp">
+ >
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -34,7 +34,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_5sdp">
+        android:layout_marginTop="@dimen/_10sdp">
 
         <com.simplemobiletools.commons.views.MyTextView
             android:id="@+id/month_day_no_events_placeholder"
