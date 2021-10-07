@@ -36,7 +36,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.shrikanthravi.customnavigationdrawer2.widget.SNavigationDrawer
-import com.simplemobiletools.commons.activities.BaseSimpleActivity
 import com.simplemobiletools.commons.dialogs.RadioGroupDialog
 import com.simplemobiletools.commons.extensions.*
 import com.simplemobiletools.commons.helpers.*
@@ -463,7 +462,9 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
                 }
             }
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+
+            }
         })
 
         selectAccountReceiver = SelectAccountReceiver()
@@ -539,7 +540,7 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
                 } else {
                     EasyPermissions.requestPermissions(
                         this, getString(R.string.permission_str),
-                        BaseSimpleActivity.RC_READ_EXTERNAL_STORAGE, *perms
+                        RC_READ_EXTERNAL_STORAGE, *perms
                     )
                     //                    Toasty.info(this, "Allow permission for storage access!", Toast.LENGTH_SHORT).show();
                 }
