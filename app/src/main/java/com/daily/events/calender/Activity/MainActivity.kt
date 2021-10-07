@@ -3,6 +3,7 @@ package com.daily.events.calender.Activity
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.*
+import android.content.pm.PackageManager
 import android.database.ContentObserver
 import android.os.*
 import android.provider.CalendarContract
@@ -30,6 +31,7 @@ import com.daily.events.calender.databinding.ActivityMainBinding
 import com.daily.events.calender.dialogs.SetRemindersDialog
 import com.daily.events.calender.helpers.*
 import com.daily.events.calender.helpers.Formatter
+import com.daily.events.calender.services.AlarmReceiver
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
@@ -50,6 +52,7 @@ import pub.devrel.easypermissions.AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE
 import pub.devrel.easypermissions.EasyPermissions
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
     //    var fragmentClass: Intrinsics.Kotlin<*>? = null
@@ -86,7 +89,6 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
             }
         }
 
-        // caldav refresh content observer triggers multiple times in a row at updating, so call the callback only a few seconds after the (hopefully) last one
         private val calDAVSyncObserver = object : ContentObserver(Handler()) {
             override fun onChange(selfChange: Boolean) {
                 super.onChange(selfChange)
@@ -409,6 +411,31 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
 
     }
 
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        val currentDate = SimpleDateFormat("d", Locale.getDefault()).format(Date())
+
+        for (i in 1..31) {
+            if (i == currentDate.toInt()) {
+                packageManager.setComponentEnabledSetting(
+                    ComponentName(
+                        applicationContext,
+                        "com.daily.events.calender.LauncherAlias" + i
+                    ),
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP
+                )
+            } else {
+                packageManager.setComponentEnabledSetting(
+                    ComponentName(
+                        applicationContext,
+                        "com.daily.events.calender.LauncherAlias" + i
+                    ),
+                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP
+                )
+            }
+        }
+    }
+
     private var showCalDAVRefreshToast = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -419,12 +446,12 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
         supportActionBar?.hide()
 
         activity = this@MainActivity
+        val calendar = Calendar.getInstance()
+        AlarmReceiver().setRepeatAlarm(applicationContext, 1001, calendar)
 
         if (config.caldavSync) {
             refreshCalDAVCalendars(false)
         }
-
-
 
         selectAccountBehaviour =
             BottomSheetBehavior.from(llBottom)
@@ -464,10 +491,9 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
         config.isSundayFirst = false
 
         mainBinding?.fab?.setOnClickListener {
+
             launchNewEventIntent(getNewEventDayCode())
         }
-
-
     }
 
     fun getNewEventDayCode() = Formatter.getTodayCode()
@@ -477,6 +503,7 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
     }
 
     fun SetFragments() {
+
         IsSet = true
         homeFragment = HomeFragment()
         eventFragment = EventFragment()
@@ -493,15 +520,14 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == DEFAULT_SETTINGS_REQ_CODE) {
-            Log.e("requestCode", requestCode.toString())
+
             // Do something after user returned from app settings screen, like showing a Toast.
             if (EasyPermissions.hasPermissions(this, *perms)) {
-                Log.e("hasPermissions", "true")
                 permissionGranted()
             } else {
                 EasyPermissions.requestPermissions(
                     this, getString(R.string.permission_str),
-                    BaseSimpleActivity.RC_READ_EXTERNAL_STORAGE, *perms
+                    RC_READ_EXTERNAL_STORAGE, *perms
                 )
             }
         }
