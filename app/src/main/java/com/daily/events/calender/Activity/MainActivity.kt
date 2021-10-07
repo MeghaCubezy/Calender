@@ -3,14 +3,12 @@ package com.daily.events.calender.Activity
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.*
-import android.content.pm.PackageManager
 import android.database.ContentObserver
 import android.os.*
 import android.provider.CalendarContract
 import android.provider.ContactsContract
 import android.text.TextUtils
 import android.util.Log
-import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
@@ -27,12 +25,11 @@ import com.daily.events.calender.Fragment.Home.HomeFragment
 import com.daily.events.calender.Model.Event
 import com.daily.events.calender.Model.EventType
 import com.daily.events.calender.R
+import com.daily.events.calender.SharedPrefrences
 import com.daily.events.calender.databinding.ActivityMainBinding
 import com.daily.events.calender.dialogs.SetRemindersDialog
 import com.daily.events.calender.helpers.*
 import com.daily.events.calender.helpers.Formatter
-import com.daily.events.calender.services.AlarmReceiver
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.shrikanthravi.customnavigationdrawer2.widget.SNavigationDrawer
@@ -53,7 +50,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
+class MainActivity : SimpleActivity() {
     //    var fragmentClass: Intrinsics.Kotlin<*>? = null
     private var selectAccountReceiver: SelectAccountReceiver? = null
     var IsSet = false
@@ -70,13 +67,13 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
         var calDAVRefreshCallback: (() -> Unit)? = null
 
         lateinit var selectAccountBehaviour: BottomSheetBehavior<LinearLayout>
+        lateinit var syncCalendarBehaviour: BottomSheetBehavior<LinearLayout>
         var mainBinding: ActivityMainBinding? = null
 
         lateinit var activity: Activity
 
         fun getSyncedCalDAVCalendars() =
             activity.calDAVHelper.getCalDAVCalendars(activity.config.caldavSyncedCalendarIds, false)
-
 
         fun syncCalDAVCalendars(callback: () -> Unit) {
             calDAVRefreshCallback = callback
@@ -414,31 +411,32 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
         super.onPostCreate(savedInstanceState)
         val currentDate = SimpleDateFormat("d", Locale.getDefault()).format(Date())
 
-        for (i in 1..31) {
-            if (i == currentDate.toInt()) {
-                packageManager.setComponentEnabledSetting(
-                    ComponentName(
-                        applicationContext,
-                        "com.daily.events.calender.LauncherAlias" + i
-                    ),
-                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP
-                )
-            } else {
-                packageManager.setComponentEnabledSetting(
-                    ComponentName(
-                        applicationContext,
-                        "com.daily.events.calender.LauncherAlias" + i
-                    ),
-                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP
-                )
-            }
-        }
+//        for (i in 1..31) {
+//            if (i == currentDate.toInt()) {
+//                packageManager.setComponentEnabledSetting(
+//                    ComponentName(
+//                        applicationContext,
+//                        "com.daily.events.calender.LauncherAlias" + i
+//                    ),
+//                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP
+//                )
+//            } else {
+//                packageManager.setComponentEnabledSetting(
+//                    ComponentName(
+//                        applicationContext,
+//                        "com.daily.events.calender.LauncherAlias" + i
+//                    ),
+//                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP
+//                )
+//            }
+//        }
     }
 
     private var showCalDAVRefreshToast = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         mainBinding =
             DataBindingUtil.setContentView(this@MainActivity, R.layout.activity_main)
 
@@ -446,7 +444,7 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
 
         activity = this@MainActivity
         val calendar = Calendar.getInstance()
-        AlarmReceiver().setRepeatAlarm(applicationContext, 1001, calendar)
+//        AlarmReceiver().setRepeatAlarm(applicationContext, 1001, calendar)
 
         if (config.caldavSync) {
             refreshCalDAVCalendars(false)
@@ -454,11 +452,25 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
 
         selectAccountBehaviour =
             BottomSheetBehavior.from(llBottom)
+        syncCalendarBehaviour =
+            BottomSheetBehavior.from(llBottomSync)
 
         selectAccountBehaviour.addBottomSheetCallback(object : BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                     mainBinding?.hideBack?.beGone()
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+
+            }
+        })
+
+        syncCalendarBehaviour.addBottomSheetCallback(object : BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    mainBinding?.hideBack?.beVisible()
                 }
             }
 
@@ -495,6 +507,7 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
 
             launchNewEventIntent(getNewEventDayCode())
         }
+
     }
 
     fun getNewEventDayCode() = Formatter.getTodayCode()
@@ -505,26 +518,41 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
 
     fun SetFragments() {
 
+        if (!SharedPrefrences.getUser(this)) {
+            syncCalendarBehaviour.state = BottomSheetBehavior.STATE_EXPANDED
+            SharedPrefrences.setUser(this, true)
+            mainBinding?.dialogNotNow?.setOnClickListener {
+                syncCalendarBehaviour.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+            mainBinding?.dialogSync?.setOnClickListener {
+                syncCalendarBehaviour.state = BottomSheetBehavior.STATE_COLLAPSED
+                val lbm = LocalBroadcastManager.getInstance(this)
+                val localIn = Intent("OPEN_ACCOUNT_SYNC")
+                lbm.sendBroadcast(localIn)
+                selectAccountBehaviour.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+        }
+
         IsSet = true
         homeFragment = HomeFragment()
         eventFragment = EventFragment()
         notificationFragment = NotificationFragment()
         settingFragment = SettingFragment()
-        mainBinding?.bottomnavigationbar?.setOnNavigationItemSelectedListener(this)
         setNavigationItems()
         homeFragment?.let {
             supportFragmentManager.beginTransaction().replace(R.id.container, it)
                 .commit()
         }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == DEFAULT_SETTINGS_REQ_CODE) {
-
             // Do something after user returned from app settings screen, like showing a Toast.
             if (EasyPermissions.hasPermissions(this, *perms)) {
                 permissionGranted()
+
             } else {
                 EasyPermissions.requestPermissions(
                     this, getString(R.string.permission_str),
@@ -534,9 +562,10 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
         }
         if (requestCode == 2296) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                Log.e("hasPermissions", "true")
+
                 if (Environment.isExternalStorageManager()) {
                     permissionGranted()
+
                 } else {
                     EasyPermissions.requestPermissions(
                         this, getString(R.string.permission_str),
@@ -567,12 +596,32 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
         }
     }
 
+
     override fun onBackPressed() {
-        super.onBackPressed()
+
         if (selectAccountBehaviour.state == BottomSheetBehavior.STATE_EXPANDED) {
             selectAccountBehaviour.state = BottomSheetBehavior.STATE_COLLAPSED
             mainBinding?.hideBack?.beGone()
         }
+
+        if (syncCalendarBehaviour.state == BottomSheetBehavior.STATE_EXPANDED) {
+            syncCalendarBehaviour.state = BottomSheetBehavior.STATE_COLLAPSED
+            mainBinding?.hideBack?.beGone()
+        }
+
+        if (menuItem != 0) {
+            homeFragment?.let {
+                supportFragmentManager.beginTransaction().replace(R.id.container, it)
+                    .commit()
+            }
+            mainBinding?.fab?.visibility = View.VISIBLE
+            mainBinding?.today?.visibility = View.VISIBLE
+            mainBinding?.today?.beVisible()
+            menuItem = 0
+        } else {
+            super.onBackPressed()
+        }
+
     }
 
     fun setNavigationItems() {
@@ -625,7 +674,7 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
 
         mainBinding?.navigationDrawer?.onMenuItemClickListener =
             SNavigationDrawer.OnMenuItemClickListener { position ->
-
+                menuItem = position
                 when (position) {
                     0 -> {
                         mainBinding?.fab?.visibility = View.VISIBLE
@@ -651,13 +700,18 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
                 mainBinding?.navigationDrawer?.drawerListener =
                     object : SNavigationDrawer.DrawerListener {
                         override fun onDrawerOpened() {
-                            mainBinding?.topRL?.visibility = View.GONE
+
                         }
 
-                        override fun onDrawerOpening() {}
+                        override fun onDrawerOpening() {
+                            mainBinding?.topRL?.visibility = View.GONE
+                            mainBinding?.fab?.visibility = View.GONE
+                        }
+
                         override fun onDrawerClosing() {
-                            println("Drawer closed")
+//                            println("Drawer closed")
                             mainBinding?.topRL?.visibility = View.VISIBLE
+                            mainBinding?.fab?.visibility = View.VISIBLE
                             if (fragment != null) {
                                 val fragmentManager = supportFragmentManager
                                 fragmentManager.beginTransaction().setCustomAnimations(
@@ -678,44 +732,9 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
             }
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.home -> {
-                homeFragment?.let {
-                    supportFragmentManager.beginTransaction().replace(R.id.container, it)
-                        .commit()
-                }
-                mainBinding?.today?.beVisible()
-                return true
-            }
-            R.id.event -> {
-                eventFragment?.let {
-                    supportFragmentManager.beginTransaction().replace(R.id.container, it)
-                        .commit()
-                }
-                mainBinding?.today?.beGone()
-                return true
-            }
-            R.id.notification -> {
-                notificationFragment?.let {
-                    supportFragmentManager.beginTransaction().replace(R.id.container, it)
-                        .commit()
-                }
-                mainBinding?.today?.beGone()
-                return true
-            }
 
-            R.id.setting -> {
-                settingFragment?.let {
-                    supportFragmentManager.beginTransaction().replace(R.id.container, it)
-                        .commit()
-                }
-                mainBinding?.today?.beGone()
-                return true
-            }
-        }
-        return false
-    }
+    var menuItem: Int = 0
+
 
     fun openMonthFromYearly(dateTime: DateTime) {
         val fragment = MonthFragmentsHolder()
@@ -752,7 +771,8 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
             var prevAccount = ""
 
             selectAccountBehaviour.state = BottomSheetBehavior.STATE_EXPANDED
-            mainBinding?.hideBack?.beVisible()
+            mainBinding?.hideBack?.visibility = View.VISIBLE
+
 
             val ids = context.config.getSyncedCalendarIdsAsList()
             val calendars = context.calDAVHelper.getCalDAVCalendars("", true)
@@ -772,17 +792,15 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
             }
 
             mainBinding?.llMain?.dialogSubmit?.setOnClickListener {
-                Log.e(
-                    "LLL_Bool: ",
-                    mainBinding?.llMain?.calendarItemBirthdaySwitch?.isChecked.toString()
-                )
                 confirmSelection(mainBinding?.llMain?.calendarItemBirthdaySwitch?.isChecked!!)
+
             }
 
             mainBinding?.llMain?.dialogCancel?.setOnClickListener {
                 selectAccountBehaviour.state = BottomSheetBehavior.STATE_COLLAPSED
                 mainBinding?.hideBack?.beGone()
             }
+
         }
 
         fun addCalendarItem(
@@ -889,6 +907,7 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
                                         activity.resources.getString(R.string.synchronization_completed),
                                         Toast.LENGTH_SHORT
                                     ).show()
+
                                 }
                             }
                         }
@@ -910,6 +929,7 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
             mainBinding?.hideBack?.beGone()
         }
     }
+
 
     class AddBirthdayTask : AsyncTask<Void, Void, String>() {
         override fun doInBackground(vararg params: Void?): String {
@@ -1076,8 +1096,7 @@ class MainActivity : SimpleActivity(), BottomNavigationView.OnNavigationItemSele
                             supportFragmentManager.beginTransaction().replace(R.id.container, it)
                                 .commit()
                         }
-                        mainBinding?.bottomnavigationbar?.menu?.findItem(R.id.home)?.isChecked =
-                            true
+
                     }
                 }
             }

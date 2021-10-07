@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/dialog_select_calendars_scrollview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingTop="@dimen/activity_margin"
+    android:background="@drawable/bottom_back"
     android:paddingBottom="@dimen/_10sdp">
 
     <View
@@ -15,13 +17,12 @@
         android:layout_gravity="center_horizontal"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:background="@color/grey_view" />
+        android:background="@color/white" />
 
     <ScrollView
         android:id="@+id/ssView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/llBottom"
         android:layout_below="@+id/mView">
 
         <RelativeLayout
@@ -35,31 +36,30 @@
                 android:id="@+id/calendar_item_birthday_switch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@null"
+                android:backgroundTint="@color/grey"
                 android:clickable="false"
-                android:fontFamily="@font/plusjakarta"
                 android:paddingStart="@dimen/_25sdp"
                 android:paddingTop="@dimen/activity_margin"
                 android:paddingEnd="@dimen/activity_margin"
                 android:paddingBottom="20dp"
-                android:textColor="@color/black"
                 android:textSize="@dimen/_12sdp"
                 android:visibility="gone"
+                android:fontFamily="@font/plusjakarta"
+                app:switchPadding="@dimen/small_margin"
                 tools:text="Add Contact Birthday" />
+
 
             <com.simplemobiletools.commons.views.MySwitchCompat
                 android:id="@+id/calendar_item_anniversary_switch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/calendar_item_birthday_switch"
-                android:background="@null"
                 android:clickable="false"
                 android:fontFamily="@font/plusjakarta"
                 android:paddingStart="@dimen/_25sdp"
                 android:paddingTop="@dimen/activity_margin"
                 android:paddingEnd="@dimen/activity_margin"
                 android:paddingBottom="20dp"
-                android:textColor="@color/black"
                 android:textSize="@dimen/_12sdp"
                 android:visibility="gone"
                 tools:text="Add Contact Anniversary" />
@@ -92,7 +92,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_20sdp"
         android:layout_marginVertical="@dimen/_15sdp"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@id/ssView"
         android:orientation="horizontal">
 
         <TextView
