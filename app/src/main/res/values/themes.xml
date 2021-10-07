@@ -59,19 +59,5 @@
         <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
-    <style name="Theme.Calender.NoActionBar.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="Theme.Calender.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="Theme.Calender.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="MyRadioButtonStyle" parent="Widget.AppCompat.CompoundButton.RadioButton">
-        <item name="colorAccent">@color/theme_color</item>
-        <item name="android:textColorSecondary">@color/grey</item>
-    </style>
-
 
 </resources>

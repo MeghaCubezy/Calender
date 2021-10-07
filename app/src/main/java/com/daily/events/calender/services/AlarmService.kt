@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.core.app.JobIntentService
 import java.text.SimpleDateFormat
 import java.util.*
@@ -15,11 +16,12 @@ class AlarmService : JobIntentService() {
 
 
         for (i in 1..31) {
+            Log.e("LLL_Data: ", "com.daily.events.calender.LauncherAlias$i")
             if (i == currentDate.toInt()) {
                 packageManager.setComponentEnabledSetting(
                     ComponentName(
                         applicationContext,
-                        "com.daily.events.calender.LauncherAlias" + i
+                        "com.daily.events.calender.LauncherAlias$i"
                     ),
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP
                 )
@@ -27,7 +29,7 @@ class AlarmService : JobIntentService() {
                 packageManager.setComponentEnabledSetting(
                     ComponentName(
                         applicationContext,
-                        "com.daily.events.calender.LauncherAlias" + i
+                        "com.daily.events.calender.LauncherAlias$i"
                     ),
                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP
                 )

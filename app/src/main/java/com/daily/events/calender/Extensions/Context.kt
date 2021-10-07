@@ -30,6 +30,7 @@ import com.daily.events.calender.R
 import com.daily.events.calender.databases.EventsDatabase
 import com.daily.events.calender.helpers.*
 import com.daily.events.calender.helpers.Formatter
+import com.daily.events.calender.helpers.Formatter.getDayCodeFromTS
 import com.daily.events.calender.interfaces.EventTypesDao
 import com.daily.events.calender.interfaces.EventsDao
 import com.daily.events.calender.models.ListEvent
@@ -607,15 +608,25 @@ fun Context.getEventListItems(
     val listItems = ArrayList<ListItem>(events.size)
     val replaceDescription = config.replaceDescription
 
-    // move all-day events in front of others
+//    // move all-day events in front of others
+//    val sorted = events.sortedWith(compareBy<Event> {
+//        Formatter.getDayStartTS(Formatter.getDayCodeFromTS(it.startTS)) - 1
+//    }.thenBy {
+//        Formatter.getDayEndTS(Formatter.getDayCodeFromTS(it.endTS))
+//    }.thenBy { it.title }.thenBy { if (replaceDescription) it.location else it.description })
+
     val sorted = events.sortedWith(compareBy<Event> {
-
-        Formatter.getDayStartTS(Formatter.getDayCodeFromTS(it.startTS)) - 1
-
+        if (it.getIsAllDay()) {
+            Formatter.getDayStartTS(Formatter.getDayCodeFromTS(it.startTS)) - 1
+        } else {
+            it.startTS
+        }
     }.thenBy {
-
-        Formatter.getDayEndTS(Formatter.getDayCodeFromTS(it.endTS))
-
+        if (it.getIsAllDay()) {
+            Formatter.getDayEndTS(Formatter.getDayCodeFromTS(it.endTS))
+        } else {
+            it.endTS
+        }
     }.thenBy { it.title }.thenBy { if (replaceDescription) it.location else it.description })
 
     var prevCode = ""
@@ -623,8 +634,38 @@ fun Context.getEventListItems(
     val today = Formatter.getDayTitle(this, Formatter.getDayCodeFromTS(now))
 
     sorted.forEach {
-        val code = Formatter.getDayCodeFromTS(it.startTS)
+        val code = getDayCodeFromTS(it.startTS)
 
+//        val listEvent = ListEvent(
+//            it.id!!,
+//            it.startTS,
+//            it.endTS,
+//            it.title,
+//            it.description,
+//            it.getIsAllDay(),
+//            it.color,
+//            it.location,
+//            it.isPastEvent,
+//            it.repeatInterval > 0
+//        )
+
+        if (it.getIsAllDay()) {
+            if (code != prevCode && addSections) {
+                val day = Formatter.getDayTitle(this, code)
+                val isToday = day == today
+                val listSection = ListSection(day, code, isToday, !isToday && it.startTS < now)
+                listItems.add(listSection)
+                prevCode = code
+            }
+        }
+//        val code = getDayCodeFromTS(it.startTS)
+//        if (code != prevCode && addSections) {
+//            val day = Formatter.getDayTitle(this, code)
+//            val isToday = day == today
+//            val listSection = ListSection(day, code, isToday, !isToday && it.startTS < now)
+//            listItems.add(listSection)
+//            prevCode = code
+//        }
         val listEvent = ListEvent(
             it.id!!,
             it.startTS,
@@ -637,17 +678,7 @@ fun Context.getEventListItems(
             it.isPastEvent,
             it.repeatInterval > 0
         )
-
-        if (listEvent.isAllDay) {
-            listItems.add(listEvent)
-            if (code != prevCode && addSections) {
-                val day = Formatter.getDayTitle(this, code)
-                val isToday = day == today
-                val listSection = ListSection(day, code, isToday, !isToday && it.startTS < now)
-                listItems.add(listSection)
-                prevCode = code
-            }
-        }
+        listItems.add(listEvent)
     }
     return listItems
 }
@@ -676,20 +707,8 @@ fun Context.getNotificationListItems(
     sorted.forEach {
         val code = Formatter.getDayCodeFromTS(it.startTS)
 
-        val listEvent = ListEvent(
-            it.id!!,
-            it.startTS,
-            it.endTS,
-            it.title,
-            it.description,
-            it.getIsAllDay(),
-            it.color,
-            it.location,
-            it.isPastEvent,
-            it.repeatInterval > 0
-        )
-        if (!listEvent.isAllDay) {
-            listItems.add(listEvent)
+        if (!it.getIsAllDay()) {
+//            listItems.add(listEvent)
             if (code != prevCode && addSections) {
                 val day = Formatter.getDayTitle(this, code)
                 val isToday = day == today
@@ -697,6 +716,19 @@ fun Context.getNotificationListItems(
                 listItems.add(listSection)
                 prevCode = code
             }
+            val listEvent = ListEvent(
+                it.id!!,
+                it.startTS,
+                it.endTS,
+                it.title,
+                it.description,
+                it.getIsAllDay(),
+                it.color,
+                it.location,
+                it.isPastEvent,
+                it.repeatInterval > 0
+            )
+            listItems.add(listEvent)
         }
     }
     return listItems
