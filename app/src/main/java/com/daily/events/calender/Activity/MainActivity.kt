@@ -3,6 +3,7 @@ package com.daily.events.calender.Activity
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.*
+import android.content.pm.PackageManager
 import android.database.ContentObserver
 import android.os.*
 import android.provider.CalendarContract
@@ -30,6 +31,7 @@ import com.daily.events.calender.databinding.ActivityMainBinding
 import com.daily.events.calender.dialogs.SetRemindersDialog
 import com.daily.events.calender.helpers.*
 import com.daily.events.calender.helpers.Formatter
+import com.daily.events.calender.services.AlarmReceiver
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.shrikanthravi.customnavigationdrawer2.widget.SNavigationDrawer
@@ -59,6 +61,8 @@ class MainActivity : SimpleActivity() {
     var notificationFragment: NotificationFragment? = null
     var settingFragment: SettingFragment? = null
 
+    var menuItem: Int = 0
+
     companion object {
 
         var fragment: Fragment? = null
@@ -68,12 +72,15 @@ class MainActivity : SimpleActivity() {
 
         lateinit var selectAccountBehaviour: BottomSheetBehavior<LinearLayout>
         lateinit var syncCalendarBehaviour: BottomSheetBehavior<LinearLayout>
+
+
         var mainBinding: ActivityMainBinding? = null
 
         lateinit var activity: Activity
 
         fun getSyncedCalDAVCalendars() =
             activity.calDAVHelper.getCalDAVCalendars(activity.config.caldavSyncedCalendarIds, false)
+
 
         fun syncCalDAVCalendars(callback: () -> Unit) {
             calDAVRefreshCallback = callback
@@ -411,32 +418,31 @@ class MainActivity : SimpleActivity() {
         super.onPostCreate(savedInstanceState)
         val currentDate = SimpleDateFormat("d", Locale.getDefault()).format(Date())
 
-//        for (i in 1..31) {
-//            if (i == currentDate.toInt()) {
-//                packageManager.setComponentEnabledSetting(
-//                    ComponentName(
-//                        applicationContext,
-//                        "com.daily.events.calender.LauncherAlias" + i
-//                    ),
-//                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP
-//                )
-//            } else {
-//                packageManager.setComponentEnabledSetting(
-//                    ComponentName(
-//                        applicationContext,
-//                        "com.daily.events.calender.LauncherAlias" + i
-//                    ),
-//                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP
-//                )
-//            }
-//        }
+        for (i in 1..31) {
+            if (i == currentDate.toInt()) {
+                packageManager.setComponentEnabledSetting(
+                    ComponentName(
+                        applicationContext,
+                        "com.daily.events.calender.LauncherAlias$i"
+                    ),
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP
+                )
+            } else {
+                packageManager.setComponentEnabledSetting(
+                    ComponentName(
+                        applicationContext,
+                        "com.daily.events.calender.LauncherAlias$i"
+                    ),
+                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP
+                )
+            }
+        }
     }
 
     private var showCalDAVRefreshToast = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         mainBinding =
             DataBindingUtil.setContentView(this@MainActivity, R.layout.activity_main)
 
@@ -444,7 +450,7 @@ class MainActivity : SimpleActivity() {
 
         activity = this@MainActivity
         val calendar = Calendar.getInstance()
-//        AlarmReceiver().setRepeatAlarm(applicationContext, 1001, calendar)
+        AlarmReceiver().setRepeatAlarm(applicationContext, 1001, calendar)
 
         if (config.caldavSync) {
             refreshCalDAVCalendars(false)
@@ -452,13 +458,14 @@ class MainActivity : SimpleActivity() {
 
         selectAccountBehaviour =
             BottomSheetBehavior.from(llBottom)
+
         syncCalendarBehaviour =
             BottomSheetBehavior.from(llBottomSync)
 
-        selectAccountBehaviour.addBottomSheetCallback(object : BottomSheetCallback() {
+        syncCalendarBehaviour.addBottomSheetCallback(object : BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    mainBinding?.hideBack?.beGone()
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    mainBinding?.hideBack?.beVisible()
                 }
             }
 
@@ -467,10 +474,10 @@ class MainActivity : SimpleActivity() {
             }
         })
 
-        syncCalendarBehaviour.addBottomSheetCallback(object : BottomSheetCallback() {
+        selectAccountBehaviour.addBottomSheetCallback(object : BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                    mainBinding?.hideBack?.beVisible()
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    mainBinding?.hideBack?.beGone()
                 }
             }
 
@@ -507,7 +514,6 @@ class MainActivity : SimpleActivity() {
 
             launchNewEventIntent(getNewEventDayCode())
         }
-
     }
 
     fun getNewEventDayCode() = Formatter.getTodayCode()
@@ -518,19 +524,41 @@ class MainActivity : SimpleActivity() {
 
     fun SetFragments() {
 
-        if (!SharedPrefrences.getUser(this)) {
-            syncCalendarBehaviour.state = BottomSheetBehavior.STATE_EXPANDED
-            SharedPrefrences.setUser(this, true)
-            mainBinding?.dialogNotNow?.setOnClickListener {
-                syncCalendarBehaviour.state = BottomSheetBehavior.STATE_COLLAPSED
+        if (!SharedPrefrences.getIntro(this)) {
+            if (mainBinding?.lottieLayerName?.visibility == View.GONE) {
+                mainBinding?.lottieLayerName?.visibility = View.VISIBLE
+                mainBinding?.lottieText?.visibility = View.VISIBLE
+                mainBinding?.hideBack?.visibility = View.VISIBLE
             }
-            mainBinding?.dialogSync?.setOnClickListener {
-                syncCalendarBehaviour.state = BottomSheetBehavior.STATE_COLLAPSED
-                val lbm = LocalBroadcastManager.getInstance(this)
-                val localIn = Intent("OPEN_ACCOUNT_SYNC")
-                lbm.sendBroadcast(localIn)
-                selectAccountBehaviour.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+
+        mainBinding?.hideBack?.setOnTouchListener { _, _ ->
+            if (mainBinding?.lottieLayerName?.visibility == View.VISIBLE) {
+                activity.runOnUiThread {
+                    mainBinding?.lottieLayerName?.beGone()
+                    mainBinding?.lottieText?.beGone()
+                    mainBinding?.hideBack?.beGone()
+                }
+
+                if (!SharedPrefrences.getIntro(activity)) {
+                    SharedPrefrences.setIntro(this@MainActivity, true)
+                    if (!SharedPrefrences.getUser(this@MainActivity)) {
+                        syncCalendarBehaviour.state = BottomSheetBehavior.STATE_EXPANDED
+                        SharedPrefrences.setUser(this@MainActivity, true)
+                        mainBinding?.dialogNotNow?.setOnClickListener {
+                            syncCalendarBehaviour.state = BottomSheetBehavior.STATE_COLLAPSED
+                        }
+                        mainBinding?.dialogSync?.setOnClickListener {
+                            syncCalendarBehaviour.state = BottomSheetBehavior.STATE_COLLAPSED
+                            val lbm = LocalBroadcastManager.getInstance(this@MainActivity)
+                            val localIn = Intent("OPEN_ACCOUNT_SYNC")
+                            lbm.sendBroadcast(localIn)
+                            selectAccountBehaviour.state = BottomSheetBehavior.STATE_EXPANDED
+                        }
+                    }
+                }
             }
+            true
         }
 
         IsSet = true
@@ -543,16 +571,15 @@ class MainActivity : SimpleActivity() {
             supportFragmentManager.beginTransaction().replace(R.id.container, it)
                 .commit()
         }
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == DEFAULT_SETTINGS_REQ_CODE) {
+
             // Do something after user returned from app settings screen, like showing a Toast.
             if (EasyPermissions.hasPermissions(this, *perms)) {
                 permissionGranted()
-
             } else {
                 EasyPermissions.requestPermissions(
                     this, getString(R.string.permission_str),
@@ -562,10 +589,9 @@ class MainActivity : SimpleActivity() {
         }
         if (requestCode == 2296) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-
+                Log.e("hasPermissions", "true")
                 if (Environment.isExternalStorageManager()) {
                     permissionGranted()
-
                 } else {
                     EasyPermissions.requestPermissions(
                         this, getString(R.string.permission_str),
@@ -595,7 +621,6 @@ class MainActivity : SimpleActivity() {
             toast(R.string.refreshing_complete)
         }
     }
-
 
     override fun onBackPressed() {
 
@@ -709,9 +734,8 @@ class MainActivity : SimpleActivity() {
                         }
 
                         override fun onDrawerClosing() {
-//                            println("Drawer closed")
+                            println("Drawer closed")
                             mainBinding?.topRL?.visibility = View.VISIBLE
-                            mainBinding?.fab?.visibility = View.VISIBLE
                             if (fragment != null) {
                                 val fragmentManager = supportFragmentManager
                                 fragmentManager.beginTransaction().setCustomAnimations(
@@ -731,10 +755,6 @@ class MainActivity : SimpleActivity() {
                     }
             }
     }
-
-
-    var menuItem: Int = 0
-
 
     fun openMonthFromYearly(dateTime: DateTime) {
         val fragment = MonthFragmentsHolder()
@@ -771,8 +791,7 @@ class MainActivity : SimpleActivity() {
             var prevAccount = ""
 
             selectAccountBehaviour.state = BottomSheetBehavior.STATE_EXPANDED
-            mainBinding?.hideBack?.visibility = View.VISIBLE
-
+            mainBinding?.hideBack?.beVisible()
 
             val ids = context.config.getSyncedCalendarIdsAsList()
             val calendars = context.calDAVHelper.getCalDAVCalendars("", true)
@@ -792,15 +811,17 @@ class MainActivity : SimpleActivity() {
             }
 
             mainBinding?.llMain?.dialogSubmit?.setOnClickListener {
+                Log.e(
+                    "LLL_Bool: ",
+                    mainBinding?.llMain?.calendarItemBirthdaySwitch?.isChecked.toString()
+                )
                 confirmSelection(mainBinding?.llMain?.calendarItemBirthdaySwitch?.isChecked!!)
-
             }
 
             mainBinding?.llMain?.dialogCancel?.setOnClickListener {
                 selectAccountBehaviour.state = BottomSheetBehavior.STATE_COLLAPSED
                 mainBinding?.hideBack?.beGone()
             }
-
         }
 
         fun addCalendarItem(
@@ -907,7 +928,6 @@ class MainActivity : SimpleActivity() {
                                         activity.resources.getString(R.string.synchronization_completed),
                                         Toast.LENGTH_SHORT
                                     ).show()
-
                                 }
                             }
                         }
@@ -929,7 +949,6 @@ class MainActivity : SimpleActivity() {
             mainBinding?.hideBack?.beGone()
         }
     }
-
 
     class AddBirthdayTask : AsyncTask<Void, Void, String>() {
         override fun doInBackground(vararg params: Void?): String {
@@ -1089,16 +1108,6 @@ class MainActivity : SimpleActivity() {
 
                 val result = IcsImporter(this).importEvents(it as String, eventTypeId, 0, false)
                 handleParseResult(result)
-                if (result != IcsImporter.ImportResult.IMPORT_FAIL) {
-                    runOnUiThread {
-
-                        homeFragment?.let {
-                            supportFragmentManager.beginTransaction().replace(R.id.container, it)
-                                .commit()
-                        }
-
-                    }
-                }
             }
         }
     }
