@@ -30,13 +30,11 @@ import androidx.core.util.Pair
 import com.simplemobiletools.commons.R
 import com.simplemobiletools.commons.asynctasks.CopyMoveTask
 import com.simplemobiletools.commons.dialogs.ConfirmationDialog
-import com.simplemobiletools.commons.dialogs.ExportSettingsDialog
 import com.simplemobiletools.commons.dialogs.FileConflictDialog
 import com.simplemobiletools.commons.dialogs.WritePermissionDialog
 import com.simplemobiletools.commons.extensions.*
 import com.simplemobiletools.commons.helpers.*
 import com.simplemobiletools.commons.interfaces.CopyMoveListener
-import com.simplemobiletools.commons.models.FAQItem
 import com.simplemobiletools.commons.models.FileDirItem
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.AppSettingsDialog
@@ -102,10 +100,9 @@ abstract class BaseSimpleActivity : AppCompatActivity(), EasyPermissions.Permiss
     private fun readExternalStorage() {
         val isGranted = EasyPermissions.hasPermissions(this, *perms)
         if (isGranted) {
-            Log.e("permission", "granted")
+
             permissionGranted()
         } else {
-            Log.e("permission", "not granted")
             EasyPermissions.requestPermissions(
                 this@BaseSimpleActivity, getString(R.string.permission_str),
                 RC_READ_EXTERNAL_STORAGE, *perms
@@ -415,51 +412,6 @@ abstract class BaseSimpleActivity : AppCompatActivity(), EasyPermissions.Permiss
     private fun isExternalStorageDocument(uri: Uri) =
         "com.android.externalstorage.documents" == uri.authority
 
-    fun startAboutActivity(
-        appNameId: Int,
-        licenseMask: Int,
-        versionName: String,
-        faqItems: ArrayList<FAQItem>,
-        showFAQBeforeMail: Boolean
-    ) {
-        Intent(applicationContext, AboutActivity::class.java).apply {
-            putExtra(APP_ICON_IDS, getAppIconIDs())
-            putExtra(APP_LAUNCHER_NAME, getAppLauncherName())
-            putExtra(APP_NAME, getString(appNameId))
-            putExtra(APP_LICENSES, licenseMask)
-            putExtra(APP_VERSION_NAME, versionName)
-            putExtra(APP_FAQ, faqItems)
-            putExtra(SHOW_FAQ_BEFORE_MAIL, showFAQBeforeMail)
-            startActivity(this)
-        }
-    }
-
-    fun startCustomizationActivity() {
-        if (!packageName.contains("slootelibomelpmis".reversed(), true)) {
-            if (baseConfig.appRunCount > 100) {
-                val label =
-                    "You are using a fake version of the app. For your own safety download the original one from www.simplemobiletools.com. Thanks"
-                ConfirmationDialog(this, label, positive = R.string.ok, negative = 0) {
-                    launchViewIntent("https://play.google.com/store/apps/dev?id=9070296388022589266")
-                }
-                return
-            }
-        }
-
-        Intent(applicationContext, CustomizationActivity::class.java).apply {
-            putExtra(APP_ICON_IDS, getAppIconIDs())
-            putExtra(APP_LAUNCHER_NAME, getAppLauncherName())
-            startActivity(this)
-        }
-    }
-
-    fun handleCustomizeColorsClick() {
-        if (isOrWasThankYouInstalled()) {
-            startCustomizationActivity()
-        } else {
-            launchPurchaseThankYouIntent()
-        }
-    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun launchCustomizeNotificationsIntent() {
@@ -757,35 +709,6 @@ abstract class BaseSimpleActivity : AppCompatActivity(), EasyPermissions.Permiss
         }
     }
 
-    fun exportSettings(configItems: LinkedHashMap<String, Any>) {
-        if (isQPlus()) {
-            configItemsToExport = configItems
-            ExportSettingsDialog(this, getExportSettingsFilename(), true) { path, filename ->
-                Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-                    type = "text/plain"
-                    putExtra(Intent.EXTRA_TITLE, filename)
-                    addCategory(Intent.CATEGORY_OPENABLE)
-
-                    startActivityForResult(this, SELECT_EXPORT_SETTINGS_FILE_INTENT)
-                }
-            }
-        } else {
-            handlePermission(PERMISSION_WRITE_STORAGE) {
-                if (it) {
-                    ExportSettingsDialog(
-                        this,
-                        getExportSettingsFilename(),
-                        false
-                    ) { path, filename ->
-                        val file = File(path)
-                        getFileOutputStream(file.toFileDirItem(this), true) {
-                            exportSettingsTo(it, configItems)
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     private fun exportSettingsTo(
         outputStream: OutputStream?,

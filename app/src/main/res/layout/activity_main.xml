@@ -156,7 +156,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal"
-                    android:background="@color/grey_view" />
+                    android:background="@color/white" />
 
                 <TextView
                     android:id="@+id/t1"

@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/topRL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_15sdp"
@@ -35,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_10sdp">
 
-        <com.simplemobiletools.commons.views.MyTextView
+        <ImageView
             android:id="@+id/month_day_no_events_placeholder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,9 +45,7 @@
             android:gravity="center"
             android:paddingStart="@dimen/activity_margin"
             android:paddingEnd="@dimen/activity_margin"
-            android:text="@string/no_items_found"
-            android:textSize="@dimen/bigger_text_size"
-            android:textStyle="italic"
+            android:src="@drawable/ic_event_not_found"
             android:visibility="gone" />
 
         <com.simplemobiletools.commons.views.MyRecyclerView

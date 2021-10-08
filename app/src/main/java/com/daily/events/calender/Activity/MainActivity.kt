@@ -3,7 +3,6 @@ package com.daily.events.calender.Activity
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.*
-import android.content.pm.PackageManager
 import android.database.ContentObserver
 import android.os.*
 import android.provider.CalendarContract
@@ -31,7 +30,6 @@ import com.daily.events.calender.databinding.ActivityMainBinding
 import com.daily.events.calender.dialogs.SetRemindersDialog
 import com.daily.events.calender.helpers.*
 import com.daily.events.calender.helpers.Formatter
-import com.daily.events.calender.services.AlarmReceiver
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.shrikanthravi.customnavigationdrawer2.widget.SNavigationDrawer
@@ -73,9 +71,7 @@ class MainActivity : SimpleActivity() {
         lateinit var selectAccountBehaviour: BottomSheetBehavior<LinearLayout>
         lateinit var syncCalendarBehaviour: BottomSheetBehavior<LinearLayout>
 
-
         var mainBinding: ActivityMainBinding? = null
-
         lateinit var activity: Activity
 
         fun getSyncedCalDAVCalendars() =
@@ -418,25 +414,25 @@ class MainActivity : SimpleActivity() {
         super.onResume()
         val currentDate = SimpleDateFormat("d", Locale.getDefault()).format(Date())
 
-        for (i in 1..31) {
-            if (i == currentDate.toInt()) {
-                packageManager.setComponentEnabledSetting(
-                    ComponentName(
-                        applicationContext,
-                        "com.daily.events.calender.LauncherAlias$i"
-                    ),
-                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP
-                )
-            } else {
-                packageManager.setComponentEnabledSetting(
-                    ComponentName(
-                        applicationContext,
-                        "com.daily.events.calender.LauncherAlias$i"
-                    ),
-                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP
-                )
-            }
-        }
+//        for (i in 1..31) {
+//            if (i == currentDate.toInt()) {
+//                packageManager.setComponentEnabledSetting(
+//                    ComponentName(
+//                        applicationContext,
+//                        "com.daily.events.calender.LauncherAlias$i"
+//                    ),
+//                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP
+//                )
+//            } else {
+//                packageManager.setComponentEnabledSetting(
+//                    ComponentName(
+//                        applicationContext,
+//                        "com.daily.events.calender.LauncherAlias$i"
+//                    ),
+//                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP
+//                )
+//            }
+//        }
     }
 
     private var showCalDAVRefreshToast = false
@@ -450,7 +446,7 @@ class MainActivity : SimpleActivity() {
 
         activity = this@MainActivity
         val calendar = Calendar.getInstance()
-        AlarmReceiver().setRepeatAlarm(applicationContext, 1001, calendar)
+//        AlarmReceiver().setRepeatAlarm(applicationContext, 1001, calendar)
 
         if (config.caldavSync) {
             refreshCalDAVCalendars(false)
@@ -547,6 +543,7 @@ class MainActivity : SimpleActivity() {
                         SharedPrefrences.setUser(this@MainActivity, true)
                         mainBinding?.dialogNotNow?.setOnClickListener {
                             syncCalendarBehaviour.state = BottomSheetBehavior.STATE_COLLAPSED
+                            mainBinding?.hideBack?.beGone()
                         }
                         mainBinding?.dialogSync?.setOnClickListener {
                             syncCalendarBehaviour.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -731,10 +728,8 @@ class MainActivity : SimpleActivity() {
                         override fun onDrawerOpening() {
                             if (position != 0) {
                                 mainBinding?.topRL?.visibility = View.GONE
-                                mainBinding?.fab?.visibility = View.GONE
                             } else {
                                 mainBinding?.topRL?.visibility = View.VISIBLE
-                                mainBinding?.fab?.visibility = View.VISIBLE
                             }
                         }
 
@@ -816,11 +811,8 @@ class MainActivity : SimpleActivity() {
             }
 
             mainBinding?.llMain?.dialogSubmit?.setOnClickListener {
-                Log.e(
-                    "LLL_Bool: ",
-                    mainBinding?.llMain?.calendarItemBirthdaySwitch?.isChecked.toString()
-                )
-                confirmSelection(mainBinding?.llMain?.calendarItemBirthdaySwitch?.isChecked!!)
+
+            confirmSelection(mainBinding?.llMain?.calendarItemBirthdaySwitch?.isChecked!!)
             }
 
             mainBinding?.llMain?.dialogCancel?.setOnClickListener {

@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
@@ -25,6 +24,7 @@ class SmallMonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
     private var dayWidth = 0f
     private var textColor = 0
     private var redTextColor = 0
+    private var whiteTextColor = 0
     private var days = 31
     private var isLandscape = false
     private var highlightWeekends = false
@@ -62,6 +62,7 @@ class SmallMonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
 
         textColor = context.resources.getColor(R.color.black)
         redTextColor = context.resources.getColor(R.color.red)
+        whiteTextColor = context.resources.getColor(R.color.white)
         highlightWeekends = true
         isSundayFirst = false
 
@@ -94,15 +95,20 @@ class SmallMonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
                 if (curId in 1..days) {
 
                     if (curId == todaysId && !isPrintVersion) {
-                        val bgLeft = x * dayWidth - dayWidth
-                        val bgTop = y * dayWidth - dayWidth
-                        canvas.drawRoundRect(
-                            RectF(
-                                bgLeft, bgTop + 15f, bgLeft + 65f, bgTop + 90f
-                            ), 5F, 5F, todayCirclePaint
+//                        val bgLeft = x * dayWidth - dayWidth
+//                        val bgTop = y * dayWidth - dayWidth
+//                        canvas.drawRoundRect(
+//                            RectF(
+//                                bgLeft, bgTop + 15f, bgLeft + 65f, bgTop + 90f
+//                            ), 5F, 5F, todayCirclePaint
+//                        )
+                        val dividerConstant = if (isLandscape) 6 else 4
+                        canvas.drawCircle(
+                            (x * dayWidth - dayWidth / 2.5).toFloat(),
+                            y * dayWidth - dayWidth / 6,
+                            dayWidth * 0.41f,
+                            todayCirclePaint
                         )
-//                        val dividerConstant = if (isLandscape) 6 else 4
-//                        canvas.drawCircle(x * dayWidth - dayWidth / 2, y * dayWidth - dayWidth / dividerConstant, dayWidth * 0.41f, todayCirclePaint)
                     }
 
                     val paint = getPaint(curId, x, highlightWeekends)
@@ -132,6 +138,10 @@ class SmallMonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
         } else if (highlightWeekends && isWeekend(weekDay - 1, isSundayFirst)) {
             val curPaint = Paint(paint)
             curPaint.color = redTextColor
+            return curPaint
+        } else if (curId == todaysId) {
+            val curPaint = Paint(paint)
+            curPaint.color = whiteTextColor
             return curPaint
         }
         return paint

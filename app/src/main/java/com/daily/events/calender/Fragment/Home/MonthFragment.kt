@@ -27,6 +27,7 @@ import com.daily.events.calender.interfaces.MonthlyCalendar
 import com.daily.events.calender.interfaces.NavigationListener
 import com.daily.events.calender.models.ListEvent
 import com.daily.events.calender.views.MonthViewWrapper
+import com.simplemobiletools.commons.extensions.beGoneIf
 import com.simplemobiletools.commons.extensions.beVisibleIf
 import com.simplemobiletools.commons.interfaces.RefreshRecyclerViewListener
 import kotlinx.android.synthetic.main.fragment_month.view.*
@@ -43,7 +44,6 @@ private const val ARG_PARAM2 = "param2"
 class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener,
     View.OnTouchListener {
 
-    private var mTextColor = 0
     private var mSundayFirst = false
     private var mShowWeekNumbers = false
     private var mDayCode = ""
@@ -214,6 +214,7 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener,
             if (activity != null) {
                 mHolder.month_day_events_list.beVisibleIf(listItems.isNotEmpty())
                 mHolder.month_day_no_events_placeholder.beVisibleIf(listItems.isEmpty())
+                mHolder.topRL.beGoneIf(listItems.isEmpty())
 
                 val currAdapter = mHolder.month_day_events_list.adapter
                 if (currAdapter == null) {

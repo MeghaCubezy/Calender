@@ -197,27 +197,12 @@ class MonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
                         val customTypeface = ResourcesCompat.getFont(context, R.font.roboto)
                         textPaint.typeface = customTypeface
                     } else if (day.isToday && !isPrintVersion) {
-                        val backgroundY = yPos + verticalOffset
-                        val bgLeft = xPos + smallPadding * 15F
-                        val bgTop = yPos + textPaint.textSize * 0.001F
-                        var bgRight = xPos - smallPadding * 15F + dayWidth
-                        val bgBottom = backgroundY + smallPadding
-                        bgRectF.set(bgLeft, bgBottom - 85F, bgRight, bgBottom)
-                        textPaint.color = resources.getColor(R.color.white)
-                        val customTypeface = ResourcesCompat.getFont(context, R.font.roboto)
-                        textPaint.typeface = customTypeface
-                        canvas.drawRoundRect(
-                            bgRectF,
-                            BG_CORNER_RADIUS,
-                            BG_CORNER_RADIUS,
+                        canvas.drawCircle(
+                            xPosCenter,
+                            yPos + textPaint.textSize * 0.7f,
+                            textPaint.textSize * 0.8f,
                             getCirclePaint(day)
                         )
-//                        canvas.drawRoundRect(
-//                            xPosCenter,
-//                            yPos + textPaint.textSize * 0.7f,
-//                            textPaint.textSize * 0.8f,
-//                            getCirclePaint(day)
-//                        )
                     }
 
                     // mark days with events with a dot

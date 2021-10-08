@@ -119,12 +119,12 @@ class EventListAdapter(
         if (detailField.isNotEmpty()) {
             ITEM_EVENT
         } else if (event.startTS == event.endTS) {
-            ITEM_EVENT_SIMPLE
+            ITEM_EVENT
         } else if (event.isAllDay) {
             val startCode = Formatter.getDayCodeFromTS(event.startTS)
             val endCode = Formatter.getDayCodeFromTS(event.endTS)
             if (startCode == endCode) {
-                ITEM_EVENT_SIMPLE
+                ITEM_EVENT
             } else {
                 ITEM_EVENT
             }
