@@ -683,7 +683,7 @@ fun Context.getEventListItems(
     return listItems
 }
 
-//****************************  Notification ***************************
+//***************************  Notification **************************
 fun Context.getNotificationListItems(
     events: List<Event>,
     addSections: Boolean = true
@@ -733,7 +733,6 @@ fun Context.getNotificationListItems(
     }
     return listItems
 }
-
 
 fun Context.handleEventDeleting(eventIds: List<Long>, timestamps: List<Long>, action: Int) {
     when (action) {

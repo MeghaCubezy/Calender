@@ -14,7 +14,6 @@ class AlarmService : JobIntentService() {
         val dateLong = System.currentTimeMillis()
         val currentDate = SimpleDateFormat("d", Locale.getDefault()).format(dateLong)
 
-
         for (i in 1..31) {
             Log.e("LLL_Data: ", "com.daily.events.calender.LauncherAlias$i")
             if (i == currentDate.toInt()) {
@@ -35,18 +34,11 @@ class AlarmService : JobIntentService() {
                 )
             }
         }
-//
-//        packageManager.setComponentEnabledSetting(ComponentName(applicationContext, "com.daily.events.calender.LauncherAlias1"), PackageManager.COMPONENT_ENABLED_STATE_DISABLED,PackageManager.DONT_KILL_APP)
-//        packageManager.setComponentEnabledSetting(ComponentName(applicationContext, "com.daily.events.calender.LauncherAlias2"), PackageManager.COMPONENT_ENABLED_STATE_ENABLED,PackageManager.DONT_KILL_APP)
-//        packageManager.setComponentEnabledSetting(ComponentName(applicationContext, "com.daily.events.calender.LauncherAlias3"), PackageManager.COMPONENT_ENABLED_STATE_DISABLED,PackageManager.DONT_KILL_APP)
     }
 
     companion object {
         const val ANDROID_CHANNEL_ID = "com.daily.events.calender"
 
-        /**
-         * Unique job ID for this service.
-         */
         const val JOB_ID = 1000
         private const val TWO_MINUTES = 1000 * 60 * 2
         fun enqueueWork(context: Context?, work: Intent?) {

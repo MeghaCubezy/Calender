@@ -17,6 +17,7 @@ import android.os.Bundle
 import android.provider.DocumentsContract
 import android.provider.Settings
 import android.telecom.TelecomManager
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -79,14 +80,12 @@ abstract class BaseSimpleActivity : AppCompatActivity(), EasyPermissions.Permiss
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: List<String?>?) {
-//        Log.d(TAG, "onPermissionsGranted:" + requestCode + ":" + perms.size());
+        Log.e("hasPermissions", "true")
         permissionGranted()
 
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms1: List<String?>?) {
-//        Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
-        // If Permission permanently denied, ask user again
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms1!!)) {
             AppSettingsDialog.Builder(this).build().show()
         } else {
@@ -103,8 +102,10 @@ abstract class BaseSimpleActivity : AppCompatActivity(), EasyPermissions.Permiss
     private fun readExternalStorage() {
         val isGranted = EasyPermissions.hasPermissions(this, *perms)
         if (isGranted) {
+            Log.e("permission", "granted")
             permissionGranted()
         } else {
+            Log.e("permission", "not granted")
             EasyPermissions.requestPermissions(
                 this@BaseSimpleActivity, getString(R.string.permission_str),
                 RC_READ_EXTERNAL_STORAGE, *perms
@@ -292,6 +293,7 @@ abstract class BaseSimpleActivity : AppCompatActivity(), EasyPermissions.Permiss
         val sdOtgPattern = Pattern.compile(SD_OTG_SHORT)
 
         if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+
             // Do something after user returned from app settings screen, like showing a Toast.
             if (EasyPermissions.hasPermissions(this, *perms)) {
                 permissionGranted()
@@ -299,6 +301,7 @@ abstract class BaseSimpleActivity : AppCompatActivity(), EasyPermissions.Permiss
         }
 
         if (requestCode == RC_READ_EXTERNAL_STORAGE) {
+
             // Do something after user returned from app settings screen, like showing a Toast.
             if (EasyPermissions.hasPermissions(this, *perms)) {
                 permissionGranted()

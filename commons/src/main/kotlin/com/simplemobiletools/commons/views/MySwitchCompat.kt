@@ -6,7 +6,6 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.simplemobiletools.commons.R
-import com.simplemobiletools.commons.extensions.adjustAlpha
 
 class MySwitchCompat : SwitchCompat {
     constructor(context: Context) : super(context)
@@ -27,7 +26,7 @@ class MySwitchCompat : SwitchCompat {
         )
         val thumbColors = intArrayOf(resources.getColor(R.color.thumb_deactivated), accentColor)
         val trackColors =
-            intArrayOf(resources.getColor(R.color.hint_black), accentColor.adjustAlpha(0.3f))
+            intArrayOf(resources.getColor(R.color.grey))
         DrawableCompat.setTintList(
             DrawableCompat.wrap(thumbDrawable),
             ColorStateList(states, thumbColors)
