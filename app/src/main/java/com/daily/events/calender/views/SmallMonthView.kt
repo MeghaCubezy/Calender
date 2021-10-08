@@ -104,7 +104,7 @@ class SmallMonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
 //                        )
                         val dividerConstant = if (isLandscape) 6 else 4
                         canvas.drawCircle(
-                            (x * dayWidth - dayWidth / 2.5).toFloat(),
+                            x * dayWidth - dayWidth / 2,
                             y * dayWidth - dayWidth / 6,
                             dayWidth * 0.41f,
                             todayCirclePaint
