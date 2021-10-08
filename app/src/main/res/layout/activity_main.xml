@@ -43,11 +43,12 @@
                 <TextView
                     android:id="@+id/dateTitleTV"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/_30sdp"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@id/today"
                     android:fontFamily="@font/plusjakarta"
                     android:text="@string/title_date"
+                    android:gravity="center_vertical"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_17sdp" />
 

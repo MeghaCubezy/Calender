@@ -414,8 +414,8 @@ class MainActivity : SimpleActivity() {
 
     }
 
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
+    override fun onResume() {
+        super.onResume()
         val currentDate = SimpleDateFormat("d", Locale.getDefault()).format(Date())
 
         for (i in 1..31) {
@@ -729,8 +729,13 @@ class MainActivity : SimpleActivity() {
                         }
 
                         override fun onDrawerOpening() {
-                            mainBinding?.topRL?.visibility = View.GONE
-                            mainBinding?.fab?.visibility = View.GONE
+                            if (position != 0) {
+                                mainBinding?.topRL?.visibility = View.GONE
+                                mainBinding?.fab?.visibility = View.GONE
+                            } else {
+                                mainBinding?.topRL?.visibility = View.VISIBLE
+                                mainBinding?.fab?.visibility = View.VISIBLE
+                            }
                         }
 
                         override fun onDrawerClosing() {
@@ -1066,8 +1071,6 @@ class MainActivity : SimpleActivity() {
                 ).show()
             }
         }
-
-
     }
 
 
