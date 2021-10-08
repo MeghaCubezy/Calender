@@ -4,8 +4,9 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.core.app.JobIntentService
+import com.daily.events.calender.BuildConfig
+import com.simplemobiletools.commons.extensions.toInt
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -13,13 +14,18 @@ class AlarmService : JobIntentService() {
     override fun onHandleWork(intent: Intent) {
         val dateLong = System.currentTimeMillis()
         val currentDate = SimpleDateFormat("d", Locale.getDefault()).format(dateLong)
-
+        packageManager.setComponentEnabledSetting(
+            ComponentName(
+                BuildConfig.APPLICATION_ID,
+                "com.daily.events.calender.Activity.MainActivity"
+            ),
+            PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP
+        )
         for (i in 1..31) {
-            Log.e("LLL_Data: ", "com.daily.events.calender.LauncherAlias$i")
             if (i == currentDate.toInt()) {
                 packageManager.setComponentEnabledSetting(
                     ComponentName(
-                        applicationContext,
+                        BuildConfig.APPLICATION_ID,
                         "com.daily.events.calender.LauncherAlias$i"
                     ),
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP
@@ -27,7 +33,7 @@ class AlarmService : JobIntentService() {
             } else {
                 packageManager.setComponentEnabledSetting(
                     ComponentName(
-                        applicationContext,
+                        BuildConfig.APPLICATION_ID,
                         "com.daily.events.calender.LauncherAlias$i"
                     ),
                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP

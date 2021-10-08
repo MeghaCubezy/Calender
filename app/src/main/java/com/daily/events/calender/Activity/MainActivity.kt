@@ -3,7 +3,6 @@ package com.daily.events.calender.Activity
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.*
-import android.content.pm.PackageManager
 import android.database.ContentObserver
 import android.os.*
 import android.provider.CalendarContract
@@ -414,29 +413,9 @@ class MainActivity : SimpleActivity() {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        val currentDate = SimpleDateFormat("d", Locale.getDefault()).format(Date())
-
-        for (i in 1..31) {
-            if (i == currentDate.toInt()) {
-                packageManager.setComponentEnabledSetting(
-                    ComponentName(
-                        applicationContext,
-                        "com.daily.events.calender.LauncherAlias$i"
-                    ),
-                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP
-                )
-            } else {
-                packageManager.setComponentEnabledSetting(
-                    ComponentName(
-                        applicationContext,
-                        "com.daily.events.calender.LauncherAlias$i"
-                    ),
-                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP
-                )
-            }
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.e("LLL_Des: ", "Destroy")
     }
 
     private var showCalDAVRefreshToast = false
@@ -444,13 +423,11 @@ class MainActivity : SimpleActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainBinding =
-            DataBindingUtil.setContentView(this@MainActivity, R.layout.activity_main)
+            DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         supportActionBar?.hide()
 
-        activity = this@MainActivity
-        val calendar = Calendar.getInstance()
-        AlarmReceiver().setRepeatAlarm(applicationContext, 1001, calendar)
+        activity = this
 
         if (config.caldavSync) {
             refreshCalDAVCalendars(false)
@@ -488,22 +465,22 @@ class MainActivity : SimpleActivity() {
 
         selectAccountReceiver = SelectAccountReceiver()
 
-        LocalBroadcastManager.getInstance(this@MainActivity).registerReceiver(
+        LocalBroadcastManager.getInstance(this).registerReceiver(
             selectAccountReceiver!!,
             IntentFilter("OPEN_ACCOUNT_SYNC")
         )
 
-        LocalBroadcastManager.getInstance(this@MainActivity).registerReceiver(
+        LocalBroadcastManager.getInstance(this).registerReceiver(
             holidayReceiver,
             IntentFilter("ADD_HOLIDAYS")
         )
 
-        LocalBroadcastManager.getInstance(this@MainActivity).registerReceiver(
+        LocalBroadcastManager.getInstance(this).registerReceiver(
             birthdayReceiver,
             IntentFilter("ADD_BIRTHDAY")
         )
 
-        LocalBroadcastManager.getInstance(this@MainActivity).registerReceiver(
+        LocalBroadcastManager.getInstance(this).registerReceiver(
             anniversaryReceiver,
             IntentFilter("ADD_ANNIVERSARY")
         )
@@ -541,11 +518,15 @@ class MainActivity : SimpleActivity() {
                 }
 
                 if (!SharedPrefrences.getIntro(activity)) {
+                    val calendar = Calendar.getInstance()
+                    AlarmReceiver().setRepeatAlarm(applicationContext, 1001, calendar)
+
                     SharedPrefrences.setIntro(this@MainActivity, true)
                     if (!SharedPrefrences.getUser(this@MainActivity)) {
                         syncCalendarBehaviour.state = BottomSheetBehavior.STATE_EXPANDED
                         SharedPrefrences.setUser(this@MainActivity, true)
                         mainBinding?.dialogNotNow?.setOnClickListener {
+                            mainBinding?.hideBack?.beGone()
                             syncCalendarBehaviour.state = BottomSheetBehavior.STATE_COLLAPSED
                         }
                         mainBinding?.dialogSync?.setOnClickListener {
@@ -731,10 +712,8 @@ class MainActivity : SimpleActivity() {
                         override fun onDrawerOpening() {
                             if (position != 0) {
                                 mainBinding?.topRL?.visibility = View.GONE
-                                mainBinding?.fab?.visibility = View.GONE
                             } else {
                                 mainBinding?.topRL?.visibility = View.VISIBLE
-                                mainBinding?.fab?.visibility = View.VISIBLE
                             }
                         }
 

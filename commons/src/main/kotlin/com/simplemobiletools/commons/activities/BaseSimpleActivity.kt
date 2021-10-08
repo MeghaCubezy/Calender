@@ -102,10 +102,8 @@ abstract class BaseSimpleActivity : AppCompatActivity(), EasyPermissions.Permiss
     private fun readExternalStorage() {
         val isGranted = EasyPermissions.hasPermissions(this, *perms)
         if (isGranted) {
-            Log.e("permission", "granted")
             permissionGranted()
         } else {
-            Log.e("permission", "not granted")
             EasyPermissions.requestPermissions(
                 this@BaseSimpleActivity, getString(R.string.permission_str),
                 RC_READ_EXTERNAL_STORAGE, *perms

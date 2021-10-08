@@ -18,6 +18,8 @@ android {
         versionCode 1
         versionName "1.0"
 
+        // Enabling multidex support.
+        multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -95,4 +97,6 @@ dependencies {
     // Lottie Animation
     implementation 'com.airbnb.android:lottie:4.1.0'
 
+    // Multidex
+    implementation "androidx.multidex:multidex:2.0.1"
 }
