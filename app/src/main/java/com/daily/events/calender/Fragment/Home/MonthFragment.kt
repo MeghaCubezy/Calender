@@ -40,11 +40,6 @@ import org.joda.time.DateTime
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [MonthFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener,
     View.OnTouchListener {
 

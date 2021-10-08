@@ -71,7 +71,11 @@ class HomeFragment : Fragment(), View.OnClickListener {
     fun updateViewPager(dayCode: String? = Formatter.getTodayCode()) {
 
         val fragment = getFragmentsHolder()
-        MainActivity.mainBinding?.today?.setOnClickListener { fragment.goToToday() }
+        MainActivity.mainBinding?.today?.setOnClickListener {
+            if (MainActivity.mainBinding!!.navigationDrawer.isDrawerOpen)
+                MainActivity.mainBinding!!.navigationDrawer.closeDrawer()
+            fragment.goToToday()
+        }
         val bundle = Bundle()
 
         if (requireActivity().config.storedView == MONTHLY_VIEW ||
