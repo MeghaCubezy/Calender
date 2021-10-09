@@ -179,6 +179,6 @@
     <!-- Strings used for fragments for navigation -->
 
     <string name="schedule">Schedule</string>
-    <string name="swipe_up">Swipe Up</string>
+    <string name="swipe_up">Swipe Up For Split MonthView</string>
 
 </resources>

@@ -3,6 +3,7 @@ package com.daily.events.calender.Activity
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.*
+import android.content.pm.PackageManager
 import android.database.ContentObserver
 import android.os.*
 import android.provider.CalendarContract
@@ -19,6 +20,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.loader.content.CursorLoader
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.daily.events.calender.BuildConfig
 import com.daily.events.calender.Extensions.*
 import com.daily.events.calender.Fragment.*
 import com.daily.events.calender.Fragment.Home.HomeFragment
@@ -63,7 +65,7 @@ class MainActivity : SimpleActivity() {
     var menuItem: Int = 0
 
     companion object {
-
+        var isPaused: Boolean = false
         var fragment: Fragment? = null
         val CALDAV_REFRESH_DELAY = 3000L
         val calDAVRefreshHandler = Handler()
@@ -413,9 +415,19 @@ class MainActivity : SimpleActivity() {
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.e("LLL_Des: ", "Destroy")
+    override fun onPause() {
+        if (isPaused) {
+            packageManager.setComponentEnabledSetting(
+                ComponentName(
+                    BuildConfig.APPLICATION_ID,
+                    "com.daily.events.calender.DefaultLauncher"
+                ),
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP
+            )
+        } else {
+            isPaused = true
+        }
+        super.onPause()
     }
 
     private var showCalDAVRefreshToast = false
@@ -428,6 +440,8 @@ class MainActivity : SimpleActivity() {
         supportActionBar?.hide()
 
         activity = this
+        val calendar = Calendar.getInstance()
+        AlarmReceiver().setRepeatAlarm(activity, 1001, calendar)
 
         if (config.caldavSync) {
             refreshCalDAVCalendars(false)
@@ -443,6 +457,8 @@ class MainActivity : SimpleActivity() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
                     mainBinding?.hideBack?.beVisible()
+                } else {
+                    mainBinding?.hideBack?.beGone()
                 }
             }
 
@@ -518,8 +534,6 @@ class MainActivity : SimpleActivity() {
                 }
 
                 if (!SharedPrefrences.getIntro(activity)) {
-                    val calendar = Calendar.getInstance()
-                    AlarmReceiver().setRepeatAlarm(applicationContext, 1001, calendar)
 
                     SharedPrefrences.setIntro(this@MainActivity, true)
                     if (!SharedPrefrences.getUser(this@MainActivity)) {
@@ -627,8 +641,8 @@ class MainActivity : SimpleActivity() {
         } else {
             super.onBackPressed()
         }
-
     }
+
 
     fun setNavigationItems() {
         val menuItems: MutableList<com.shrikanthravi.customnavigationdrawer2.data.MenuItem> =

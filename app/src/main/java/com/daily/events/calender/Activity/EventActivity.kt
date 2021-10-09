@@ -118,20 +118,19 @@ class EventActivity : SimpleActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_event)
 
-        if (checkAppSideloading()) {
-            return
-        }
+        System.gc()
 
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_cross_vector)
         val intent = intent ?: return
         mDialogTheme = getDialogTheme()
-        mWasContactsPermissionChecked = hasPermission(PERMISSION_READ_CONTACTS)
+//        mWasContactsPermissionChecked = hasPermission(PERMISSION_READ_CONTACTS)
 
         val eventId = intent.getLongExtra(EVENT_ID, 0L)
         ensureBackgroundThread {
             mStoredEventTypes = eventTypesDB.getEventTypes().toMutableList() as ArrayList<EventType>
             val event = eventsDB.getEventWithId(eventId)
             if (eventId != 0L && event == null) {
+                Log.e("LLL_Loading1: ", "Event")
                 finish()
                 return@ensureBackgroundThread
             }
@@ -140,6 +139,7 @@ class EventActivity : SimpleActivity() {
                 mStoredEventTypes.firstOrNull { it.id == config.lastUsedLocalEventTypeId }
             runOnUiThread {
                 if (!isDestroyed && !isFinishing) {
+                    Log.e("LLL_Loading9: ", "Event")
                     gotEvent(savedInstanceState, localEventType, event)
                 }
             }
@@ -163,7 +163,12 @@ class EventActivity : SimpleActivity() {
     }
 
     override fun permissionGranted() {
+        mWasContactsPermissionChecked = true
+    }
 
+    override fun onDestroy() {
+        Log.e("LLL_LoadingDes: ", "Destroy")
+        super.onDestroy()
     }
 
     private fun addTag() {
@@ -446,6 +451,7 @@ class EventActivity : SimpleActivity() {
         mWasActivityInitialized = true
     }
 
+    //
     @SuppressLint("RestrictedApi")
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         if (menu is MenuBuilder) menu.setOptionalIconsVisible(true)
@@ -561,6 +567,7 @@ class EventActivity : SimpleActivity() {
         super.onSaveInstanceState(outState)
 
         if (!mWasActivityInitialized) {
+            Log.e("LLL_Event: ", "SaveIns")
             return
         }
 
@@ -594,6 +601,7 @@ class EventActivity : SimpleActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         if (!savedInstanceState.containsKey(START_TS)) {
+            Log.e("LLL_Loading: ", "Event")
             finish()
             return
         }
@@ -1340,6 +1348,7 @@ class EventActivity : SimpleActivity() {
                 }
 
                 runOnUiThread {
+                    Log.e("LLL_Loading2: ", "Event")
                     finish()
                 }
             }
@@ -1348,6 +1357,7 @@ class EventActivity : SimpleActivity() {
 
     private fun duplicateEvent() {
         // the activity has the singleTask launchMode to avoid some glitches, so finish it before relaunching
+        Log.e("LLL_Loading3: ", "Event")
         finish()
         Intent(this, EventActivity::class.java).apply {
             putExtra(EVENT_ID, mEvent.id)
@@ -1510,6 +1520,7 @@ class EventActivity : SimpleActivity() {
                         notifyEvent(mEvent)
                     }
                 }
+                Log.e("LLL_Loading4: ", "Event")
                 finish()
             }
         } else {
@@ -1519,6 +1530,7 @@ class EventActivity : SimpleActivity() {
                 }
             } else {
                 eventsHelper.updateEvent(mEvent, true, true) {
+                    Log.e("LLL_Loading5: ", "Event")
                     finish()
                 }
             }
@@ -1544,6 +1556,7 @@ class EventActivity : SimpleActivity() {
                         }
 
                         eventsHelper.insertEvent(mEvent, true, true) {
+                            Log.e("LLL_Loading6: ", "Event")
                             finish()
                         }
                     }
@@ -1555,6 +1568,7 @@ class EventActivity : SimpleActivity() {
                             id = null
                         }
                         eventsHelper.insertEvent(mEvent, true, true) {
+                            Log.e("LLL_Loading7: ", "Event")
                             finish()
                         }
                     }
@@ -1564,6 +1578,7 @@ class EventActivity : SimpleActivity() {
                     ensureBackgroundThread {
                         eventsHelper.addEventRepeatLimit(mEvent.id!!, mEventOccurrenceTS)
                         eventsHelper.updateEvent(mEvent, true, true) {
+                            Log.e("LLL_Loading8: ", "Event")
                             finish()
                         }
                     }

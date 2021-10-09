@@ -31,7 +31,7 @@ class LauncherAlias28
 class LauncherAlias29
 class LauncherAlias30
 class LauncherAlias31
-
+class DefaultLauncher
 
 
 

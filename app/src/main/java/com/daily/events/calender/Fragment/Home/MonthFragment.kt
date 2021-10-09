@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.view.animation.TranslateAnimation
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import com.daily.events.calender.Activity.MainActivity
 import com.daily.events.calender.Activity.SimpleActivity
@@ -27,6 +28,7 @@ import com.daily.events.calender.interfaces.MonthlyCalendar
 import com.daily.events.calender.interfaces.NavigationListener
 import com.daily.events.calender.models.ListEvent
 import com.daily.events.calender.views.MonthViewWrapper
+import com.simplemobiletools.commons.extensions.beGoneIf
 import com.simplemobiletools.commons.extensions.beVisibleIf
 import com.simplemobiletools.commons.interfaces.RefreshRecyclerViewListener
 import kotlinx.android.synthetic.main.fragment_month.view.*
@@ -56,6 +58,7 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener,
     lateinit var mRes: Resources
     lateinit var mHolder: RelativeLayout
     lateinit var mMainRL: RelativeLayout
+    lateinit var imgAddEvent: AppCompatImageView
     lateinit var mMonthViewWaraper: MonthViewWrapper
     lateinit var mConfig: Config
 
@@ -86,6 +89,7 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener,
         mPackageName = requireActivity().packageName
         mHolder = view.month_calendar_holder
         mMonthViewWaraper = view.month_view_wrapper
+        imgAddEvent = view.imgAddEvent
         mMainRL = view.mainRL
         mMainRL.setOnTouchListener(this)
         mDayCode = requireArguments().getString(DAY_CODE)!!
@@ -94,8 +98,14 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener,
 
 //        setupButtons()
         mCalendar = MonthlyCalendarImpl(this, requireContext())
+
+        imgAddEvent.setOnClickListener {
+            requireContext().launchNewEventIntent(getNewEventDayCode())
+        }
         return view
     }
+
+    fun getNewEventDayCode() = Formatter.getTodayCode()
 
     override fun onPause() {
         super.onPause()
@@ -214,6 +224,7 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener,
             if (activity != null) {
                 mHolder.month_day_events_list.beVisibleIf(listItems.isNotEmpty())
                 mHolder.month_day_no_events_placeholder.beVisibleIf(listItems.isEmpty())
+                mHolder.topRL.beGoneIf(listItems.isEmpty())
 
                 val currAdapter = mHolder.month_day_events_list.adapter
                 if (currAdapter == null) {
@@ -300,8 +311,10 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener,
             MotionEvent.ACTION_UP -> {
                 if (isExpand) {
                     collapse(mMonthViewWaraper)
+                    collapse(mMainRL)
                 } else {
                     expand(mMonthViewWaraper)
+                    expand(mMainRL)
                 }
             }
         }
