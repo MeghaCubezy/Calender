@@ -69,7 +69,7 @@ val Context.areSystemAnimationsEnabled: Boolean
     ) > 0f
 
 fun Context.updateTextColors(viewGroup: ViewGroup, tmpTextColor: Int = 0, tmpAccentColor: Int = 0) {
-    val textColor = if (tmpTextColor == 0) baseConfig.textColor else tmpTextColor
+    val textColor = resources.getColor(R.color.md_grey_black_dark)
     val backgroundColor = baseConfig.backgroundColor
     val accentColor = if (tmpAccentColor == 0) {
         when {

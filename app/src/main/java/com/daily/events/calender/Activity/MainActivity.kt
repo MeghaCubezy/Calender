@@ -460,6 +460,8 @@ class MainActivity : SimpleActivity() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
                     mainBinding?.hideBack?.beVisible()
+                } else {
+                    mainBinding?.hideBack?.beGone()
                 }
             }
 

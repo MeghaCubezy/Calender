@@ -50,6 +50,9 @@
                     android:gravity="center_vertical"
                     android:text="@string/title_date"
                     android:textColor="@color/black"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:singleLine="true"
                     android:textSize="@dimen/_17sdp" />
 
                 <ImageView

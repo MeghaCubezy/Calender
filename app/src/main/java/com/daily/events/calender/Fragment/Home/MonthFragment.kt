@@ -301,8 +301,10 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener,
             MotionEvent.ACTION_UP -> {
                 if (isExpand) {
                     collapse(mMonthViewWaraper)
+                    collapse(mMainRL)
                 } else {
                     expand(mMonthViewWaraper)
+                    expand(mMainRL)
                 }
             }
         }

@@ -144,7 +144,7 @@ abstract class BaseSimpleActivity : AppCompatActivity(), EasyPermissions.Permiss
             updateActionbarColor()
         }
 
-        updateRecentsAppIcon()
+//        updateRecentsAppIcon()
         updateNavigationBarColor()
 
     }

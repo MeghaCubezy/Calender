@@ -24,10 +24,12 @@ import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.app.NotificationManagerCompat
+import androidx.databinding.DataBindingUtil
 import com.daily.events.calender.Adapter.AutoCompleteTextViewAdapter
 import com.daily.events.calender.Extensions.*
 import com.daily.events.calender.Model.*
 import com.daily.events.calender.R
+import com.daily.events.calender.databinding.ActivityEventBinding
 import com.daily.events.calender.dialogs.*
 import com.daily.events.calender.helpers.*
 import com.daily.events.calender.helpers.Formatter
@@ -113,17 +115,21 @@ class EventActivity : SimpleActivity() {
     var displayList: MutableList<Int>? = mutableListOf()
     var pickerLayout = 0
     var model = 0
+    var eventBinding: ActivityEventBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_event)
+        eventBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_event)
 
         if (checkAppSideloading()) {
+            Log.e("Log", "1")
             return
         }
 
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_cross_vector)
         val intent = intent ?: return
+        Log.e("Log", "2")
         mDialogTheme = getDialogTheme()
         mWasContactsPermissionChecked = hasPermission(PERMISSION_READ_CONTACTS)
 
@@ -218,6 +224,7 @@ class EventActivity : SimpleActivity() {
 
     private fun viewClicked(eventType: EventType, view: View) {
         if (!wasInit) {
+            Log.e("Log", "4")
             return
         }
 
@@ -561,6 +568,7 @@ class EventActivity : SimpleActivity() {
         super.onSaveInstanceState(outState)
 
         if (!mWasActivityInitialized) {
+            Log.e("Log", "5")
             return
         }
 
@@ -594,6 +602,7 @@ class EventActivity : SimpleActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         if (!savedInstanceState.containsKey(START_TS)) {
+            Log.e("Log", "6")
             finish()
             return
         }
@@ -1510,6 +1519,7 @@ class EventActivity : SimpleActivity() {
                         notifyEvent(mEvent)
                     }
                 }
+                Log.e("Log", "6")
                 finish()
             }
         } else {
@@ -1519,6 +1529,7 @@ class EventActivity : SimpleActivity() {
                 }
             } else {
                 eventsHelper.updateEvent(mEvent, true, true) {
+                    Log.e("Log", "7")
                     finish()
                 }
             }
