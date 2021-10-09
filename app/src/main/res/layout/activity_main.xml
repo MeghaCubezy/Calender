@@ -47,8 +47,8 @@
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@id/today"
                     android:fontFamily="@font/plusjakarta"
-                    android:text="@string/title_date"
                     android:gravity="center_vertical"
+                    android:text="@string/title_date"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_17sdp" />
 
@@ -56,9 +56,9 @@
                     android:id="@+id/today"
                     android:layout_width="@dimen/_30sdp"
                     android:layout_height="@dimen/_30sdp"
-                    android:layout_marginRight="@dimen/_7sdp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/_7sdp"
                     android:padding="@dimen/_4sdp"
                     android:src="@drawable/ic_event"
                     app:tint="@color/black" />

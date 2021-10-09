@@ -17,7 +17,6 @@ import android.os.Bundle
 import android.provider.DocumentsContract
 import android.provider.Settings
 import android.telecom.TelecomManager
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -78,7 +77,7 @@ abstract class BaseSimpleActivity : AppCompatActivity(), EasyPermissions.Permiss
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: List<String?>?) {
-        Log.e("hasPermissions", "true")
+//        Log.e("hasPermissions", "true")
         permissionGranted()
 
     }

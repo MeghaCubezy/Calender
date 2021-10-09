@@ -21,7 +21,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_160sdp"
+                android:layout_height="@dimen/_170sdp"
                 android:orientation="horizontal">
 
                 <RelativeLayout
@@ -35,9 +35,9 @@
                         android:id="@+id/month_1_label"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/january"
-                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginLeft="@dimen/_5sdp"
                         android:fontFamily="@font/roboto"
+                        android:text="@string/january"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
@@ -46,55 +46,57 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_below="@id/month_1_label"
-                        android:layout_marginVertical="@dimen/_3sdp" />
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_3sdp" />
 
                     <com.daily.events.calender.views.SmallMonthView
                         android:id="@+id/month_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/month_view1"
-                        android:layout_marginTop="@dimen/_minus7sdp"
-                        android:layout_centerInParent="true" />
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="@dimen/_minus7sdp" />
 
                 </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/month_2_holder"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="@dimen/_7sdp"
-                android:layout_weight="1">
+                <RelativeLayout
+                    android:id="@+id/month_2_holder"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="@dimen/_7sdp"
+                    android:layout_weight="1">
 
-                <TextView
-                    android:id="@+id/month_2_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/february"
-                    android:layout_marginLeft="@dimen/_10sdp"
-                    android:fontFamily="@font/roboto"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_15sdp" />
+                    <TextView
+                        android:id="@+id/month_2_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:fontFamily="@font/roboto"
+                        android:text="@string/february"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_15sdp" />
 
-                <com.daily.events.calender.views.MonthView
-                    android:id="@+id/month_view2"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_20sdp"
-                    android:layout_below="@id/month_2_label"
-                    android:layout_marginVertical="@dimen/_3sdp" />
+                    <com.daily.events.calender.views.MonthView
+                        android:id="@+id/month_view2"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_below="@id/month_2_label"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_3sdp" />
 
-                <com.daily.events.calender.views.SmallMonthView
-                    android:id="@+id/month_2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/month_view2"
-                    android:layout_marginTop="@dimen/_minus7sdp" />
+                    <com.daily.events.calender.views.SmallMonthView
+                        android:id="@+id/month_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/month_view2"
+                        android:layout_marginTop="@dimen/_minus7sdp" />
 
-            </RelativeLayout>
+                </RelativeLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_160sdp"
+                android:layout_height="@dimen/_170sdp"
                 android:orientation="horizontal">
 
                 <RelativeLayout
@@ -108,9 +110,9 @@
                         android:id="@+id/month_3_label"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/march"
-                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginLeft="@dimen/_5sdp"
                         android:fontFamily="@font/roboto"
+                        android:text="@string/march"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
@@ -119,7 +121,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_below="@id/month_3_label"
-                        android:layout_marginVertical="@dimen/_3sdp" />
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_3sdp" />
 
                     <com.daily.events.calender.views.SmallMonthView
                         android:id="@+id/month_3"
@@ -141,9 +144,9 @@
                         android:id="@+id/month_4_label"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/april"
-                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginLeft="@dimen/_5sdp"
                         android:fontFamily="@font/roboto"
+                        android:text="@string/april"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
@@ -152,7 +155,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_below="@id/month_4_label"
-                        android:layout_marginVertical="@dimen/_3sdp" />
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_3sdp" />
 
                     <com.daily.events.calender.views.SmallMonthView
                         android:id="@+id/month_4"
@@ -167,7 +171,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_160sdp"
+                android:layout_height="@dimen/_170sdp"
                 android:orientation="horizontal">
 
                 <RelativeLayout
@@ -181,9 +185,9 @@
                         android:id="@+id/month_5_label"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/may"
-                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginLeft="@dimen/_5sdp"
                         android:fontFamily="@font/roboto"
+                        android:text="@string/may"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
@@ -192,7 +196,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_below="@id/month_5_label"
-                        android:layout_marginVertical="@dimen/_3sdp" />
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_3sdp" />
 
                     <com.daily.events.calender.views.SmallMonthView
                         android:id="@+id/month_5"
@@ -214,9 +219,9 @@
                         android:id="@+id/month_6_label"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/june"
-                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginLeft="@dimen/_5sdp"
                         android:fontFamily="@font/roboto"
+                        android:text="@string/june"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
@@ -225,7 +230,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_below="@id/month_6_label"
-                        android:layout_marginVertical="@dimen/_3sdp" />
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_3sdp" />
 
                     <com.daily.events.calender.views.SmallMonthView
                         android:id="@+id/month_6"
@@ -239,7 +245,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_160sdp"
+                android:layout_height="@dimen/_170sdp"
                 android:orientation="horizontal">
 
                 <RelativeLayout
@@ -253,9 +259,9 @@
                         android:id="@+id/month_7_label"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/july"
-                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginLeft="@dimen/_5sdp"
                         android:fontFamily="@font/roboto"
+                        android:text="@string/july"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
@@ -264,7 +270,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_below="@id/month_7_label"
-                        android:layout_marginVertical="@dimen/_3sdp" />
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_3sdp" />
 
                     <com.daily.events.calender.views.SmallMonthView
                         android:id="@+id/month_7"
@@ -274,44 +281,45 @@
                         android:layout_marginTop="@dimen/_minus7sdp" />
                 </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/month_8_holder"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="@dimen/_7sdp"
-                android:layout_weight="1">
-
-                <TextView
-                    android:id="@+id/month_8_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/august"
-                    android:layout_marginLeft="@dimen/_10sdp"
-                    android:fontFamily="@font/roboto"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_15sdp" />
-
-                <com.daily.events.calender.views.MonthView
-                    android:id="@+id/month_view8"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_20sdp"
-                    android:layout_below="@id/month_8_label"
-                    android:layout_marginVertical="@dimen/_3sdp" />
-
-                <com.daily.events.calender.views.SmallMonthView
-                    android:id="@+id/month_8"
-                    android:layout_width="match_parent"
+                <RelativeLayout
+                    android:id="@+id/month_8_holder"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_below="@+id/month_view8"
-                    android:layout_marginTop="@dimen/_minus7sdp" />
+                    android:layout_marginHorizontal="@dimen/_7sdp"
+                    android:layout_weight="1">
 
-            </RelativeLayout>
+                    <TextView
+                        android:id="@+id/month_8_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:fontFamily="@font/roboto"
+                        android:text="@string/august"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_15sdp" />
+
+                    <com.daily.events.calender.views.MonthView
+                        android:id="@+id/month_view8"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_below="@id/month_8_label"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_3sdp" />
+
+                    <com.daily.events.calender.views.SmallMonthView
+                        android:id="@+id/month_8"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/month_view8"
+                        android:layout_marginTop="@dimen/_minus7sdp" />
+
+                </RelativeLayout>
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_160sdp"
+                android:layout_height="@dimen/_170sdp"
                 android:orientation="horizontal">
 
                 <RelativeLayout
@@ -325,9 +333,9 @@
                         android:id="@+id/month_9_label"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/september"
-                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginLeft="@dimen/_5sdp"
                         android:fontFamily="@font/roboto"
+                        android:text="@string/september"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
@@ -336,7 +344,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_below="@id/month_9_label"
-                        android:layout_marginVertical="@dimen/_3sdp" />
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_3sdp" />
 
                     <com.daily.events.calender.views.SmallMonthView
                         android:id="@+id/month_9"
@@ -359,9 +368,9 @@
                         android:id="@+id/month_10_label"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/october"
-                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginLeft="@dimen/_5sdp"
                         android:fontFamily="@font/roboto"
+                        android:text="@string/october"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
@@ -370,7 +379,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_below="@id/month_10_label"
-                        android:layout_marginVertical="@dimen/_3sdp" />
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_3sdp" />
 
                     <com.daily.events.calender.views.SmallMonthView
                         android:id="@+id/month_10"
@@ -384,7 +394,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_160sdp"
+                android:layout_height="@dimen/_170sdp"
                 android:orientation="horizontal">
 
                 <RelativeLayout
@@ -398,9 +408,9 @@
                         android:id="@+id/month_11_label"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/november"
-                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginLeft="@dimen/_5sdp"
                         android:fontFamily="@font/roboto"
+                        android:text="@string/november"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
@@ -409,7 +419,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_below="@id/month_11_label"
-                        android:layout_marginVertical="@dimen/_3sdp" />
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_3sdp" />
 
                     <com.daily.events.calender.views.SmallMonthView
                         android:id="@+id/month_11"
@@ -431,7 +442,7 @@
                         android:id="@+id/month_12_label"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginLeft="@dimen/_5sdp"
                         android:fontFamily="@font/roboto"
                         android:text="@string/december"
                         android:textColor="@color/black"
@@ -442,7 +453,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_below="@id/month_12_label"
-                        android:layout_marginVertical="@dimen/_3sdp" />
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_3sdp" />
 
                     <com.daily.events.calender.views.SmallMonthView
                         android:id="@+id/month_12"
