@@ -16,7 +16,6 @@ class AlarmService : JobIntentService() {
         val dateLong = System.currentTimeMillis()
         val currentDate = SimpleDateFormat("d", Locale.getDefault()).format(dateLong)
 
-
         val cur = currentDate.toInt()
         packageManager.setComponentEnabledSetting(
             ComponentName(
@@ -40,6 +39,8 @@ class AlarmService : JobIntentService() {
     }
 
     companion object {
+        const val ANDROID_CHANNEL_ID = "com.daily.events.calender"
+
         const val JOB_ID = 1000
         fun enqueueWork(context: Context?, work: Intent?) {
             enqueueWork(

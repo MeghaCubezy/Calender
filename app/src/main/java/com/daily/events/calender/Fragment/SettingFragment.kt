@@ -1,26 +1,31 @@
 package com.daily.events.calender.Fragment
 
 import android.Manifest
+import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.daily.events.calender.Activity.MainActivity
+import com.daily.events.calender.BuildConfig
 import com.daily.events.calender.Extensions.calDAVHelper
 import com.daily.events.calender.Extensions.config
 import com.daily.events.calender.Extensions.eventTypesDB
 import com.daily.events.calender.R
 import com.daily.events.calender.databinding.FragmentSettingBinding
+import com.daily.events.calender.services.AlarmReceiver
 import com.simplemobiletools.commons.activities.BaseSimpleActivity.Companion.perms
 import com.simplemobiletools.commons.helpers.*
 import pub.devrel.easypermissions.EasyPermissions
+import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -98,6 +103,25 @@ class SettingFragment : Fragment() {
             val lbm = LocalBroadcastManager.getInstance(requireContext())
             val localIn = Intent("ADD_ANNIVERSARY")
             lbm.sendBroadcast(localIn)
+        }
+
+        fragmentSetting?.icCustomIcons?.setOnClickListener {
+            requireActivity().packageManager.setComponentEnabledSetting(
+                ComponentName(
+                    BuildConfig.APPLICATION_ID,
+                    "com.daily.events.calender.DefaultLauncher"
+                ),
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP
+            )
+            val calendar = Calendar.getInstance()
+            AlarmReceiver().setRepeatAlarm(requireContext(), 1001, calendar)
+            requireActivity().runOnUiThread {
+                Toast.makeText(
+                    MainActivity.activity,
+                    "Custom icon theme applied. Please relaunch app.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
 
         return fragmentSetting?.root

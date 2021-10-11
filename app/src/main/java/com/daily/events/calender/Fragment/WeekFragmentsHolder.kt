@@ -182,14 +182,14 @@ class WeekFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
         if (startDateTime.monthOfYear == endDateTime.monthOfYear) {
             newTitle = startMonthName
             if (startDateTime.year != DateTime().year) {
-                newTitle += " - ${startDateTime.year}"
+                newTitle += " ( ${startDateTime.year} )"
             }
         } else {
             val endMonthName = Formatter.getMonthName(requireContext(), endDateTime.monthOfYear)
             newTitle = "$startMonthName - $endMonthName"
         }
         val str = newTitle.plus(" ").plus(
-            "\n${getString(R.string.week)} ${
+            "${getString(R.string.week)} ${
                 startDateTime.plusDays(3).weekOfWeekyear
             }"
         )

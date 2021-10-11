@@ -1,5 +1,6 @@
 package com.daily.events.calender
 
+
 class LauncherAlias1
 class LauncherAlias2
 class LauncherAlias3

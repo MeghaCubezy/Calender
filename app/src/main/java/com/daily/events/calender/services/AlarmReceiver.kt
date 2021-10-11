@@ -34,9 +34,14 @@ class AlarmReceiver : BroadcastReceiver() {
         val diffTime = mCalendar!!.timeInMillis - currentTime
         mAlarmManager!!.setRepeating(
             AlarmManager.ELAPSED_REALTIME,
-            SystemClock.elapsedRealtime() + diffTime,
+            SystemClock.elapsedRealtime(),
             60000, mPendingIntent
         )
+//        mAlarmManager!!.setRepeating(
+//            AlarmManager.ELAPSED_REALTIME,
+//            SystemClock.elapsedRealtime() + diffTime,
+//            60000, mPendingIntent
+//        )
 
         // Restart alarm if device is rebooted
         val receiver = ComponentName(
