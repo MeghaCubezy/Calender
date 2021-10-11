@@ -79,7 +79,6 @@ abstract class BaseSimpleActivity : AppCompatActivity(), EasyPermissions.Permiss
     override fun onPermissionsGranted(requestCode: Int, perms: List<String?>?) {
 //        Log.e("hasPermissions", "true")
         permissionGranted()
-
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms1: List<String?>?) {

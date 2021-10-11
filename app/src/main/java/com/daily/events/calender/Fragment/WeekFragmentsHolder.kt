@@ -59,6 +59,7 @@ class WeekFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
         viewPager = weekHolder!!.week_view_view_pager
         viewPager!!.id = (System.currentTimeMillis() % 100000).toInt()
         setupFragment()
+
         return weekHolder
     }
 
@@ -141,8 +142,8 @@ class WeekFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
         })
     }
 
-    private fun addHours(textColor: Int = requireContext().config.textColor) {
-        val itemHeight = requireContext().getWeeklyViewItemHeight().toInt()
+    private fun addHours(textColor: Int = requireActivity().config.textColor) {
+        val itemHeight = requireActivity().getWeeklyViewItemHeight().toInt()
         weekHolder!!.week_view_hours_holder.removeAllViews()
         val hourDateTime = DateTime().withDate(2000, 1, 1).withTime(0, 0, 0, 0)
         for (i in 1..23) {
@@ -187,7 +188,7 @@ class WeekFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
             val endMonthName = Formatter.getMonthName(requireContext(), endDateTime.monthOfYear)
             newTitle = "$startMonthName - $endMonthName"
         }
-        val str = newTitle.plus(" ").plus("-").plus(
+        val str = newTitle.plus(" ").plus(
             "${getString(R.string.week)} ${
                 startDateTime.plusDays(3).weekOfWeekyear
             }"

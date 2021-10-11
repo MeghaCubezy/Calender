@@ -24,12 +24,10 @@ import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.app.NotificationManagerCompat
-import androidx.databinding.DataBindingUtil
 import com.daily.events.calender.Adapter.AutoCompleteTextViewAdapter
 import com.daily.events.calender.Extensions.*
 import com.daily.events.calender.Model.*
 import com.daily.events.calender.R
-import com.daily.events.calender.databinding.ActivityEventBinding
 import com.daily.events.calender.dialogs.*
 import com.daily.events.calender.helpers.*
 import com.daily.events.calender.helpers.Formatter
@@ -115,29 +113,24 @@ class EventActivity : SimpleActivity() {
     var displayList: MutableList<Int>? = mutableListOf()
     var pickerLayout = 0
     var model = 0
-    var eventBinding: ActivityEventBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        eventBinding =
-            DataBindingUtil.setContentView(this, R.layout.activity_event)
+        setContentView(R.layout.activity_event)
 
-        if (checkAppSideloading()) {
-            Log.e("Log", "1")
-            return
-        }
+        System.gc()
 
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_cross_vector)
         val intent = intent ?: return
-        Log.e("Log", "2")
         mDialogTheme = getDialogTheme()
-        mWasContactsPermissionChecked = hasPermission(PERMISSION_READ_CONTACTS)
+//        mWasContactsPermissionChecked = hasPermission(PERMISSION_READ_CONTACTS)
 
         val eventId = intent.getLongExtra(EVENT_ID, 0L)
         ensureBackgroundThread {
             mStoredEventTypes = eventTypesDB.getEventTypes().toMutableList() as ArrayList<EventType>
             val event = eventsDB.getEventWithId(eventId)
             if (eventId != 0L && event == null) {
+                Log.e("LLL_Loading1: ", "Event")
                 finish()
                 return@ensureBackgroundThread
             }
@@ -146,6 +139,7 @@ class EventActivity : SimpleActivity() {
                 mStoredEventTypes.firstOrNull { it.id == config.lastUsedLocalEventTypeId }
             runOnUiThread {
                 if (!isDestroyed && !isFinishing) {
+                    Log.e("LLL_Loading9: ", "Event")
                     gotEvent(savedInstanceState, localEventType, event)
                 }
             }
@@ -169,7 +163,12 @@ class EventActivity : SimpleActivity() {
     }
 
     override fun permissionGranted() {
+        mWasContactsPermissionChecked = true
+    }
 
+    override fun onDestroy() {
+        Log.e("LLL_LoadingDes: ", "Destroy")
+        super.onDestroy()
     }
 
     private fun addTag() {
@@ -224,7 +223,6 @@ class EventActivity : SimpleActivity() {
 
     private fun viewClicked(eventType: EventType, view: View) {
         if (!wasInit) {
-            Log.e("Log", "4")
             return
         }
 
@@ -453,6 +451,7 @@ class EventActivity : SimpleActivity() {
         mWasActivityInitialized = true
     }
 
+    //
     @SuppressLint("RestrictedApi")
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         if (menu is MenuBuilder) menu.setOptionalIconsVisible(true)
@@ -568,7 +567,7 @@ class EventActivity : SimpleActivity() {
         super.onSaveInstanceState(outState)
 
         if (!mWasActivityInitialized) {
-            Log.e("Log", "5")
+            Log.e("LLL_Event: ", "SaveIns")
             return
         }
 
@@ -602,7 +601,7 @@ class EventActivity : SimpleActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         if (!savedInstanceState.containsKey(START_TS)) {
-            Log.e("Log", "6")
+            Log.e("LLL_Loading: ", "Event")
             finish()
             return
         }
@@ -1349,6 +1348,7 @@ class EventActivity : SimpleActivity() {
                 }
 
                 runOnUiThread {
+                    Log.e("LLL_Loading2: ", "Event")
                     finish()
                 }
             }
@@ -1357,6 +1357,7 @@ class EventActivity : SimpleActivity() {
 
     private fun duplicateEvent() {
         // the activity has the singleTask launchMode to avoid some glitches, so finish it before relaunching
+        Log.e("LLL_Loading3: ", "Event")
         finish()
         Intent(this, EventActivity::class.java).apply {
             putExtra(EVENT_ID, mEvent.id)
@@ -1519,7 +1520,7 @@ class EventActivity : SimpleActivity() {
                         notifyEvent(mEvent)
                     }
                 }
-                Log.e("Log", "6")
+                Log.e("LLL_Loading4: ", "Event")
                 finish()
             }
         } else {
@@ -1529,7 +1530,7 @@ class EventActivity : SimpleActivity() {
                 }
             } else {
                 eventsHelper.updateEvent(mEvent, true, true) {
-                    Log.e("Log", "7")
+                    Log.e("LLL_Loading5: ", "Event")
                     finish()
                 }
             }
@@ -1555,6 +1556,7 @@ class EventActivity : SimpleActivity() {
                         }
 
                         eventsHelper.insertEvent(mEvent, true, true) {
+                            Log.e("LLL_Loading6: ", "Event")
                             finish()
                         }
                     }
@@ -1566,6 +1568,7 @@ class EventActivity : SimpleActivity() {
                             id = null
                         }
                         eventsHelper.insertEvent(mEvent, true, true) {
+                            Log.e("LLL_Loading7: ", "Event")
                             finish()
                         }
                     }
@@ -1575,6 +1578,7 @@ class EventActivity : SimpleActivity() {
                     ensureBackgroundThread {
                         eventsHelper.addEventRepeatLimit(mEvent.id!!, mEventOccurrenceTS)
                         eventsHelper.updateEvent(mEvent, true, true) {
+                            Log.e("LLL_Loading8: ", "Event")
                             finish()
                         }
                     }

@@ -34,11 +34,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Calender.NoActionBar">
         <activity
-            android:name=".Activity.SplashActivity"
-            android:clearTaskOnLaunch="true"
-            android:launchMode="singleTask" />
-        <activity
             android:name=".Activity.MainActivity"
+            android:clearTaskOnLaunch="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <intent-filter>

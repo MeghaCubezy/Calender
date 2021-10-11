@@ -3,7 +3,6 @@ package com.daily.events.calender.Activity
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.*
-import android.content.pm.PackageManager
 import android.database.ContentObserver
 import android.os.*
 import android.provider.CalendarContract
@@ -20,7 +19,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.loader.content.CursorLoader
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.daily.events.calender.BuildConfig
 import com.daily.events.calender.Extensions.*
 import com.daily.events.calender.Fragment.*
 import com.daily.events.calender.Fragment.Home.HomeFragment
@@ -32,7 +30,6 @@ import com.daily.events.calender.databinding.ActivityMainBinding
 import com.daily.events.calender.dialogs.SetRemindersDialog
 import com.daily.events.calender.helpers.*
 import com.daily.events.calender.helpers.Formatter
-import com.daily.events.calender.services.AlarmReceiver
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.shrikanthravi.customnavigationdrawer2.widget.SNavigationDrawer
@@ -416,21 +413,6 @@ class MainActivity : SimpleActivity() {
 
     }
 
-    override fun onPause() {
-        if (isPaused) {
-            packageManager.setComponentEnabledSetting(
-                ComponentName(
-                    BuildConfig.APPLICATION_ID,
-                    "com.daily.events.calender.DefaultLauncher"
-                ),
-                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP
-            )
-        } else {
-            isPaused = true
-        }
-        super.onPause()
-    }
-
 
     private var showCalDAVRefreshToast = false
 
@@ -442,9 +424,6 @@ class MainActivity : SimpleActivity() {
         supportActionBar?.hide()
 
         activity = this
-        val calendar = Calendar.getInstance()
-        AlarmReceiver().setRepeatAlarm(applicationContext, 1001, calendar)
-
 
         if (config.caldavSync) {
             refreshCalDAVCalendars(false)

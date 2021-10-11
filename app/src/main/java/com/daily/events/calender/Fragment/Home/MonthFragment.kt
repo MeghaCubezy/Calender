@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.view.animation.TranslateAnimation
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import com.daily.events.calender.Activity.MainActivity
 import com.daily.events.calender.Activity.SimpleActivity
@@ -56,6 +57,7 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener,
     lateinit var mRes: Resources
     lateinit var mHolder: RelativeLayout
     lateinit var mMainRL: RelativeLayout
+    lateinit var imgAddEvent: AppCompatImageView
     lateinit var mMonthViewWaraper: MonthViewWrapper
     lateinit var mConfig: Config
 
@@ -86,6 +88,7 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener,
         mPackageName = requireActivity().packageName
         mHolder = view.month_calendar_holder
         mMonthViewWaraper = view.month_view_wrapper
+        imgAddEvent = view.imgAddEvent
         mMainRL = view.mainRL
         mMainRL.setOnTouchListener(this)
         mDayCode = requireArguments().getString(DAY_CODE)!!
@@ -94,8 +97,14 @@ class MonthFragment : Fragment(), MonthlyCalendar, RefreshRecyclerViewListener,
 
 //        setupButtons()
         mCalendar = MonthlyCalendarImpl(this, requireContext())
+
+        imgAddEvent.setOnClickListener {
+            requireContext().launchNewEventIntent(getNewEventDayCode())
+        }
         return view
     }
+
+    fun getNewEventDayCode() = Formatter.getTodayCode()
 
     override fun onPause() {
         super.onPause()
