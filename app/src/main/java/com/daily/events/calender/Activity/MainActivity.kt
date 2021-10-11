@@ -509,6 +509,7 @@ class MainActivity : SimpleActivity() {
         mainBinding?.fab?.setOnClickListener {
 
             launchNewEventIntent(getNewEventDayCode())
+
         }
     }
 
