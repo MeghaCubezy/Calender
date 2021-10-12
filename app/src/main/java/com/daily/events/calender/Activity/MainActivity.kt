@@ -486,9 +486,7 @@ class MainActivity : SimpleActivity() {
         config.isSundayFirst = false
 
         mainBinding?.fab?.setOnClickListener {
-
             launchNewEventIntent(getNewEventDayCode())
-
         }
     }
 

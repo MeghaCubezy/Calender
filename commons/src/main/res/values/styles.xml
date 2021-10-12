@@ -58,8 +58,8 @@
 
     <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/color_primary</item>
-        <item name="android:windowBackground">@color/white</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:windowBackground">@color/md_grey</item>
+        <item name="android:textColor">@color/theme_color</item>
     </style>
 
     <style name="MyDialogTheme.Dark" parent="Theme.AppCompat.Dialog">

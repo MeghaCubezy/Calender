@@ -132,14 +132,21 @@ class SmallMonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
 //        Log.e("highlightWeekends", highlightWeekends.toString())
         val colors = mEvents?.get(curId)?.eventColors ?: HashSet()
         if (colors.isNotEmpty()) {
-            val curPaint = Paint(paint)
-            curPaint.color = colors.first()
-            return curPaint
+            if (curId == todaysId) {
+                val curPaint = Paint(paint)
+                curPaint.color = whiteTextColor
+                return curPaint
+            } else {
+                val curPaint = Paint(paint)
+                curPaint.color = colors.first()
+                return curPaint
+            }
         } else if (highlightWeekends && isWeekend(weekDay - 1, isSundayFirst)) {
             val curPaint = Paint(paint)
             curPaint.color = redTextColor
             return curPaint
-        } else if (curId == todaysId) {
+        }
+        if (curId == todaysId) {
             val curPaint = Paint(paint)
             curPaint.color = whiteTextColor
             return curPaint

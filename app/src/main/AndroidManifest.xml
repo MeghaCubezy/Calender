@@ -450,6 +450,10 @@
         </activity-alias>
 
         <activity
+            android:name=".Activity.PolicyActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".Activity.EventActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Calender.NoActionBar">

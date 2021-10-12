@@ -281,16 +281,18 @@ class WeekFragment : Fragment(), WeeklyCalendar {
     }
 
     private fun initGrid() {
-        (0 until config.weeklyViewDays).mapNotNull { dayColumns.getOrNull(it) }
-            .forEachIndexed { index, layout ->
-                layout.removeAllViews()
-                val gestureDetector = getViewGestureDetector(layout, index)
+        requireActivity().runOnUiThread {
+            (0 until config.weeklyViewDays).mapNotNull { dayColumns.getOrNull(it) }
+                .forEachIndexed { index, layout ->
+                    layout.removeAllViews()
+                    val gestureDetector = getViewGestureDetector(layout, index)
 
-                layout.setOnTouchListener { view, motionEvent ->
-                    gestureDetector.onTouchEvent(motionEvent)
-                    true
+                    layout.setOnTouchListener { view, motionEvent ->
+                        gestureDetector.onTouchEvent(motionEvent)
+                        true
+                    }
                 }
-            }
+        }
     }
 
     private fun getViewGestureDetector(view: ViewGroup, index: Int): GestureDetector {
@@ -429,56 +431,20 @@ class WeekFragment : Fragment(), WeeklyCalendar {
         val minimalHeight = res.getDimension(R.dimen.weekly_view_minimal_event_height).toInt()
         val density = Math.round(res.displayMetrics.density)
 
-        for (event in events) {
-            val startDateTime = Formatter.getDateTimeFromTS(event.startTS)
-            val startDayCode = Formatter.getDayCodeFromDateTime(startDateTime)
-            val endDateTime = Formatter.getDateTimeFromTS(event.endTS)
-            val endDayCode = Formatter.getDayCodeFromDateTime(endDateTime)
+        requireActivity().runOnUiThread {
+            for (event in events) {
+                val startDateTime = Formatter.getDateTimeFromTS(event.startTS)
+                val startDayCode = Formatter.getDayCodeFromDateTime(startDateTime)
+                val endDateTime = Formatter.getDateTimeFromTS(event.endTS)
+                val endDayCode = Formatter.getDayCodeFromDateTime(endDateTime)
 
-            if (event.getIsAllDay() || ((startDayCode != endDayCode) && config.showMidnightSpanningEventsAtTop)) {
-                continue
-            }
-
-            var currentDateTime = startDateTime
-            var currentDayCode = Formatter.getDayCodeFromDateTime(currentDateTime)
-            do {
-                val startMinutes = when (currentDayCode == startDayCode) {
-                    true -> (startDateTime.minuteOfDay)
-                    else -> 0
+                if (event.getIsAllDay() || ((startDayCode != endDayCode) && config.showMidnightSpanningEventsAtTop)) {
+                    continue
                 }
-                val duration = when (currentDayCode == endDayCode) {
-                    true -> (endDateTime.minuteOfDay - startMinutes)
-                    else -> 1440
-                }
-                val range = Range(startMinutes, startMinutes + duration)
-                val eventWeekly = EventWeeklyView(event.id!!, range)
 
-                if (!eventTimeRanges.containsKey(currentDayCode)) {
-                    eventTimeRanges[currentDayCode] = ArrayList()
-                }
-                eventTimeRanges[currentDayCode]?.add(eventWeekly)
-
-                currentDateTime = currentDateTime.plusDays(1)
-                currentDayCode = Formatter.getDayCodeFromDateTime(currentDateTime)
-            } while (currentDayCode.toInt() <= endDayCode.toInt())
-        }
-
-        dayevents@ for (event in events) {
-            val startDateTime = Formatter.getDateTimeFromTS(event.startTS)
-            val startDayCode = Formatter.getDayCodeFromDateTime(startDateTime)
-            val endDateTime = Formatter.getDateTimeFromTS(event.endTS)
-            val endDayCode = Formatter.getDayCodeFromDateTime(endDateTime)
-            if (event.getIsAllDay() || ((startDayCode != endDayCode) && config.showMidnightSpanningEventsAtTop)) {
-                addAllDayEvent(event)
-            } else {
                 var currentDateTime = startDateTime
                 var currentDayCode = Formatter.getDayCodeFromDateTime(currentDateTime)
                 do {
-                    val dayOfWeek = dayColumns.indexOfFirst { it.tag == currentDayCode }
-                    if (dayOfWeek == -1 || dayOfWeek >= config.weeklyViewDays) {
-                        continue@dayevents
-                    }
-
                     val startMinutes = when (currentDayCode == startDayCode) {
                         true -> (startDateTime.minuteOfDay)
                         else -> 0
@@ -488,80 +454,122 @@ class WeekFragment : Fragment(), WeeklyCalendar {
                         else -> 1440
                     }
                     val range = Range(startMinutes, startMinutes + duration)
-                    var overlappingEvents = 0
-                    var currentEventOverlapIndex = 0
-                    var foundCurrentEvent = false
+                    val eventWeekly = EventWeeklyView(event.id!!, range)
 
-                    eventTimeRanges[currentDayCode]!!.forEachIndexed { index, eventWeeklyView ->
-                        if (eventWeeklyView.range.touch(range)) {
-                            overlappingEvents++
-
-                            if (eventWeeklyView.id == event.id) {
-                                foundCurrentEvent = true
-                            }
-
-                            if (!foundCurrentEvent) {
-                                currentEventOverlapIndex++
-                            }
-                        }
+                    if (!eventTimeRanges.containsKey(currentDayCode)) {
+                        eventTimeRanges[currentDayCode] = ArrayList()
                     }
-
-                    val dayColumn = dayColumns[dayOfWeek]
-                    (inflater.inflate(R.layout.week_event_marker, null, false) as TextView).apply {
-                        var backgroundColor = eventTypeColors.get(event.eventType, primaryColor)
-                        var textColor = backgroundColor.getContrastColor()
-                        if (dimPastEvents && event.isPastEvent && !isPrintVersion) {
-                            backgroundColor = backgroundColor.adjustAlpha(LOWER_ALPHA)
-                            textColor = textColor.adjustAlpha(HIGHER_ALPHA)
-                        }
-
-                        background = ColorDrawable(backgroundColor)
-                        setTextColor(textColor)
-                        text = event.title
-                        contentDescription = text
-                        dayColumn.addView(this)
-                        y = startMinutes * minuteHeight
-                        (layoutParams as RelativeLayout.LayoutParams).apply {
-                            width = dayColumn.width - 1
-                            width /= Math.max(overlappingEvents, 1)
-                            if (overlappingEvents > 1) {
-                                x = width * currentEventOverlapIndex.toFloat()
-                                if (currentEventOverlapIndex != 0) {
-                                    x += density
-                                }
-
-                                width -= density
-                                if (currentEventOverlapIndex + 1 != overlappingEvents) {
-                                    if (currentEventOverlapIndex != 0) {
-                                        width -= density
-                                    }
-                                }
-                            }
-
-                            minHeight = if (event.startTS == event.endTS) {
-                                minimalHeight
-                            } else {
-                                (duration * minuteHeight).toInt() - 1
-                            }
-                        }
-
-                        setOnClickListener {
-                            Intent(context, EventActivity::class.java).apply {
-                                putExtra(EVENT_ID, event.id!!)
-                                putExtra(EVENT_OCCURRENCE_TS, event.startTS)
-                                startActivity(this)
-                            }
-                        }
-                    }
+                    eventTimeRanges[currentDayCode]?.add(eventWeekly)
 
                     currentDateTime = currentDateTime.plusDays(1)
                     currentDayCode = Formatter.getDayCodeFromDateTime(currentDateTime)
                 } while (currentDayCode.toInt() <= endDayCode.toInt())
             }
-        }
 
-        checkTopHolderHeight()
-        addCurrentTimeIndicator()
+            dayevents@ for (event in events) {
+                val startDateTime = Formatter.getDateTimeFromTS(event.startTS)
+                val startDayCode = Formatter.getDayCodeFromDateTime(startDateTime)
+                val endDateTime = Formatter.getDateTimeFromTS(event.endTS)
+                val endDayCode = Formatter.getDayCodeFromDateTime(endDateTime)
+                if (event.getIsAllDay() || ((startDayCode != endDayCode) && config.showMidnightSpanningEventsAtTop)) {
+                    addAllDayEvent(event)
+                } else {
+                    var currentDateTime = startDateTime
+                    var currentDayCode = Formatter.getDayCodeFromDateTime(currentDateTime)
+                    do {
+                        val dayOfWeek = dayColumns.indexOfFirst { it.tag == currentDayCode }
+                        if (dayOfWeek == -1 || dayOfWeek >= config.weeklyViewDays) {
+                            continue@dayevents
+                        }
+
+                        val startMinutes = when (currentDayCode == startDayCode) {
+                            true -> (startDateTime.minuteOfDay)
+                            else -> 0
+                        }
+                        val duration = when (currentDayCode == endDayCode) {
+                            true -> (endDateTime.minuteOfDay - startMinutes)
+                            else -> 1440
+                        }
+                        val range = Range(startMinutes, startMinutes + duration)
+                        var overlappingEvents = 0
+                        var currentEventOverlapIndex = 0
+                        var foundCurrentEvent = false
+
+                        eventTimeRanges[currentDayCode]!!.forEachIndexed { index, eventWeeklyView ->
+                            if (eventWeeklyView.range.touch(range)) {
+                                overlappingEvents++
+
+                                if (eventWeeklyView.id == event.id) {
+                                    foundCurrentEvent = true
+                                }
+
+                                if (!foundCurrentEvent) {
+                                    currentEventOverlapIndex++
+                                }
+                            }
+                        }
+
+                        val dayColumn = dayColumns[dayOfWeek]
+                        (inflater.inflate(
+                            R.layout.week_event_marker,
+                            null,
+                            false
+                        ) as TextView).apply {
+                            var backgroundColor = eventTypeColors.get(event.eventType, primaryColor)
+                            var textColor = backgroundColor.getContrastColor()
+                            if (dimPastEvents && event.isPastEvent && !isPrintVersion) {
+                                backgroundColor = backgroundColor.adjustAlpha(LOWER_ALPHA)
+                                textColor = textColor.adjustAlpha(HIGHER_ALPHA)
+                            }
+
+                            background = ColorDrawable(backgroundColor)
+                            setTextColor(textColor)
+                            text = event.title
+                            contentDescription = text
+                            dayColumn.addView(this)
+                            y = startMinutes * minuteHeight
+                            (layoutParams as RelativeLayout.LayoutParams).apply {
+                                width = dayColumn.width - 1
+                                width /= Math.max(overlappingEvents, 1)
+                                if (overlappingEvents > 1) {
+                                    x = width * currentEventOverlapIndex.toFloat()
+                                    if (currentEventOverlapIndex != 0) {
+                                        x += density
+                                    }
+
+                                    width -= density
+                                    if (currentEventOverlapIndex + 1 != overlappingEvents) {
+                                        if (currentEventOverlapIndex != 0) {
+                                            width -= density
+                                        }
+                                    }
+                                }
+
+                                minHeight = if (event.startTS == event.endTS) {
+                                    minimalHeight
+                                } else {
+                                    (duration * minuteHeight).toInt() - 1
+                                }
+                            }
+
+                            setOnClickListener {
+                                Intent(context, EventActivity::class.java).apply {
+                                    putExtra(EVENT_ID, event.id!!)
+                                    putExtra(EVENT_OCCURRENCE_TS, event.startTS)
+                                    startActivity(this)
+                                }
+                            }
+                        }
+
+                        currentDateTime = currentDateTime.plusDays(1)
+                        currentDayCode = Formatter.getDayCodeFromDateTime(currentDateTime)
+                    } while (currentDayCode.toInt() <= endDayCode.toInt())
+                }
+            }
+
+            checkTopHolderHeight()
+            addCurrentTimeIndicator()
+        }
     }
 
     private fun addNewLine() {
