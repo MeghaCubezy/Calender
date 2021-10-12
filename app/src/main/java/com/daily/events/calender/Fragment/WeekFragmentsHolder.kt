@@ -102,26 +102,31 @@ class WeekFragmentsHolder : MyFragmentHolder(), WeekFragmentListener {
         viewPager!!.apply {
             adapter = weeklyAdapter
             addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-                override fun onPageScrollStateChanged(state: Int) {}
+                override fun onPageScrollStateChanged(state: Int) {
+
+                }
 
                 override fun onPageScrolled(
                     position: Int,
                     positionOffset: Float,
                     positionOffsetPixels: Int
                 ) {
+
                 }
 
                 override fun onPageSelected(position: Int) {
-                    currentWeekTS = weekTSs[position]
-                    val shouldGoToTodayBeVisible = shouldGoToTodayBeVisible()
-                    if (isGoToTodayVisible != shouldGoToTodayBeVisible) {
-                        (activity as? MainActivity)?.toggleGoToTodayVisibility(
-                            shouldGoToTodayBeVisible
-                        )
-                        isGoToTodayVisible = shouldGoToTodayBeVisible
-                    }
+                    requireActivity().runOnUiThread {
+                        currentWeekTS = weekTSs[position]
+                        val shouldGoToTodayBeVisible = shouldGoToTodayBeVisible()
+                        if (isGoToTodayVisible != shouldGoToTodayBeVisible) {
+                            (activity as? MainActivity)?.toggleGoToTodayVisibility(
+                                shouldGoToTodayBeVisible
+                            )
+                            isGoToTodayVisible = shouldGoToTodayBeVisible
+                        }
 
-                    setupWeeklyActionbarTitle(weekTSs[position])
+                        setupWeeklyActionbarTitle(weekTSs[position])
+                    }
                 }
             })
             currentItem = defaultWeeklyPage

@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.loader.content.CursorLoader
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.airbnb.lottie.RenderMode
 import com.daily.events.calender.Extensions.*
 import com.daily.events.calender.Fragment.*
 import com.daily.events.calender.Fragment.Home.HomeFragment
@@ -422,6 +423,7 @@ class MainActivity : SimpleActivity() {
             DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         supportActionBar?.hide()
+        mainBinding?.lottieLoader?.setRenderMode(RenderMode.HARDWARE)
 
         activity = this
 
@@ -495,7 +497,14 @@ class MainActivity : SimpleActivity() {
     fun getNewEventDayCode() = Formatter.getTodayCode()
 
     override fun permissionGranted() {
-        if (!IsSet) SetFragments()
+        if (!IsSet) {
+            SetFragments()
+            setNavigationItems()
+            homeFragment?.let {
+                supportFragmentManager.beginTransaction().replace(R.id.container, it)
+                    .commit()
+            }
+        }
     }
 
     fun SetFragments() {
@@ -544,11 +553,7 @@ class MainActivity : SimpleActivity() {
         eventFragment = EventFragment()
         notificationFragment = NotificationFragment()
         settingFragment = SettingFragment()
-        setNavigationItems()
-        homeFragment?.let {
-            supportFragmentManager.beginTransaction().replace(R.id.container, it)
-                .commit()
-        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -703,10 +708,6 @@ class MainActivity : SimpleActivity() {
                 mainBinding?.navigationDrawer?.drawerListener =
                     object : SNavigationDrawer.DrawerListener {
                         override fun onDrawerOpened() {
-
-                        }
-
-                        override fun onDrawerOpening() {
                             if (position != 0) {
                                 mainBinding?.topRL?.visibility = View.GONE
                             } else {
@@ -714,9 +715,11 @@ class MainActivity : SimpleActivity() {
                             }
                         }
 
+                        override fun onDrawerOpening() {
+
+                        }
+
                         override fun onDrawerClosing() {
-                            println("Drawer closed")
-                            mainBinding?.topRL?.visibility = View.VISIBLE
                             if (fragment != null) {
                                 val fragmentManager = supportFragmentManager
                                 fragmentManager.beginTransaction().setCustomAnimations(
@@ -729,9 +732,13 @@ class MainActivity : SimpleActivity() {
                             }
                         }
 
-                        override fun onDrawerClosed() {}
+                        override fun onDrawerClosed() {
+                            mainBinding?.topRL?.visibility = View.VISIBLE
+
+                        }
+
                         override fun onDrawerStateChanged(newState: Int) {
-                            println("State $newState")
+
                         }
                     }
             }

@@ -80,6 +80,7 @@
                 android:background="@color/divider_grey" />
 
             <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/privacy_policy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_privacy" />
@@ -91,6 +92,7 @@
                 android:background="@color/divider_grey" />
 
             <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/rate_us"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_rate" />
@@ -102,6 +104,7 @@
                 android:background="@color/divider_grey" />
 
             <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/feedback"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_feed" />
@@ -113,6 +116,7 @@
                 android:background="@color/divider_grey" />
 
             <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/share_app"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_share" />

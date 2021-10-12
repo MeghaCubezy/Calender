@@ -18,8 +18,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        // Enabling multidex support.
-        multiDexEnabled true
+        setProperty("archivesBaseName", "calendar" + versionName)
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -50,6 +49,9 @@ android {
         viewBinding true
     }
 
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
+    }
 }
 
 dependencies {
@@ -97,7 +99,4 @@ dependencies {
 
     // Lottie Animation
     implementation 'com.airbnb.android:lottie:4.1.0'
-
-    // Multidex
-    implementation "androidx.multidex:multidex:2.0.1"
 }

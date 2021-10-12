@@ -69,7 +69,7 @@ val Context.areSystemAnimationsEnabled: Boolean
     ) > 0f
 
 fun Context.updateTextColors(viewGroup: ViewGroup, tmpTextColor: Int = 0, tmpAccentColor: Int = 0) {
-    val textColor = if (tmpTextColor == 0) baseConfig.textColor else tmpTextColor
+    val textColor = resources.getColor(R.color.md_grey_black_dark)
     val backgroundColor = baseConfig.backgroundColor
     val accentColor = if (tmpAccentColor == 0) {
         when {
@@ -512,7 +512,7 @@ fun Context.getMyContactsCursor(favoritesOnly: Boolean, withPhoneNumbersOnly: Bo
 }
 
 fun Context.getDialogTheme() =
-    if (baseConfig.backgroundColor.getContrastColor() == Color.WHITE) R.style.MyDialogTheme_Dark else R.style.MyDialogTheme
+    R.style.MyDialogTheme
 
 fun Context.getCurrentFormattedDateTime(): String {
     val simpleDateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.getDefault())
