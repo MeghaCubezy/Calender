@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Calender</string>
+    <string name="app_name">Calendar</string>
     <string name="permission_str">Need calender and read contacts permission for access</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="notification">Notification</string>

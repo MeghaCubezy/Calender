@@ -394,23 +394,24 @@ class MainActivity : SimpleActivity() {
             }
         }
 
-        private fun setupQuickFilter(isAdded: Boolean) {
-            activity.eventsHelper.getEventTypes(activity, false) {
-                activity.config.displayEventTypes.plus(
-                    activity.eventsHelper.getBirthdaysEventTypeId().toString()
-                )
-                updateWidgets()
-            }
-        }
+//        private fun setupQuickFilter(isAdded: Boolean) {
+//            activity.eventsHelper.getEventTypes(activity, false) {
+//                activity.config.displayEventTypes.plus(
+//                    activity.eventsHelper.getBirthdaysEventTypeId().toString()
+//                )
+//                updateWidgets()
+//            }
+//        }
+//
+private fun setupQuicAnniversaryFilter() {
+    activity.eventsHelper.getEventTypes(activity, false) {
+        activity.config.displayEventTypes.plus(
+            activity.eventsHelper.getAnniversariesEventTypeId().toString()
+        )
+        updateWidgets()
+    }
+}
 
-        private fun setupQuicAnniversaryFilter() {
-            activity.eventsHelper.getEventTypes(activity, false) {
-                activity.config.displayEventTypes.plus(
-                    activity.eventsHelper.getAnniversariesEventTypeId().toString()
-                )
-                updateWidgets()
-            }
-        }
 
     }
 
@@ -658,7 +659,7 @@ class MainActivity : SimpleActivity() {
         )
         menuItems.add(
             com.shrikanthravi.customnavigationdrawer2.data.MenuItem(
-                "Setting",
+                "Settings",
                 R.drawable.ic_side_select,
                 R.drawable.ic_setting_new
             )
@@ -938,65 +939,65 @@ class MainActivity : SimpleActivity() {
         }
     }
 
-    class AddBirthdayTask : AsyncTask<Void, Void, String>() {
-        override fun doInBackground(vararg params: Void?): String {
-            tryAddBirthdays(true)
-            return ""
-        }
+    /* class AddBirthdayTask : AsyncTask<Void, Void, String>() {
+         override fun doInBackground(vararg params: Void?): String {
+             tryAddBirthdays(true)
+             return ""
+         }
 
-        fun tryAddBirthdays(isAdded: Boolean) {
-            val isGranted = EasyPermissions.hasPermissions(activity, *perms)
-            if (isGranted) {
-                activity.runOnUiThread {
-                    SetRemindersDialog(activity) {
-                        val reminders = it
-                        val privateCursor =
-                            Companion.getMyContactsCursor(false, false)?.loadInBackground()
+         fun tryAddBirthdays(isAdded: Boolean) {
+             val isGranted = EasyPermissions.hasPermissions(activity, *perms)
+             if (isGranted) {
+                 activity.runOnUiThread {
+                     SetRemindersDialog(activity) {
+                         val reminders = it
+                         val privateCursor =
+                             Companion.getMyContactsCursor(false, false)?.loadInBackground()
 
-                        ensureBackgroundThread {
-                            val privateContacts =
-                                MyContactsContentProvider.getSimpleContacts(activity, privateCursor)
-                            addPrivateEvents(
-                                true,
-                                privateContacts,
-                                reminders
-                            ) { eventsFound, eventsAdded ->
-                                addContactEvents(true, reminders, eventsFound, eventsAdded) {
-                                    when {
-                                        it > 0 -> {
-                                            Toast.makeText(
-                                                activity,
-                                                R.string.birthdays_added,
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                            setupQuickFilter(isAdded)
-                                        }
-                                        it == -1 -> Toast.makeText(
-                                            activity,
-                                            R.string.no_new_birthdays,
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        else -> Toast.makeText(
-                                            activity,
-                                            R.string.no_birthdays,
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            } else {
-                Toast.makeText(
-                    activity,
-                    R.string.no_contacts_permission,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
+                         ensureBackgroundThread {
+                             val privateContacts =
+                                 MyContactsContentProvider.getSimpleContacts(activity, privateCursor)
+                             addPrivateEvents(
+                                 true,
+                                 privateContacts,
+                                 reminders
+                             ) { eventsFound, eventsAdded ->
+                                 addContactEvents(true, reminders, eventsFound, eventsAdded) {
+                                     when {
+                                         it > 0 -> {
+                                             Toast.makeText(
+                                                 activity,
+                                                 R.string.birthdays_added,
+                                                 Toast.LENGTH_SHORT
+                                             ).show()
+                                             setupQuickFilter(isAdded)
+                                         }
+                                         it == -1 -> Toast.makeText(
+                                             activity,
+                                             R.string.no_new_birthdays,
+                                             Toast.LENGTH_SHORT
+                                         ).show()
+                                         else -> Toast.makeText(
+                                             activity,
+                                             R.string.no_birthdays,
+                                             Toast.LENGTH_SHORT
+                                         ).show()
+                                     }
+                                 }
+                             }
+                         }
+                     }
+                 }
+             } else {
+                 Toast.makeText(
+                     activity,
+                     R.string.no_contacts_permission,
+                     Toast.LENGTH_SHORT
+                 ).show()
+             }
+         }
 
-    }
+     }*/
 
     class AddAnniversaryTask : AsyncTask<Void, Void, String>() {
         override fun doInBackground(vararg params: Void?): String {
@@ -1066,7 +1067,79 @@ class MainActivity : SimpleActivity() {
 
     private val birthdayReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            AddBirthdayTask().execute()
+//            AddBirthdayTask().execute()
+            tryAddBirthdays(true)
+        }
+    }
+
+    private fun setupQuickFilter(isAdded: Boolean) {
+        eventsHelper.getEventTypes(activity, false) {
+            config.displayEventTypes.plus(
+                eventsHelper.getBirthdaysEventTypeId().toString()
+            )
+            refreshViewPager()
+            updateWidgets()
+        }
+    }
+
+    private fun refreshViewPager() {
+        runOnUiThread {
+            if (!isDestroyed) {
+                MonthFragmentsHolder().refreshEvents()
+                WeekFragmentsHolder().refreshEvents()
+                DayFragmentsHolder().refreshEvents()
+                YearFragmentsHolder().refreshEvents()
+            }
+        }
+    }
+
+    fun tryAddBirthdays(isAdded: Boolean) {
+        val isGranted = EasyPermissions.hasPermissions(activity, *perms)
+        if (isGranted) {
+            SetRemindersDialog(activity) {
+                val reminders = it
+                val privateCursor =
+                    getMyContactsCursor(false, false)?.loadInBackground()
+
+                ensureBackgroundThread {
+                    val privateContacts =
+                        MyContactsContentProvider.getSimpleContacts(activity, privateCursor)
+                    addPrivateEvents(
+                        true,
+                        privateContacts,
+                        reminders
+                    ) { eventsFound, eventsAdded ->
+                        addContactEvents(true, reminders, eventsFound, eventsAdded) {
+                            when {
+                                it > 0 -> {
+                                    Toast.makeText(
+                                        activity,
+                                        R.string.birthdays_added,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    setupQuickFilter(isAdded)
+                                }
+                                it == -1 -> Toast.makeText(
+                                    activity,
+                                    R.string.no_new_birthdays,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                else -> Toast.makeText(
+                                    activity,
+                                    R.string.no_birthdays,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            Toast.makeText(
+                activity,
+                R.string.no_contacts_permission,
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
