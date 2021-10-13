@@ -341,6 +341,4 @@ class SettingFragment : Fragment() {
         PERMISSION_READ_PHONE_STATE -> Manifest.permission.READ_PHONE_STATE
         else -> ""
     }
-
-
 }

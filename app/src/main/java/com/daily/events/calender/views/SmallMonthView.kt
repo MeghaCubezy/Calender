@@ -129,7 +129,6 @@ class SmallMonthView(context: Context, attrs: AttributeSet, defStyle: Int) :
     }
 
     private fun getPaint(curId: Int, weekDay: Int, highlightWeekends: Boolean): Paint {
-//        Log.e("highlightWeekends", highlightWeekends.toString())
         val colors = mEvents?.get(curId)?.eventColors ?: HashSet()
         if (colors.isNotEmpty()) {
             if (curId == todaysId) {

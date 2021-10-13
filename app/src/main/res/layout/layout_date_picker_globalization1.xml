@@ -89,6 +89,6 @@
             app:np_selectedTextColor="@color/theme_color"
             app:np_wheelItemCount="3" />
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </RelativeLayout>

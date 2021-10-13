@@ -59,5 +59,7 @@
         <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
-
+    <style name="Theme.Calender.WhiteAccent">
+        <item name="colorAccent">@color/white</item> <!-- Whatever color you want-->
+    </style>
 </resources>

@@ -368,15 +368,20 @@ class EventsHelper(val context: Context) {
 
     fun getBirthdaysEventTypeId(createIfNotExists: Boolean = true): Long {
         val birthdays = context.getString(R.string.birthdays)
-        var eventTypeId = getEventTypeIdWithTitle(birthdays)
-        if (eventTypeId == -1L && createIfNotExists) {
-            val eventType = EventType(
-                null,
-                birthdays,
-                context.resources.getColor(R.color.default_birthdays_color)
-            )
-            eventTypeId = insertOrUpdateEventTypeSync(eventType)
-        }
+        var eventTypeId = -1L
+        Thread {
+            eventTypeId = getEventTypeIdWithTitle(birthdays)
+
+            if (eventTypeId == -1L && createIfNotExists) {
+                val eventType = EventType(
+                    null,
+                    birthdays,
+                    context.resources.getColor(R.color.default_birthdays_color)
+                )
+                eventTypeId = insertOrUpdateEventTypeSync(eventType)
+            }
+        }.start()
+
         return eventTypeId
     }
 

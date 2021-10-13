@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.collection.LongSparseArray
 import androidx.fragment.app.Fragment
 import com.daily.events.calender.Activity.EventActivity
+import com.daily.events.calender.Activity.MainActivity
 import com.daily.events.calender.Extensions.*
 import com.daily.events.calender.Model.Event
 import com.daily.events.calender.Model.EventWeeklyView
@@ -78,6 +79,7 @@ class WeekFragment : Fragment(), WeeklyCalendar {
     private lateinit var res: Resources
     private lateinit var config: Config
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         res = requireContext().resources
@@ -96,7 +98,7 @@ class WeekFragment : Fragment(), WeeklyCalendar {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         this.inflater = inflater
 
         val fullHeight = requireContext().getWeeklyViewItemHeight().toInt() * 24
@@ -106,7 +108,7 @@ class WeekFragment : Fragment(), WeeklyCalendar {
             week_events_columns_holder.layoutParams.height = fullHeight
 
             val scaleDetector = getViewScaleDetector()
-            scrollView.setOnTouchListener { view, motionEvent ->
+            scrollView.setOnTouchListener { _, motionEvent ->
                 scaleDetector.onTouchEvent(motionEvent)
                 if (motionEvent.action == MotionEvent.ACTION_UP && wasScaled) {
                     scrollView.isScrollable = true
@@ -142,6 +144,12 @@ class WeekFragment : Fragment(), WeeklyCalendar {
         }
 
         wasFragmentInit = true
+
+        HomeFragment.mActivity.runOnUiThread {
+            MainActivity.mainBinding?.progressBar1?.visibility = View.GONE
+            MainActivity.mainBinding?.hideBack?.visibility = View.GONE
+        }
+
         return mView
     }
 
