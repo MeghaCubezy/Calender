@@ -14,11 +14,13 @@ buildscript {
     repositories {
         google()
         jcenter()
+        gradlePluginPortal()
         maven { url "https://plugins.gradle.org/m2" }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:4.2.2"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.google.gms:google-services:4.3.10'
         classpath "de.timfreiheit.resourceplaceholders:placeholders:0.3"
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
@@ -31,6 +33,7 @@ allprojects {
     repositories {
         google()
         jcenter() // Warning: this repository is going to shut down soon
+        gradlePluginPortal()
         maven { url "https://jitpack.io" }
     }
 }

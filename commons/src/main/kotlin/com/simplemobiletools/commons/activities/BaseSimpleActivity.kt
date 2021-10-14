@@ -119,7 +119,7 @@ abstract class BaseSimpleActivity : AppCompatActivity(), EasyPermissions.Permiss
 
         super.onCreate(savedInstanceState)
 
-        if (!packageName.startsWith("com.daily.events.calender", true)) {
+        if (!packageName.startsWith("calendar.event.reminder", true)) {
             if ((0..50).random() == 10 || baseConfig.appRunCount % 100 == 0) {
 //                val label =
 //                    "You are using a fake version of the app. For your own safety download the original one from www.simplemobiletools.com. Thanks"
@@ -732,7 +732,7 @@ abstract class BaseSimpleActivity : AppCompatActivity(), EasyPermissions.Permiss
         var defaultFilename = baseConfig.lastExportedSettingsFile
         if (defaultFilename.isEmpty()) {
             val appName = baseConfig.appId.removeSuffix(".debug").removeSuffix(".pro")
-                .removePrefix("com.daily.events.calender")
+                .removePrefix("calendar.event.reminder")
             defaultFilename = "$appName-settings.txt"
         }
 

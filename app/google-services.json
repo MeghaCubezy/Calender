@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "670760223569",
+    "project_id": "calendar-66670",
+    "storage_bucket": "calendar-66670.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:670760223569:android:b2b6a86e06b27afca1c970",
+        "android_client_info": {
+          "package_name": "calendar.event.reminder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "670760223569-igjep5j1riq525m18fm6nmngkm6csskf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBX60OE9d-vS39tPpnl3nBm7OZp5iK-Fg8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "670760223569-igjep5j1riq525m18fm6nmngkm6csskf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

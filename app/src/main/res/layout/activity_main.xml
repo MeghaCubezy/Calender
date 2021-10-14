@@ -14,6 +14,7 @@
         tools:context=".Activity.MainActivity">
 
         <RelativeLayout
+            android:id="@+id/mainRL"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -21,6 +22,7 @@
                 android:id="@+id/navigationDrawer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_above="@id/banner_container"
                 android:layout_marginTop="@dimen/_5sdp">
 
                 <FrameLayout
@@ -69,7 +71,7 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
+                android:layout_above="@id/banner_container"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="@dimen/_26sdp">
 
@@ -82,6 +84,14 @@
                     android:src="@drawable/ic_add_items" />
 
             </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/banner_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="@color/white"
+                android:orientation="vertical" />
 
             <View
                 android:id="@+id/hideBack"

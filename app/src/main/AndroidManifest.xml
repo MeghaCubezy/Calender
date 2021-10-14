@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.daily.events.calender">
+    package="calendar.event.reminder">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
@@ -451,10 +452,6 @@
         </activity-alias>
 
         <activity
-            android:name=".Activity.PolicyActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
             android:name=".Activity.EventActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Calender.NoActionBar">
@@ -576,6 +573,10 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/app_id" />
     </application>
 
 </manifest>

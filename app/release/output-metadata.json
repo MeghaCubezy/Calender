@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.daily.events.calender",
+  "applicationId": "calendar.event.reminder",
   "variantName": "release",
   "elements": [
     {

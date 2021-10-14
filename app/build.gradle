@@ -5,6 +5,7 @@ plugins {
     id 'kotlin-android-extensions'
     id 'de.timfreiheit.resourceplaceholders'
     id 'com.github.dcendents.android-maven'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -12,7 +13,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.daily.events.calender"
+        applicationId "calendar.event.reminder"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
@@ -99,4 +100,8 @@ dependencies {
 
     // Lottie Animation
     implementation 'com.airbnb.android:lottie:4.1.0'
+
+    implementation 'com.google.android.gms:play-services-ads:20.4.0'
+    implementation platform('com.google.firebase:firebase-bom:28.0.1')
+    implementation 'com.google.firebase:firebase-analytics'
 }

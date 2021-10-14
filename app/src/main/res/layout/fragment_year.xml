@@ -41,7 +41,7 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
-                    <com.daily.events.calender.views.MonthView
+                    <calendar.event.reminder.views.MonthView
                         android:id="@+id/month_view1"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_20sdp"
@@ -49,7 +49,7 @@
                         android:layout_marginTop="@dimen/_10sdp"
                         android:layout_marginBottom="@dimen/_3sdp" />
 
-                    <com.daily.events.calender.views.SmallMonthView
+                    <calendar.event.reminder.views.SmallMonthView
                         android:id="@+id/month_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
-                    <com.daily.events.calender.views.MonthView
+                    <calendar.event.reminder.views.MonthView
                         android:id="@+id/month_view2"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_20sdp"
@@ -84,7 +84,7 @@
                         android:layout_marginTop="@dimen/_10sdp"
                         android:layout_marginBottom="@dimen/_3sdp" />
 
-                    <com.daily.events.calender.views.SmallMonthView
+                    <calendar.event.reminder.views.SmallMonthView
                         android:id="@+id/month_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -116,7 +116,7 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
-                    <com.daily.events.calender.views.MonthView
+                    <calendar.event.reminder.views.MonthView
                         android:id="@+id/month_view3"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_20sdp"
@@ -124,7 +124,7 @@
                         android:layout_marginTop="@dimen/_10sdp"
                         android:layout_marginBottom="@dimen/_3sdp" />
 
-                    <com.daily.events.calender.views.SmallMonthView
+                    <calendar.event.reminder.views.SmallMonthView
                         android:id="@+id/month_3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -150,7 +150,7 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
-                    <com.daily.events.calender.views.MonthView
+                    <calendar.event.reminder.views.MonthView
                         android:id="@+id/month_view4"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_20sdp"
@@ -158,7 +158,7 @@
                         android:layout_marginTop="@dimen/_10sdp"
                         android:layout_marginBottom="@dimen/_3sdp" />
 
-                    <com.daily.events.calender.views.SmallMonthView
+                    <calendar.event.reminder.views.SmallMonthView
                         android:id="@+id/month_4"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -191,7 +191,7 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
-                    <com.daily.events.calender.views.MonthView
+                    <calendar.event.reminder.views.MonthView
                         android:id="@+id/month_view5"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_20sdp"
@@ -199,7 +199,7 @@
                         android:layout_marginTop="@dimen/_10sdp"
                         android:layout_marginBottom="@dimen/_3sdp" />
 
-                    <com.daily.events.calender.views.SmallMonthView
+                    <calendar.event.reminder.views.SmallMonthView
                         android:id="@+id/month_5"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -225,7 +225,7 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
-                    <com.daily.events.calender.views.MonthView
+                    <calendar.event.reminder.views.MonthView
                         android:id="@+id/month_view6"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_20sdp"
@@ -233,7 +233,7 @@
                         android:layout_marginTop="@dimen/_10sdp"
                         android:layout_marginBottom="@dimen/_3sdp" />
 
-                    <com.daily.events.calender.views.SmallMonthView
+                    <calendar.event.reminder.views.SmallMonthView
                         android:id="@+id/month_6"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -265,7 +265,7 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
-                    <com.daily.events.calender.views.MonthView
+                    <calendar.event.reminder.views.MonthView
                         android:id="@+id/month_view7"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_20sdp"
@@ -273,7 +273,7 @@
                         android:layout_marginTop="@dimen/_10sdp"
                         android:layout_marginBottom="@dimen/_3sdp" />
 
-                    <com.daily.events.calender.views.SmallMonthView
+                    <calendar.event.reminder.views.SmallMonthView
                         android:id="@+id/month_7"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -298,7 +298,7 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
-                    <com.daily.events.calender.views.MonthView
+                    <calendar.event.reminder.views.MonthView
                         android:id="@+id/month_view8"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_20sdp"
@@ -306,7 +306,7 @@
                         android:layout_marginTop="@dimen/_10sdp"
                         android:layout_marginBottom="@dimen/_3sdp" />
 
-                    <com.daily.events.calender.views.SmallMonthView
+                    <calendar.event.reminder.views.SmallMonthView
                         android:id="@+id/month_8"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -339,7 +339,7 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
-                    <com.daily.events.calender.views.MonthView
+                    <calendar.event.reminder.views.MonthView
                         android:id="@+id/month_view9"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_20sdp"
@@ -347,7 +347,7 @@
                         android:layout_marginTop="@dimen/_10sdp"
                         android:layout_marginBottom="@dimen/_3sdp" />
 
-                    <com.daily.events.calender.views.SmallMonthView
+                    <calendar.event.reminder.views.SmallMonthView
                         android:id="@+id/month_9"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -374,7 +374,7 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
-                    <com.daily.events.calender.views.MonthView
+                    <calendar.event.reminder.views.MonthView
                         android:id="@+id/month_view10"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_20sdp"
@@ -382,7 +382,7 @@
                         android:layout_marginTop="@dimen/_10sdp"
                         android:layout_marginBottom="@dimen/_3sdp" />
 
-                    <com.daily.events.calender.views.SmallMonthView
+                    <calendar.event.reminder.views.SmallMonthView
                         android:id="@+id/month_10"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -414,7 +414,7 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
-                    <com.daily.events.calender.views.MonthView
+                    <calendar.event.reminder.views.MonthView
                         android:id="@+id/month_view11"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_20sdp"
@@ -422,7 +422,7 @@
                         android:layout_marginTop="@dimen/_10sdp"
                         android:layout_marginBottom="@dimen/_3sdp" />
 
-                    <com.daily.events.calender.views.SmallMonthView
+                    <calendar.event.reminder.views.SmallMonthView
                         android:id="@+id/month_11"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -448,7 +448,7 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
-                    <com.daily.events.calender.views.MonthView
+                    <calendar.event.reminder.views.MonthView
                         android:id="@+id/month_view12"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_20sdp"
@@ -456,7 +456,7 @@
                         android:layout_marginTop="@dimen/_10sdp"
                         android:layout_marginBottom="@dimen/_3sdp" />
 
-                    <com.daily.events.calender.views.SmallMonthView
+                    <calendar.event.reminder.views.SmallMonthView
                         android:id="@+id/month_12"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

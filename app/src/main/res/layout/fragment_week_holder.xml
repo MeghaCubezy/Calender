@@ -14,7 +14,7 @@
         android:background="@drawable/stroke_bottom_right"
         android:importantForAccessibility="no" />
 
-    <com.daily.events.calender.views.MyScrollView
+    <calendar.event.reminder.views.MyScrollView
         android:id="@+id/week_view_hours_scrollview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" />
 
-    </com.daily.events.calender.views.MyScrollView>
+    </calendar.event.reminder.views.MyScrollView>
 
     <com.simplemobiletools.commons.views.MyViewPager
         android:id="@+id/week_view_view_pager"

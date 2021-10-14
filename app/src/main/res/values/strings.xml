@@ -333,4 +333,9 @@
     <string name="schedule">Schedule</string>
     <string name="swipe_up">Swipe Up For Split MonthView</string>
 
+    <!--    Test IDs-->
+    <string name="app_id">ca-app-pub-1599168469857155~7406857046</string>
+    <string name="banner_ad_home">ca-app-pub-3940256099942544/6300978111</string>
+
+
 </resources>

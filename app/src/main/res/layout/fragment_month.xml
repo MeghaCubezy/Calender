@@ -6,7 +6,7 @@
     android:background="@color/white">
 
 
-    <com.daily.events.calender.views.MonthViewWrapper
+    <calendar.event.reminder.views.MonthViewWrapper
         android:id="@+id/month_view_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
